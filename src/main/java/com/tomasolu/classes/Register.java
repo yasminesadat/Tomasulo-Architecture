@@ -5,7 +5,7 @@ public class Register {
     String Q;
     // has value and Q field , value either double or integer depending
     // name is index
-    
+
     public Register(double value, String Q) {
         this.value = value;
         this.Q = Q;
@@ -28,8 +28,7 @@ public class Register {
     }
 
     public boolean isReady() {
-        return Q.isEmpty();
+        return Q.equals("0");
     }
-
 
 }

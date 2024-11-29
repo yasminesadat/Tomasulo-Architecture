@@ -9,27 +9,27 @@ public class RegisterFile {
         R = new Register[32];
         F = new Register[32];
         for (int i = 0; i < 32; i++) {
-            R[i] = new Register(0, ""); //integer value reg
-            F[i] = new Register(0.0, ""); //float value reg
+            R[i] = new Register(0, "0"); // integer value reg
+            F[i] = new Register(0.0, "0"); // float value reg
         }
     }
 
-    public Register getIntRegister (int index) { //name of reg is its index in arrau
+    public Register getIntRegister(int index) { // name of reg is its index in arrau
         return R[index];
     }
 
-    public Register getFloatRegister (int index) {
+    public Register getFloatRegister(int index) {
         return F[index];
     }
 
-    public void setFloatRegister(int index, Register value){
+    public void setFloatRegister(int index, Register value) {
         F[index] = value;
-        F[index].setQ("");
+        F[index].setQ("0");
     }
 
-    public void setIntegerRegister(int index, Register value){
+    public void setIntegerRegister(int index, Register value) {
         R[index] = value;
-        R[index].setQ("");
+        R[index].setQ("0");
     }
 
     public Register[] getR() {

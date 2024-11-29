@@ -1,5 +1,9 @@
 package com.tomasolu.classes;
 
 public class Memory {
-    // data memory (array of size whatever)
+    double[] memory;
+
+    public Memory() {
+        memory = new double[1000];
+    }
 }
