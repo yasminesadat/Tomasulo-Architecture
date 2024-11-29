@@ -1,7 +1,6 @@
 package com.tomasolu.classes;
 
 import java.io.IOException;
-import java.util.Vector;
 
 public class Simulator {
 
@@ -16,6 +15,10 @@ public class Simulator {
     public static Memory memory;
     public static Cache cache;
     public static boolean canIssue = true;
+    public static AddFU Adder;
+    public static SubFU Subtractor;
+    public static MulFU Multiplier;
+    public static DivFU Divider;
 
     public static void init() {
         registerFile = new RegisterFile();
@@ -34,6 +37,10 @@ public class Simulator {
         memory = new Memory(); // 1000 memory locations
         instructionQueue.printInstructions();
         // cache= new
+        Adder = new AddFU();
+        Subtractor = new SubFU();
+        Multiplier = new MulFU();
+        Divider = new DivFU();
 
     }
 

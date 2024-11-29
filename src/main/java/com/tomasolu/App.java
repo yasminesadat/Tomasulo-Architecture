@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -17,7 +18,15 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        // Load a classic system font (e.g., Arial)
+        Font.loadFont(App.class.getResourceAsStream("/fonts/Arial.ttf"), 12);
+
+        // Load the FXML
+        scene = new Scene(loadFXML("primary"), 640, 640);
+
+        // Apply the font globally
+        scene.getRoot().setStyle("-fx-font-family: 'Arial';");
+
         stage.setScene(scene);
         stage.show();
     }
@@ -34,5 +43,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }

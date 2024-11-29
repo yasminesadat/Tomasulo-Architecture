@@ -11,7 +11,7 @@ public class Issuer {
             case InstructionType.SUB_DOUBLE_PRECISION:
             case InstructionType.SUB_SINGLE_PRECISION:
                 if (!Simulator.addSubReservationStation.hasSpace()) {
-                    System.out.println("No space in  reservation station");
+                    System.out.println("No space in reservation station");
                     return false;
                 } else {
 
@@ -45,6 +45,7 @@ public class Issuer {
                     return false;
                 } else {
                     Simulator.instructionQueue.dequeueInstruction();
+
                     instruction.setIssueTime(Simulator.clockCycle);
                     Register Source1 = Simulator.registerFile
                             .getFloatRegister(Integer.parseInt(instruction.getRs().substring(1)));
