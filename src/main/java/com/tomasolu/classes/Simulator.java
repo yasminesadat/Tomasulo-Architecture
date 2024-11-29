@@ -62,7 +62,7 @@ public class Simulator {
 
         getUserInputs();
         init();
-        while (instructionQueue.size() > 0) {
+        while (clockCycle < 10) {
 
             if (canIssue) {
                 canIssue = Issuer.issue();

@@ -25,8 +25,8 @@ public class Issuer {
             case InstructionType.SUB_IMMEDIATE:
             case InstructionType.BRANCH_EQUAL:
             case InstructionType.BRANCH_NOT_EQUAL:
-                // return handleIntegerOperations(instruction,
-                // Simulator.integerReservationStation);
+                return handleIntegerOperations(instruction,
+                        Simulator.integerReservationStation);
 
             case InstructionType.LOAD_WORD:
             case InstructionType.LOAD_DOUBLE_WORD:
@@ -86,7 +86,7 @@ public class Issuer {
             return false;
         } else {
             executeCommonLogic(instruction);
-            // Perform other logic specific to Integer operations (e.g., immediate values)
+
         }
         return true;
     }
