@@ -99,8 +99,8 @@ public class ReservationStationEntry {
 
     @Override
     public String toString() {
-        return "ReservationStationEntry [tag=" + tag + ", busy=" + busy + ", address=" + address + ", vj=" + vj
-                + ", vk=" + vk + ", qj=" + qj + ", qk=" + qk + ", currInstruction=" + currInstruction + "]";
+        return " [tag=" + tag + ", busy=" + busy + ", address=" + address + ", vj=" + vj
+                + ", vk=" + vk + ", qj=" + qj + ", qk=" + qk + "]";
     }
 
 }

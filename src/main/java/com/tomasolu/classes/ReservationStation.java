@@ -57,6 +57,17 @@ public class ReservationStation {
         return entries;
     }
 
+    public boolean canStartExecution() {
+        for (int i = 0; i < entries.size(); i++) {
+            if (entries.get(i).qj.equals("0") && entries.get(i).qk.equals("0")
+                    && entries.get(i).currInstruction.getIssueTime() != Simulator.clockCycle) {
+                entries.get(i).currInstruction.setStartTime(Simulator.clockCycle);
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "ReservationStation [entries=" + entries + ", freeSpaces=" + freeSpaces + "]";

@@ -57,19 +57,7 @@ public class Simulator {
      * @param args
      * @throws IOException
      */
-
-    public static void main(String[] args) throws IOException {
-
-        getUserInputs();
-        init();
-        while (clockCycle < 10) {
-
-            if (canIssue) {
-                canIssue = Issuer.issue();
-            }
-
-            clockCycle++;
-        }
+    public static void displayReservationStations() {
         System.out.println("------------------------------------------------------------------------------------");
 
         System.out.println(addSubReservationStation);
@@ -78,8 +66,31 @@ public class Simulator {
         System.out.println(mulDivReservationStation);
         System.out.println("------------------------------------------------------------------------------------");
 
+        System.out.println(integerReservationStation);
+        System.out.println("------------------------------------------------------------------------------------");
         System.out.println(loadBuffer);
         System.out.println("------------------------------------------------------------------------------------");
+        System.out.println(storeBuffer);
+        System.out.println("------------------------------------------------------------------------------------");
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        getUserInputs();
+        init();
+        while (instructionQueue.size() > 0) {
+
+            if (canIssue) {
+                canIssue = Issuer.issue();
+            }
+
+            // checkCanStartExecution(); // Check if any instruction can start execution and
+            // decrement cycles in currently executing instructions
+            // check has finished
+
+            clockCycle++;
+        }
+        displayReservationStations();
 
     }
 }

@@ -8,7 +8,6 @@ public class Issuer {
         switch (instructionType) {
             case InstructionType.ADD_DOUBLE_PRECISION:
             case InstructionType.ADD_SINGLE_PRECISION:
-
                 return handleAddSub(instruction, Simulator.addSubReservationStation, Simulator.Adder);
             case InstructionType.SUB_DOUBLE_PRECISION:
             case InstructionType.SUB_SINGLE_PRECISION:
@@ -22,11 +21,16 @@ public class Issuer {
                 return handleMulDiv(instruction, Simulator.mulDivReservationStation, Simulator.Divider);
 
             case InstructionType.ADD_IMMEDIATE:
+                return handleIntegerOperations(instruction,
+                        Simulator.integerReservationStation, Simulator.Adder);
+
             case InstructionType.SUB_IMMEDIATE:
+                return handleIntegerOperations(instruction,
+                        Simulator.integerReservationStation, Simulator.Subtractor);
             case InstructionType.BRANCH_EQUAL:
             case InstructionType.BRANCH_NOT_EQUAL:
-                return handleIntegerOperations(instruction,
-                        Simulator.integerReservationStation);
+                return handleBranchOperations(instruction,
+                        Simulator.integerReservationStation, Simulator.Subtractor);
 
             case InstructionType.LOAD_WORD:
             case InstructionType.LOAD_DOUBLE_WORD:
@@ -38,7 +42,7 @@ public class Issuer {
             case InstructionType.STORE_DOUBLE_WORD:
             case InstructionType.STORE_DOUBLE_PRECISION:
             case InstructionType.STORE_SINGLE_PRECISION:
-                // return handleStore(instruction, Simulator.storeBuffer);
+                return handleStore(instruction, Simulator.storeBuffer);
         }
 
         return true;
@@ -80,12 +84,39 @@ public class Issuer {
         return true;
     }
 
-    private static boolean handleIntegerOperations(Instruction instruction, ReservationStation reservationStation) {
+    private static boolean handleIntegerOperations(Instruction instruction, ReservationStation reservationStation,
+            FunctionalUnit functionalUnit) {
         if (!reservationStation.hasSpace()) {
             System.out.println("No space in reservation station");
             return false;
         } else {
+
             executeCommonLogic(instruction);
+            Register source1 = getRegister(instruction.getRs());
+            int immediate = instruction.getImmediate();
+            Register destination = getRegister(instruction.getRd());
+
+            int index = reservationStation.addEntry("I", immediate, source1.getValue(), 0,
+                    source1.getQ(), "0", instruction, functionalUnit);
+            destination.setQ("I" + index); // Register file update
+
+        }
+        return true;
+    }
+
+    private static boolean handleBranchOperations(Instruction instruction, ReservationStation reservationStation,
+            FunctionalUnit functionalUnit) {
+        if (!reservationStation.hasSpace()) {
+            System.out.println("No space in reservation station");
+            return false;
+        } else {
+
+            executeCommonLogic(instruction);
+            Register source1 = getRegister(instruction.getRs());
+            Register source2 = getRegister(instruction.getRt());
+            int address = instruction.getImmediate();
+            int index = reservationStation.addEntry("I", address, source1.getValue(), source2.getValue(),
+                    source1.getQ(), source2.getQ(), instruction, functionalUnit);
 
         }
         return true;
@@ -113,7 +144,9 @@ public class Issuer {
             executeCommonLogic(instruction);
             Register source = getRegister(instruction.getRs());
             int immediate = instruction.getImmediate();
-            int index = reservationStation.addEntry("S", immediate, 0, 0, "0", "0", instruction, null);
+
+            int index = reservationStation.addEntry("S", immediate, source.getValue(), 0, source.getQ(), "0",
+                    instruction, null);
         }
         return true;
     }
