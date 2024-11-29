@@ -43,7 +43,8 @@ public class ReservationStation {
                     entries.get(i).setFunctionalUnit(functionalUnit);
                     entries.get(i).setBusy(true);
                     entries.get(i).setTag(ReservationStationPrefix + i);
-
+                    entries.get(i).setIssueTime(entries.get(i).currInstruction.issueTime);
+                    ;
                     freeSpaces--;
                     return i;
 

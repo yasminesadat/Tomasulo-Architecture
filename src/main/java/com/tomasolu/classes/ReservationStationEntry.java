@@ -11,6 +11,7 @@ public class ReservationStationEntry {
     String qj;
     String qk;
     Instruction currInstruction;
+    int issueTime;
     FunctionalUnit functionalUnit; // executes this unit's kind of op
 
     public ReservationStationEntry() {
@@ -99,8 +100,12 @@ public class ReservationStationEntry {
 
     @Override
     public String toString() {
-        return " [tag=" + tag + ", busy=" + busy + ", address=" + address + ", vj=" + vj
+        return " [tag=" + tag + ", issueTime=" + issueTime + ", busy=" + busy + ", address=" + address + ", vj=" + vj
                 + ", vk=" + vk + ", qj=" + qj + ", qk=" + qk + "]";
+    }
+
+    public void setIssueTime(int issueTime) {
+        this.issueTime = issueTime;
     }
 
 }
