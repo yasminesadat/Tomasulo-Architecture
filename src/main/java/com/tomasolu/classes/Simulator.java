@@ -19,6 +19,7 @@ public class Simulator {
     public static SubFU Subtractor;
     public static MulFU Multiplier;
     public static DivFU Divider;
+    public static MemoryHandler memoryHandler;
 
     public static void init() {
         registerFile = new RegisterFile();
@@ -75,6 +76,9 @@ public class Simulator {
         System.out.println("------------------------------------------------------------------------------------");
 
         System.out.println(mulDivReservationStation);
+        System.out.println("------------------------------------------------------------------------------------");
+
+        System.out.println(loadBuffer);
         System.out.println("------------------------------------------------------------------------------------");
 
     }

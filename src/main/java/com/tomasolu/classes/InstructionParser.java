@@ -63,6 +63,7 @@ public class InstructionParser {
                     case InstructionType.STORE_SINGLE_PRECISION:
                         currentInstruction.setRs(parts[1]);
                         currentInstruction.setImmediate(Integer.parseInt(parts[2]));
+
                         break;
                     case InstructionType.BRANCH_EQUAL: // BEQ R1 R2 100
                     case InstructionType.BRANCH_NOT_EQUAL:
