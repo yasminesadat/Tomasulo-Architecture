@@ -5,5 +5,6 @@ public enum ReservationStationType {
     ADDSUB,
     MULDIV,
     STORE,
-    LOAD
+    LOAD,
+    INTEGER
 }

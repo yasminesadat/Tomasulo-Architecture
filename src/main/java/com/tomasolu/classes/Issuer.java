@@ -54,7 +54,7 @@ public class Issuer {
             Register source2 = getRegister(instruction.getRt());
             Register destination = getRegister(instruction.getRd());
             FunctionalUnit functionalUnit = new AddSubFU();
-            int index = reservationStation.addEntry("A", -1, source1.getValue(), source2.getValue(),
+            int index = reservationStation.addEntry(-1, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
             destination.setQ("A" + index); // Register file update
         }
@@ -75,7 +75,7 @@ public class Issuer {
             Register destination = getRegister(instruction.getRd());
             FunctionalUnit functionalUnit = new MulDivFU();
 
-            int index = reservationStation.addEntry("M", -1, source1.getValue(), source2.getValue(),
+            int index = reservationStation.addEntry(-1, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
             destination.setQ("M" + index); // Register file update
         }
@@ -95,7 +95,7 @@ public class Issuer {
             int immediate = instruction.getImmediate();
             Register destination = getRegister(instruction.getRd());
             FunctionalUnit functionalUnit = new AddSubFU();
-            int index = reservationStation.addEntry("I", immediate, source1.getValue(), 0,
+            int index = reservationStation.addEntry(immediate, source1.getValue(), 0,
                     source1.getQ(), "0", instruction, functionalUnit);
             destination.setQ("I" + index); // Register file update
 
@@ -117,7 +117,7 @@ public class Issuer {
             Register source2 = getRegister(instruction.getRt());
             int address = instruction.getImmediate();
             FunctionalUnit functionalUnit = new AddSubFU();
-            int index = reservationStation.addEntry("I", address, source1.getValue(), source2.getValue(),
+            int index = reservationStation.addEntry(address, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
 
         }
@@ -136,7 +136,7 @@ public class Issuer {
             Register destination = getRegister(instruction.getRd());
             int immediate = instruction.getImmediate();
             FunctionalUnit functionalUnit = new LoadFU();
-            int index = reservationStation.addEntry("L", immediate, 0, 0, "0", "0", instruction, functionalUnit);
+            int index = reservationStation.addEntry(immediate, 0, 0, "0", "0", instruction, functionalUnit);
             destination.setQ("L" + index);
         }
         return true;
@@ -154,7 +154,7 @@ public class Issuer {
             int immediate = instruction.getImmediate();
             FunctionalUnit functionalUnit = new StoreFU();
 
-            int index = reservationStation.addEntry("S", immediate, source.getValue(), 0, source.getQ(), "0",
+            int index = reservationStation.addEntry(immediate, source.getValue(), 0, source.getQ(), "0",
                     instruction, functionalUnit);
         }
         return true;

@@ -12,11 +12,10 @@ public class ReservationStationEntry {
     String qk;
     Instruction currInstruction;
     int issueTime;
-    FunctionalUnit functionalUnit; // executes this unit's kind of op
-    FunctionalUnit functionalUnit2;
+    FunctionalUnit functionalUnit;
 
-    public ReservationStationEntry() {
-        this.tag = "";
+    public ReservationStationEntry(String tag) {
+        this.tag = tag;
         this.busy = false;
         this.address = 0;
         this.vj = 0;
@@ -24,6 +23,7 @@ public class ReservationStationEntry {
         this.qj = "";
         this.qk = "";
         this.currInstruction = null;
+        this.functionalUnit = null;
 
     }
 

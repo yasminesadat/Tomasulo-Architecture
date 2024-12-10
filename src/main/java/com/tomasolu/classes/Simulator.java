@@ -22,12 +22,14 @@ public class Simulator {
 
     public static void init() {
         registerFile = new RegisterFile();
-        addSubReservationStation = new ReservationStation(UserInputValues.getReservationStationAddSubSize());
-        loadBuffer = new ReservationStation(UserInputValues.getLoadBufferSize());
-        storeBuffer = new ReservationStation(UserInputValues.getStoreBufferSize());
-        mulDivReservationStation = new ReservationStation(UserInputValues.getReservationStationMulDivSize());
+        addSubReservationStation = new ReservationStation(UserInputValues.getReservationStationAddSubSize(),
+                ReservationStationType.ADDSUB);
+        loadBuffer = new ReservationStation(UserInputValues.getLoadBufferSize(), ReservationStationType.LOAD);
+        storeBuffer = new ReservationStation(UserInputValues.getStoreBufferSize(), ReservationStationType.STORE);
+        mulDivReservationStation = new ReservationStation(UserInputValues.getReservationStationMulDivSize(),
+                ReservationStationType.MULDIV);
         integerReservationStation = new ReservationStation(
-                UserInputValues.getReservationStationAddSubIntegerSize());
+                UserInputValues.getReservationStationAddSubIntegerSize(), ReservationStationType.INTEGER);
         try {
             instructionQueue = new InstructionQueue(
                     InstructionParser.parseInstructions("src/main/resources/com/tomasolu/instructions.txt"));
@@ -42,6 +44,25 @@ public class Simulator {
     public static void getUserInputs() {
         System.out.println("Welcome to the Tomasulo Simulator Configuration!");
         UserInputValues.initializeFromInput();
+    }
+
+    public int getWaitingStation(String qi) {
+        int waitingStations = 0;
+        for (ReservationStationEntry entry : addSubReservationStation.getEntries()) {
+            String qj = entry.getQj();
+            String qk = entry.getQk();
+            if (qi.equals(qj) || qi.equals(qk)) {
+                waitingStations++;
+            }
+        }
+        for (ReservationStationEntry entry : mulDivReservationStation.getEntries()) {
+            String qj = entry.getQj();
+            String qk = entry.getQk();
+            if (qi.equals(qj) || qi.equals(qk)) {
+                waitingStations++;
+            }
+        }
+        return waitingStations;
     }
 
     /**
@@ -70,17 +91,17 @@ public class Simulator {
 
         getUserInputs();
         init();
-        // while (instructionQueue.size() > 0) {
-        // Issuer.issue();
+        while (instructionQueue.size() > 0) {
+            Issuer.issue();
 
-        // // checkCanStartExecution(); // Check if any instruction can start execution
-        // and
-        // // decrement cycles in currently executing instructions
-        // //
+            // // checkCanStartExecution(); // Check if any instruction can start execution
+            // and
+            // // decrement cycles in currently executing instructions
+            // //
 
-        // clockCycle++;
-        // }
-        // displayReservationStations();
+            clockCycle++;
+        }
+        displayReservationStations();
 
     }
 }

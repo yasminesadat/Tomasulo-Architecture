@@ -6,11 +6,34 @@ public class ReservationStation {
 
     private Vector<ReservationStationEntry> entries;
     private int freeSpaces;
+    private ReservationStationType type;
 
-    public ReservationStation(int size) {
+    public ReservationStation(int size, ReservationStationType type) {
         this.entries = new Vector<>(size);
         for (int i = 0; i < size; i++) {
-            entries.add(new ReservationStationEntry());
+            switch (type) {
+                case ADDSUB:
+                    entries.add(new ReservationStationEntry("A" + i));
+
+                    break;
+                case MULDIV:
+                    entries.add(new ReservationStationEntry("M" + i));
+
+                    break;
+                case STORE:
+                    entries.add(new ReservationStationEntry("S" + i));
+
+                    break;
+                case LOAD:
+                    entries.add(new ReservationStationEntry("L" + i));
+
+                    break;
+                case INTEGER:
+                    entries.add(new ReservationStationEntry("I" + i));
+
+                    break;
+
+            }
 
         }
         this.freeSpaces = size;
@@ -23,7 +46,7 @@ public class ReservationStation {
         return freeSpaces > 0;
     }
 
-    public int addEntry(String ReservationStationPrefix, int address, double vj, double vk, String qj, String qk,
+    public int addEntry(int address, double vj, double vk, String qj, String qk,
             Instruction currInstruction, FunctionalUnit functionalUnit) {
         {
             for (int i = 0; i < entries.size(); i++) {
@@ -40,7 +63,7 @@ public class ReservationStation {
                     entries.get(i).setQk(qk);
                     entries.get(i).setCurrInstruction(currInstruction);
                     entries.get(i).setBusy(true);
-                    entries.get(i).setTag(ReservationStationPrefix + i);
+                    // entries.get(i).setTag(ReservationStationPrefix + i);
                     entries.get(i).setIssueTime(entries.get(i).currInstruction.issueTime);
                     entries.get(i).setFunctionalUnit(functionalUnit);
                     freeSpaces--;
@@ -61,6 +84,62 @@ public class ReservationStation {
             if (entries.get(i).qj.equals("0") && entries.get(i).qk.equals("0")
                     && entries.get(i).currInstruction.getIssueTime() != Simulator.clockCycle) {
                 entries.get(i).currInstruction.setStartTime(Simulator.clockCycle);
+                int endExecutionTime = 0;
+                int latency = 0;
+                String insType = entries.get(i).currInstruction.getType();
+                switch (insType) {
+                    case InstructionType.ADD_DOUBLE_PRECISION:
+                    case InstructionType.ADD_SINGLE_PRECISION:
+                        latency = UserInputValues.getAddLatency();
+                        break;
+                    case InstructionType.SUB_DOUBLE_PRECISION:
+                    case InstructionType.SUB_SINGLE_PRECISION:
+                        latency = UserInputValues.getSubLatency();
+                        break;
+                    case InstructionType.MULTIPLY_DOUBLE_PRECISION:
+                    case InstructionType.MULTIPLY_SINGLE_PRECISION:
+                        latency = UserInputValues.getMulLatency();
+                        break;
+                    case InstructionType.DIVIDE_DOUBLE_PRECISION:
+                    case InstructionType.DIVIDE_SINGLE_PRECISION:
+                        latency = UserInputValues.getDivLatency();
+                        break;
+                    case InstructionType.ADD_IMMEDIATE:
+                        latency = UserInputValues.getAddIntegerLatency();
+                        break;
+                    case InstructionType.SUB_IMMEDIATE:
+                        latency = UserInputValues.getSubIntegerLatency();
+                        break;
+                    case InstructionType.BRANCH_EQUAL:
+                    case InstructionType.BRANCH_NOT_EQUAL:
+                        latency = UserInputValues.getBranchLatency();
+                        break;
+                    case InstructionType.LOAD_WORD:
+                    case InstructionType.LOAD_DOUBLE_WORD:
+                    case InstructionType.LOAD_DOUBLE_PRECISION:
+                    case InstructionType.LOAD_SINGLE_PRECISION:
+                        latency = UserInputValues.getLoadLatency();
+                        break;
+
+                    case InstructionType.STORE_WORD:
+                    case InstructionType.STORE_DOUBLE_WORD:
+                    case InstructionType.STORE_DOUBLE_PRECISION:
+                    case InstructionType.STORE_SINGLE_PRECISION:
+                        latency = UserInputValues.getStoreLatency();
+                        break;
+                }
+                endExecutionTime = entries.get(i).currInstruction.getStartTime() + latency - 1;
+                entries.get(i).currInstruction.setEndTime(endExecutionTime);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean finishExec() {
+        for (int i = 0; i < entries.size(); i++) {
+            if (entries.get(i).qj.equals("0") && entries.get(i).qk.equals("0")
+                    && entries.get(i).currInstruction.getEndTime() == Simulator.clockCycle) {
                 return true;
             }
         }
