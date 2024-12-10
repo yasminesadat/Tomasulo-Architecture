@@ -8,57 +8,52 @@ public class Issuer {
         switch (instructionType) {
             case InstructionType.ADD_DOUBLE_PRECISION:
             case InstructionType.ADD_SINGLE_PRECISION:
-                return handleAddSub(instruction, Simulator.addSubReservationStation, Simulator.Adder);
             case InstructionType.SUB_DOUBLE_PRECISION:
             case InstructionType.SUB_SINGLE_PRECISION:
-                return handleAddSub(instruction, Simulator.addSubReservationStation, Simulator.Subtractor);
+                return handleAddSub();
             case InstructionType.MULTIPLY_DOUBLE_PRECISION:
             case InstructionType.MULTIPLY_SINGLE_PRECISION:
-
-                return handleMulDiv(instruction, Simulator.mulDivReservationStation, Simulator.Multiplier);
             case InstructionType.DIVIDE_DOUBLE_PRECISION:
             case InstructionType.DIVIDE_SINGLE_PRECISION:
-                return handleMulDiv(instruction, Simulator.mulDivReservationStation, Simulator.Divider);
+                return handleMulDiv();
 
             case InstructionType.ADD_IMMEDIATE:
-                return handleIntegerOperations(instruction,
-                        Simulator.integerReservationStation, Simulator.Adder);
+                return handleIntegerOperations();
 
             case InstructionType.SUB_IMMEDIATE:
-                return handleIntegerOperations(instruction,
-                        Simulator.integerReservationStation, Simulator.Subtractor);
+                return handleIntegerOperations();
             case InstructionType.BRANCH_EQUAL:
             case InstructionType.BRANCH_NOT_EQUAL:
-                return handleBranchOperations(instruction,
-                        Simulator.integerReservationStation, Simulator.Subtractor);
+                return handleBranchOperations();
 
             case InstructionType.LOAD_WORD:
             case InstructionType.LOAD_DOUBLE_WORD:
             case InstructionType.LOAD_DOUBLE_PRECISION:
             case InstructionType.LOAD_SINGLE_PRECISION:
-                return handleLoad(instruction, Simulator.loadBuffer);
+                return handleLoad();
 
             case InstructionType.STORE_WORD:
             case InstructionType.STORE_DOUBLE_WORD:
             case InstructionType.STORE_DOUBLE_PRECISION:
             case InstructionType.STORE_SINGLE_PRECISION:
-                return handleStore(instruction, Simulator.storeBuffer);
+                return handleStore();
         }
 
         return true;
     }
 
-    private static boolean handleAddSub(Instruction instruction, ReservationStation reservationStation,
-            FunctionalUnit functionalUnit) {
+    private static boolean handleAddSub() {
+        ReservationStation reservationStation = Simulator.addSubReservationStation;
         if (!reservationStation.hasSpace()) {
             System.out.println("No space in reservation station");
             return false;
         } else {
-            executeCommonLogic(instruction);
+            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            instruction.setIssueTime(Simulator.clockCycle);
             Register source1 = getRegister(instruction.getRs());
             Register source2 = getRegister(instruction.getRt());
             Register destination = getRegister(instruction.getRd());
-
+            FunctionalUnit functionalUnit = new AddSubFU();
             int index = reservationStation.addEntry("A", -1, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
             destination.setQ("A" + index); // Register file update
@@ -66,16 +61,19 @@ public class Issuer {
         return true;
     }
 
-    private static boolean handleMulDiv(Instruction instruction, ReservationStation reservationStation,
-            FunctionalUnit functionalUnit) {
+    private static boolean handleMulDiv() {
+        ReservationStation reservationStation = Simulator.mulDivReservationStation;
         if (!reservationStation.hasSpace()) {
             System.out.println("No space in reservation station");
             return false;
         } else {
-            executeCommonLogic(instruction);
+
+            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            instruction.setIssueTime(Simulator.clockCycle);
             Register source1 = getRegister(instruction.getRs());
             Register source2 = getRegister(instruction.getRt());
             Register destination = getRegister(instruction.getRd());
+            FunctionalUnit functionalUnit = new MulDivFU();
 
             int index = reservationStation.addEntry("M", -1, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
@@ -84,18 +82,19 @@ public class Issuer {
         return true;
     }
 
-    private static boolean handleIntegerOperations(Instruction instruction, ReservationStation reservationStation,
-            FunctionalUnit functionalUnit) {
+    private static boolean handleIntegerOperations() {
+        ReservationStation reservationStation = Simulator.integerReservationStation;
         if (!reservationStation.hasSpace()) {
             System.out.println("No space in reservation station");
             return false;
         } else {
-
-            executeCommonLogic(instruction);
+            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            instruction.setIssueTime(Simulator.clockCycle);
+            Simulator.instructionQueue.dequeueInstruction();
             Register source1 = getRegister(instruction.getRs());
             int immediate = instruction.getImmediate();
             Register destination = getRegister(instruction.getRd());
-
+            FunctionalUnit functionalUnit = new AddSubFU();
             int index = reservationStation.addEntry("I", immediate, source1.getValue(), 0,
                     source1.getQ(), "0", instruction, functionalUnit);
             destination.setQ("I" + index); // Register file update
@@ -104,17 +103,20 @@ public class Issuer {
         return true;
     }
 
-    private static boolean handleBranchOperations(Instruction instruction, ReservationStation reservationStation,
-            FunctionalUnit functionalUnit) {
+    private static boolean handleBranchOperations() {
+        ReservationStation reservationStation = Simulator.integerReservationStation;
         if (!reservationStation.hasSpace()) {
             System.out.println("No space in reservation station");
             return false;
         } else {
 
-            executeCommonLogic(instruction);
+            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            instruction.setIssueTime(Simulator.clockCycle);
+
             Register source1 = getRegister(instruction.getRs());
             Register source2 = getRegister(instruction.getRt());
             int address = instruction.getImmediate();
+            FunctionalUnit functionalUnit = new AddSubFU();
             int index = reservationStation.addEntry("I", address, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
 
@@ -122,39 +124,40 @@ public class Issuer {
         return true;
     }
 
-    private static boolean handleLoad(Instruction instruction, ReservationStation reservationStation) {
+    private static boolean handleLoad() {
+        ReservationStation reservationStation = Simulator.loadBuffer;
+
         if (!reservationStation.hasSpace()) {
             System.out.println("No space in load buffer");
             return false;
         } else {
-            executeCommonLogic(instruction);
+            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            instruction.setIssueTime(Simulator.clockCycle);
             Register destination = getRegister(instruction.getRd());
             int immediate = instruction.getImmediate();
-            int index = reservationStation.addEntry("L", immediate, 0, 0, "0", "0", instruction, null);
+            FunctionalUnit functionalUnit = new LoadFU();
+            int index = reservationStation.addEntry("L", immediate, 0, 0, "0", "0", instruction, functionalUnit);
             destination.setQ("L" + index);
         }
         return true;
     }
 
-    private static boolean handleStore(Instruction instruction, ReservationStation reservationStation) {
+    private static boolean handleStore() {
+        ReservationStation reservationStation = Simulator.storeBuffer;
         if (!reservationStation.hasSpace()) {
             System.out.println("No space in store buffer");
             return false;
         } else {
-            executeCommonLogic(instruction);
+            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            instruction.setIssueTime(Simulator.clockCycle);
             Register source = getRegister(instruction.getRs());
             int immediate = instruction.getImmediate();
+            FunctionalUnit functionalUnit = new StoreFU();
 
             int index = reservationStation.addEntry("S", immediate, source.getValue(), 0, source.getQ(), "0",
-                    instruction, null);
+                    instruction, functionalUnit);
         }
         return true;
-    }
-
-    // happens always if we're issuing
-    private static void executeCommonLogic(Instruction instruction) {
-        Simulator.instructionQueue.dequeueInstruction();
-        instruction.setIssueTime(Simulator.clockCycle);
     }
 
     // gets register from the F12 / R26 values etc

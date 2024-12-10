@@ -22,7 +22,9 @@ public class InstructionParser {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
+
                 String[] parts = line.split("\\s+");
+                String[] operands = parts[1].split(",");
                 String operation = parts[0];
                 Instruction currentInstruction = new Instruction();
                 currentInstruction.setEndTime(-1);
@@ -40,36 +42,36 @@ public class InstructionParser {
                     case InstructionType.MULTIPLY_SINGLE_PRECISION:
                     case InstructionType.DIVIDE_DOUBLE_PRECISION:
                     case InstructionType.DIVIDE_SINGLE_PRECISION:
-                        currentInstruction.setRd(parts[1]);
-                        currentInstruction.setRs(parts[2]);
-                        currentInstruction.setRt(parts[3]);
+                        currentInstruction.setRd(operands[0]);
+                        currentInstruction.setRs(operands[1]);
+                        currentInstruction.setRt(operands[2]);
                         break;
                     case InstructionType.ADD_IMMEDIATE: // ADDI R1 R1 100
                     case InstructionType.SUB_IMMEDIATE:
-                        currentInstruction.setRd(parts[1]);
-                        currentInstruction.setRs(parts[2]);
-                        currentInstruction.setImmediate(Integer.parseInt(parts[3]));
+                        currentInstruction.setRd(operands[0]);
+                        currentInstruction.setRs(operands[1]);
+                        currentInstruction.setImmediate(Integer.parseInt(operands[2]));
                         break;
                     case InstructionType.LOAD_WORD: // LW R1 100
                     case InstructionType.LOAD_DOUBLE_WORD:
                     case InstructionType.LOAD_DOUBLE_PRECISION:
                     case InstructionType.LOAD_SINGLE_PRECISION:
-                        currentInstruction.setRd(parts[1]);
-                        currentInstruction.setImmediate(Integer.parseInt(parts[2]));
+                        currentInstruction.setRd(operands[0]);
+                        currentInstruction.setImmediate(Integer.parseInt(operands[1]));
                         break;
                     case InstructionType.STORE_WORD: // SW R1 100
                     case InstructionType.STORE_DOUBLE_WORD:
                     case InstructionType.STORE_DOUBLE_PRECISION:
                     case InstructionType.STORE_SINGLE_PRECISION:
-                        currentInstruction.setRs(parts[1]);
-                        currentInstruction.setImmediate(Integer.parseInt(parts[2]));
+                        currentInstruction.setRs(operands[0]);
+                        currentInstruction.setImmediate(Integer.parseInt(operands[1]));
 
                         break;
                     case InstructionType.BRANCH_EQUAL: // BEQ R1 R2 100
                     case InstructionType.BRANCH_NOT_EQUAL:
-                        currentInstruction.setRs(parts[1]);
-                        currentInstruction.setRt(parts[2]);
-                        currentInstruction.setImmediate(Integer.parseInt(parts[3]));
+                        currentInstruction.setRs(operands[0]);
+                        currentInstruction.setRt(operands[1]);
+                        currentInstruction.setImmediate(Integer.parseInt(operands[2]));
                 }
 
                 instructions.add(currentInstruction);

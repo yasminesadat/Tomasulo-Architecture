@@ -14,12 +14,11 @@ public class Simulator {
     public static ReservationStation integerReservationStation;
     public static Memory memory;
     public static Cache cache;
-    public static boolean canIssue = true;
-    public static AddFU Adder;
-    public static SubFU Subtractor;
-    public static MulFU Multiplier;
-    public static DivFU Divider;
-    public static MemoryHandler memoryHandler;
+    // public static AddFU Adder;
+    // public static SubFU Subtractor;
+    // public static MulFU Multiplier;
+    // public static DivFU Divider;
+    // public static MemoryHandler memoryHandler;
 
     public static void init() {
         registerFile = new RegisterFile();
@@ -37,18 +36,12 @@ public class Simulator {
         }
         memory = new Memory(); // 1000 memory locations
         instructionQueue.printInstructions();
-        // cache= new
-        Adder = new AddFU();
-        Subtractor = new SubFU();
-        Multiplier = new MulFU();
-        Divider = new DivFU();
 
     }
 
     public static void getUserInputs() {
         System.out.println("Welcome to the Tomasulo Simulator Configuration!");
         UserInputValues.initializeFromInput();
-
     }
 
     /**
@@ -62,7 +55,6 @@ public class Simulator {
 
         System.out.println(addSubReservationStation);
         System.out.println("------------------------------------------------------------------------------------");
-
         System.out.println(mulDivReservationStation);
         System.out.println("------------------------------------------------------------------------------------");
 
@@ -78,19 +70,17 @@ public class Simulator {
 
         getUserInputs();
         init();
-        while (instructionQueue.size() > 0) {
+        // while (instructionQueue.size() > 0) {
+        // Issuer.issue();
 
-            if (canIssue) {
-                canIssue = Issuer.issue();
-            }
+        // // checkCanStartExecution(); // Check if any instruction can start execution
+        // and
+        // // decrement cycles in currently executing instructions
+        // //
 
-            // checkCanStartExecution(); // Check if any instruction can start execution and
-            // decrement cycles in currently executing instructions
-            // check has finished
-
-            clockCycle++;
-        }
-        displayReservationStations();
+        // clockCycle++;
+        // }
+        // displayReservationStations();
 
     }
 }

@@ -24,8 +24,7 @@ public class ReservationStation {
     }
 
     public int addEntry(String ReservationStationPrefix, int address, double vj, double vk, String qj, String qk,
-            Instruction currInstruction,
-            FunctionalUnit functionalUnit) {
+            Instruction currInstruction, FunctionalUnit functionalUnit) {
         {
             for (int i = 0; i < entries.size(); i++) {
                 if (entries.get(i).busy == false) {
@@ -40,11 +39,10 @@ public class ReservationStation {
                     entries.get(i).setQj(qj);
                     entries.get(i).setQk(qk);
                     entries.get(i).setCurrInstruction(currInstruction);
-                    entries.get(i).setFunctionalUnit(functionalUnit);
                     entries.get(i).setBusy(true);
                     entries.get(i).setTag(ReservationStationPrefix + i);
                     entries.get(i).setIssueTime(entries.get(i).currInstruction.issueTime);
-                    ;
+                    entries.get(i).setFunctionalUnit(functionalUnit);
                     freeSpaces--;
                     return i;
 
