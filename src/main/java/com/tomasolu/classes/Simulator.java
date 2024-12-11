@@ -38,6 +38,7 @@ public class Simulator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        bus = new Bus();
         memory = new double[1000];
         instructionQueue.printInstructions();
 
@@ -116,8 +117,11 @@ public class Simulator {
 
         getUserInputs();
         init();
-        while (!(endSystem()) || instructionQueue.size() > 0) {
-            Issuer.issue();
+        // while (!(endSystem()) || instructionQueue.size() > 0) {
+        while (instructionQueue.size() > 0) {
+            if (instructionQueue.size() > 0) {
+                Issuer.issue();
+            }
             Executer.execute();
             WriteBack.writeBack();
 

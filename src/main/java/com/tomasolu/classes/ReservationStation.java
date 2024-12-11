@@ -84,7 +84,7 @@ public class ReservationStation {
     public boolean canStartExecution() {
         for (int i = 0; i < entries.size(); i++) {
             if (entries.get(i).qj.equals("0") && entries.get(i).qk.equals("0")
-                    && entries.get(i).currInstruction.getIssueTime() != Simulator.clockCycle) {
+                    && entries.get(i).currInstruction.getIssueTime() != Simulator.clockCycle && entries.get(i).busy) {
                 entries.get(i).currInstruction.setStartTime(Simulator.clockCycle);
                 int endExecutionTime = 0;
                 int latency = 0;
@@ -160,7 +160,8 @@ public class ReservationStation {
                 }
                 endExecutionTime = entries.get(i).currInstruction.getStartTime() + latency - 1;
                 entries.get(i).currInstruction.setEndTime(endExecutionTime);
-                System.out.println("Instruction " + entries.get(i).currInstruction.type + " started execution");
+                System.out.println("Instruction " + entries.get(i).currInstruction.type
+                        + " started execution at clock cycle" + Simulator.clockCycle);
 
                 return true;
             }
