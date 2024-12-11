@@ -1,7 +1,7 @@
-module com.tomasolu {
+module com.tomasulo {
     requires javafx.controls;
     requires javafx.fxml;
 
-    opens com.tomasolu to javafx.fxml;
-    exports com.tomasolu;
+    opens com.tomasulo to javafx.fxml;
+    exports com.tomasulo;
 }
