@@ -8,6 +8,7 @@ import com.tomasolu.classes.UserInputValues;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -48,17 +49,7 @@ public class PrimaryController {
     @FXML
     private TextField storeBufferSizeField;
 
-    @FXML
-    public void initialize() {
-        saveButton.setOnAction(event -> {
-            try {
-                saveConfiguration();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
+     @FXML
     private void saveConfiguration() throws IOException {
         // Gather user inputs and set them in UserInputValues
         UserInputValues.storeLatency = Integer.parseInt(storeLatencyField.getText());
@@ -86,8 +77,8 @@ public class PrimaryController {
     }
 
     private void loadReservationStationScene() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tomasolu/reservationStations.fxml"));
-        Scene reservationStationScene = new Scene(loader.load());
+        Parent rs = FXMLLoader.load(getClass().getResource("/com/tomasolu/reservationStations.fxml"));
+        Scene reservationStationScene = new Scene(rs);
     
         Stage stage = (Stage) saveButton.getScene().getWindow();
         stage.setScene(reservationStationScene);

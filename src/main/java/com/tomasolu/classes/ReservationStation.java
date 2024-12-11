@@ -18,7 +18,6 @@ public class ReservationStation {
                     break;
                 case MULDIV:
                     entries.add(new ReservationStationEntry("M" + i));
-
                     break;
                 case STORE:
                     entries.add(new ReservationStationEntry("S" + i));

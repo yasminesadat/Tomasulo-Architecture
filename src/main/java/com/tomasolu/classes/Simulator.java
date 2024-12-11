@@ -113,25 +113,35 @@ public class Simulator {
 
     }
 
+    public static boolean executeNextCycle(){
+        if (instructionQueue.size() > 0) {
+             Issuer.issue();
+        }
+        Executer.execute();
+        WriteBack.writeBack();
+
+        return !(endSystem()) || instructionQueue.size() > 0;
+    }
+
     public static void main(String[] args) throws IOException {
 
         getUserInputs();
         init();
-        while (!(endSystem()) || instructionQueue.size() > 0) {
+    //     while (!(endSystem()) || instructionQueue.size() > 0) {
 
-            if (instructionQueue.size() > 0) {
-                Issuer.issue();
-            }
-            Executer.execute();
-            WriteBack.writeBack();
-            System.out.println("Clock Cycle: " + clockCycle);
-            displayReservationStations();
-            clockCycle++;
+    //         if (instructionQueue.size() > 0) {
+    //             Issuer.issue();
+    //         }
+    //         Executer.execute();
+    //         WriteBack.writeBack();
+    //         System.out.println("Clock Cycle: " + clockCycle);
+    //         displayReservationStations();
+    //         clockCycle++;
 
-        }
-        System.out.println("Done: " + clockCycle);
-        registerFile.displayRegisterFiles();
-        displayReservationStations();
+    //     }
+    //     System.out.println("Done: " + clockCycle);
+    //     registerFile.displayRegisterFiles();
+    //     displayReservationStations();
 
     }
 }
