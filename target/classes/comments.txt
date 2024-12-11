@@ -1,0 +1,5 @@
+// branch not handled
+// no cache no memory no life
+// no pc usage , issuing is done in order sequentially 
+// sizes of instructions DATA for loads and stores wel yeegy m3ahom 
+// branch can write check this pls??? might cause inconsistency 

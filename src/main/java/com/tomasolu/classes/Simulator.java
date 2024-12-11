@@ -14,6 +14,7 @@ public class Simulator {
     public static ReservationStation integerReservationStation;
     public static double[] memory;
     public static Cache cache;
+    public static Bus bus;
     int pc = 0;
     // public static AddFU Adder;
     // public static SubFU Subtractor;
@@ -111,9 +112,9 @@ public class Simulator {
         while (instructionQueue.size() > 0) {
             Issuer.issue();
             Executer.execute();
-            // WriteBack.write();
-
+            WriteBack.writeBack();
             clockCycle++;
+
         }
         registerFile.displayRegisterFiles();
         displayReservationStations();

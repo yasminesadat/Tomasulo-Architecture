@@ -161,7 +161,7 @@ public class Issuer {
     }
 
     // gets register from the F12 / R26 values etc
-    private static Register getRegister(String register) {
+    public static Register getRegister(String register) {
         if (register.startsWith("R"))
             return Simulator.registerFile.getIntRegister(Integer.parseInt(register.substring(1)));
         else {
