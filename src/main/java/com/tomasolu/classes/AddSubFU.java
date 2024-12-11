@@ -16,7 +16,7 @@ public class AddSubFU extends FunctionalUnit {
             case InstructionType.SUB_IMMEDIATE:
                 this.result = src1 - src2;
                 break;
-
+            // update pc dont forget affects issuing and life
         }
     }
 }

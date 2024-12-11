@@ -24,7 +24,6 @@ public class ReservationStationEntry {
         this.qj = "";
         this.qk = "";
         this.currInstruction = null;
-        this.functionalUnit = null;
 
     }
 
@@ -98,6 +97,16 @@ public class ReservationStationEntry {
 
     public void setFunctionalUnit(FunctionalUnit functionalUnit) {
         this.functionalUnit = functionalUnit;
+    }
+
+    public boolean canWrite() {
+        if (this.qj.equals("0") && this.qk.equals("0")
+                && this.currInstruction.getEndTime() < Simulator.clockCycle && this.busy)
+
+        {
+            return true;
+        }
+        return false;
     }
 
     @Override

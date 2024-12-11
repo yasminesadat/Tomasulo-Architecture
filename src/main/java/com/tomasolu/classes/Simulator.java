@@ -47,7 +47,7 @@ public class Simulator {
         UserInputValues.initializeFromInput();
     }
 
-    public int getWaitingStation(String qi) {
+    public static int getWaitingStation(String qi) {
         int waitingStations = 0;
         for (ReservationStationEntry entry : addSubReservationStation.getEntries()) {
             String qj = entry.getQj();
@@ -63,6 +63,22 @@ public class Simulator {
                 waitingStations++;
             }
         }
+        for (ReservationStationEntry entry : storeBuffer.getEntries()) {
+            String qj = entry.getQj();
+
+            if (qi.equals(qj)) {
+                waitingStations++;
+            }
+        }
+
+        for (ReservationStationEntry entry : integerReservationStation.getEntries()) {
+            String qj = entry.getQj();
+            String qk = entry.getQk();
+            if (qi.equals(qj) || qi.equals(qk)) {
+                waitingStations++;
+            }
+        }
+
         return waitingStations;
     }
 
@@ -94,11 +110,8 @@ public class Simulator {
         init();
         while (instructionQueue.size() > 0) {
             Issuer.issue();
-
-            // // checkCanStartExecution(); // Check if any instruction can start execution
-            // and
-            // // decrement cycles in currently executing instructions
-            // //
+            Executer.execute();
+            // WriteBack.write();
 
             clockCycle++;
         }
