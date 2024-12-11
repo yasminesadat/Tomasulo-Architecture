@@ -7,6 +7,7 @@ public class ReservationStation {
     private Vector<ReservationStationEntry> entries;
     private int freeSpaces;
     private ReservationStationType type;
+    private int size;
 
     public ReservationStation(int size, ReservationStationType type) {
         this.entries = new Vector<>(size);
@@ -35,6 +36,7 @@ public class ReservationStation {
             }
 
         }
+        this.size = size;
         this.type = type;
         this.freeSpaces = size;
         // System.out.println("Reservation Station initialized with capacity " + size);
@@ -164,6 +166,18 @@ public class ReservationStation {
             }
         }
         return false;
+    }
+
+    public int getFreeSpaces() {
+        return freeSpaces;
+    }
+
+    public void setFreeSpaces(int freeSpaces) {
+        this.freeSpaces = freeSpaces;
+    }
+
+    public boolean isEmpty() {
+        return (freeSpaces == this.size);
     }
 
     @Override

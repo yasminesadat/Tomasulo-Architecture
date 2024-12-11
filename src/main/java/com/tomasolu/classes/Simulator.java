@@ -105,14 +105,22 @@ public class Simulator {
         System.out.println("------------------------------------------------------------------------------------");
     }
 
+    public static boolean endSystem() {
+        return (addSubReservationStation.isEmpty() && mulDivReservationStation.isEmpty() && storeBuffer.isEmpty()
+                && loadBuffer.isEmpty()
+                && integerReservationStation.isEmpty());
+
+    }
+
     public static void main(String[] args) throws IOException {
 
         getUserInputs();
         init();
-        while (instructionQueue.size() > 0) {
+        while (!(endSystem()) || instructionQueue.size() > 0) {
             Issuer.issue();
             Executer.execute();
             WriteBack.writeBack();
+
             clockCycle++;
 
         }
