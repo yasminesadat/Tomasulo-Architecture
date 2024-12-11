@@ -35,7 +35,8 @@ public class WriteBack {
 
         }
         for (ReservationStationEntry entry : Simulator.integerReservationStation.getEntries()) {
-            if (entry.canWrite()) {
+            if (entry.canWrite() && !entry.getCurrInstruction().getType().equals("BEQ")
+                    && !entry.getCurrInstruction().getType().equals("BNE")) {
                 if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
                     maxWaiting = Simulator.getWaitingStation(entry.getTag());
                     writingBackEntry = entry;
