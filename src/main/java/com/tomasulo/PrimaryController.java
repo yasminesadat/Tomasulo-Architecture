@@ -76,12 +76,8 @@ public class PrimaryController {
     }
 
     private void loadReservationStationScene() throws IOException {
-        Parent rs = FXMLLoader.load(getClass().getResource("/com/tomasulo/reservationStations.fxml"));
-        Scene reservationStationScene = new Scene(rs);
-    
         Stage stage = (Stage) saveButton.getScene().getWindow();
-        stage.setScene(reservationStationScene);
-        stage.setTitle("Reservation Stations");
-        stage.show();
+        TomasuloController tomasuloController = new TomasuloController();
+        tomasuloController.initialize(stage);
     }
 }

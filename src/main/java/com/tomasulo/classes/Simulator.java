@@ -16,11 +16,60 @@ public class Simulator {
     public static Cache cache;
     public static Bus bus;
     int pc = 0;
+    
     // public static AddFU Adder;
     // public static SubFU Subtractor;
     // public static MulFU Multiplier;
     // public static DivFU Divider;
     // public static MemoryHandler memoryHandler;
+
+    public static int getClockCycle() {
+        return clockCycle;
+    }
+
+    public static RegisterFile getRegisterFile() {
+        return registerFile;
+    }
+
+    public static InstructionQueue getInstructionQueue() {
+        return instructionQueue;
+    }
+
+    public static ReservationStation getAddSubReservationStation() {
+        return addSubReservationStation;
+    }
+
+    public static ReservationStation getLoadBuffer() {
+        return loadBuffer;
+    }
+
+    public static ReservationStation getStoreBuffer() {
+        return storeBuffer;
+    }
+
+    public static ReservationStation getMulDivReservationStation() {
+        return mulDivReservationStation;
+    }
+
+    public static ReservationStation getIntegerReservationStation() {
+        return integerReservationStation;
+    }
+
+    public static double[] getMemory() {
+        return memory;
+    }
+
+    public static Cache getCache() {
+        return cache;
+    }
+
+    public static Bus getBus() {
+        return bus;
+    }
+
+    public int getPc() {
+        return pc;
+    }
 
     public static void init() {
         registerFile = new RegisterFile();
