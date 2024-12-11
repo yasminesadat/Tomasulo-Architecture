@@ -69,21 +69,6 @@ public class Cache {
 
     private byte[] storeData(byte[] block, byte[] data, int offset, String operation) {
         System.arraycopy(data, 0, block, offset, data.length);
-
-        // Handle specific store operations
-        if (operation.equals(InstructionType.STORE_SINGLE_PRECISION)) {
-            // Store 4-byte float
-            return block;
-        } else if (operation.equals(InstructionType.STORE_DOUBLE_PRECISION) || operation.equals(InstructionType.STORE_DOUBLE_WORD)) {
-            // Store 8-byte double
-            return block;
-        } else if (operation.equals(InstructionType.STORE_WORD)) {
-            // Store 4-byte integer
-            return block;
-        } else if (operation.equals(InstructionType.STORE_DOUBLE_WORD)) {
-            // Store 8-byte double
-            return block;
-        }
         return block;
     }
 
@@ -178,7 +163,7 @@ public class Cache {
         // Store single-precision float (S.S)
         cache.access(0, 3.14f, 4, InstructionType.STORE_SINGLE_PRECISION); // S.S
         System.out.println("Read S.S: " + cache.access(0, null, 4, InstructionType.LOAD_SINGLE_PRECISION)); // L.S
-
+        
         // Store double-precision float (S.D)
         cache.access(8, 3.141592653589793, 8, InstructionType.STORE_DOUBLE_PRECISION); // S.D
         System.out.println("Read S.D: " + cache.access(8, null, 8, InstructionType.LOAD_DOUBLE_PRECISION)); // L.D
