@@ -99,4 +99,15 @@ public class TomasuloController {
         ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
         storeReservationStationTable.setItems(observableEntries);
     }
+
+    public void updateAndRefreshTables() {
+        // Call the method in Simulator to update entries
+        Simulator.executeNextCycle();
+        // Refresh the tables
+        populateReservationStationAddSub();
+        populateReservationStationMulDiv();
+        populateReservationStationLoad();
+        populateReservationStationStore();
+    }
+
 }
