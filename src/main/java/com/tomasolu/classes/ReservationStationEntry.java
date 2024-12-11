@@ -101,10 +101,16 @@ public class ReservationStationEntry {
 
     public boolean canWrite() {
         if (this.qj.equals("0") && this.qk.equals("0")
-                && this.currInstruction.getEndTime() < Simulator.clockCycle && this.busy)
+                && this.currInstruction.getEndTime() < Simulator.clockCycle
+                && this.currInstruction.issueTime != Simulator.clockCycle && this.busy)
 
         {
+            System.out.println("True Remaining time now is" + (this.currInstruction.endTime - Simulator.clockCycle));
             return true;
+
+        }
+        if (this.busy) {
+            System.out.println(" Remaining time now is" + (this.currInstruction.endTime - Simulator.clockCycle));
         }
         return false;
     }

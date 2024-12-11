@@ -11,19 +11,21 @@ public class WriteBack {
         ReservationStationEntry writingBackEntry = null;
         ReservationStation desiredStation = null;
         for (ReservationStationEntry entry : Simulator.addSubReservationStation.getEntries()) {
+
             if (entry.canWrite()) {
-                if (Simulator.getWaitingStation(entry.getTag()) > maxWaiting) {
+                if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
                     maxWaiting = Simulator.getWaitingStation(entry.getTag());
                     writingBackEntry = entry;
                     desiredStation = Simulator.addSubReservationStation;
                 }
+                System.out.println("Writing back: " + entry.tag);
 
             }
 
         }
         for (ReservationStationEntry entry : Simulator.mulDivReservationStation.getEntries()) {
             if (entry.canWrite()) {
-                if (Simulator.getWaitingStation(entry.getTag()) > maxWaiting) {
+                if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
                     maxWaiting = Simulator.getWaitingStation(entry.getTag());
                     writingBackEntry = entry;
                     desiredStation = Simulator.mulDivReservationStation;
@@ -34,7 +36,7 @@ public class WriteBack {
         }
         for (ReservationStationEntry entry : Simulator.integerReservationStation.getEntries()) {
             if (entry.canWrite()) {
-                if (Simulator.getWaitingStation(entry.getTag()) > maxWaiting) {
+                if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
                     maxWaiting = Simulator.getWaitingStation(entry.getTag());
                     writingBackEntry = entry;
                     desiredStation = Simulator.integerReservationStation;
@@ -46,7 +48,7 @@ public class WriteBack {
         }
         for (ReservationStationEntry entry : Simulator.loadBuffer.getEntries()) {
             if (entry.canWrite()) {
-                if (Simulator.getWaitingStation(entry.getTag()) > maxWaiting) {
+                if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
                     maxWaiting = Simulator.getWaitingStation(entry.getTag());
                     writingBackEntry = entry;
                     desiredStation = Simulator.loadBuffer;
@@ -62,6 +64,7 @@ public class WriteBack {
             desiredStation.setFreeSpaces(desiredStation.getFreeSpaces() + 1);
             Simulator.bus.setTag(writingBackEntry.tag);
             Simulator.bus.setValue(writingBackEntry.functionalUnit.result);
+            writingBackEntry.currInstruction.setStartTime(-1);
             sniffBus();
             // sniff bus
 
