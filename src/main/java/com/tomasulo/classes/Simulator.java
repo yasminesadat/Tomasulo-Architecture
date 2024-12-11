@@ -15,13 +15,7 @@ public class Simulator {
     public static double[] memory;
     public static Cache cache;
     public static Bus bus;
-    int pc = 0;
-
-    // public static AddFU Adder;
-    // public static SubFU Subtractor;
-    // public static MulFU Multiplier;
-    // public static DivFU Divider;
-    // public static MemoryHandler memoryHandler;
+    public static int pc = 0;
 
     public static int getClockCycle() {
         return clockCycle;

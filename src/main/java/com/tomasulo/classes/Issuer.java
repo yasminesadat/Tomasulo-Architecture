@@ -2,9 +2,11 @@ package com.tomasulo.classes;
 
 public class Issuer {
     public static boolean issue() {
+        // issue instruction with id=pc if its at the front of the queue else go fetch
+        // from instrution memory
         Instruction instruction = Simulator.instructionQueue.peekInstruction();
         String instructionType = instruction.getType();
-
+        //
         switch (instructionType) {
             case InstructionType.ADD_DOUBLE_PRECISION:
             case InstructionType.ADD_SINGLE_PRECISION:
@@ -57,6 +59,7 @@ public class Issuer {
             int index = reservationStation.addEntry(-1, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
             destination.setQ("A" + index); // Register file update
+            Simulator.pc++;
         }
         return true;
     }
@@ -78,6 +81,7 @@ public class Issuer {
             int index = reservationStation.addEntry(-1, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
             destination.setQ("M" + index); // Register file update
+            Simulator.pc++;
         }
         return true;
     }
@@ -98,6 +102,7 @@ public class Issuer {
             int index = reservationStation.addEntry(-1, source1.getValue(), immediate,
                     source1.getQ(), "0", instruction, functionalUnit);
             destination.setQ("I" + index); // Register file update
+            Simulator.pc++;
 
         }
         return true;
@@ -119,6 +124,7 @@ public class Issuer {
             FunctionalUnit functionalUnit = new AddSubFU();
             int index = reservationStation.addEntry(address, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
+            Simulator.pc++;
 
         }
         return true;
@@ -138,6 +144,7 @@ public class Issuer {
             FunctionalUnit functionalUnit = new LoadFU();
             int index = reservationStation.addEntry(immediate, 0, 0, "0", "0", instruction, functionalUnit);
             destination.setQ("L" + index);
+            Simulator.pc++;
         }
         return true;
     }
@@ -156,6 +163,7 @@ public class Issuer {
 
             int index = reservationStation.addEntry(immediate, source.getValue(), 0, source.getQ(), "0",
                     instruction, functionalUnit);
+            Simulator.pc++;
         }
         return true;
     }
