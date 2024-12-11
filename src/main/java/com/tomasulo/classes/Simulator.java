@@ -163,12 +163,12 @@ public class Simulator {
     }
 
     public static boolean executeNextCycle(){
-        clockCycle++;
         if (instructionQueue.size() > 0) {
              Issuer.issue();
         }
         Executer.execute();
         WriteBack.writeBack();
+        clockCycle++;
 
         return !(endSystem()) || instructionQueue.size() > 0;
     }

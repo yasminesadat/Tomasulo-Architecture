@@ -70,9 +70,8 @@ public class PrimaryController {
 
 
         Simulator.init();
-        loadReservationStationScene();
-
         System.out.println("Configuration saved and simulator initialized.");
+        loadReservationStationScene();
     }
 
     private void loadReservationStationScene() throws IOException {

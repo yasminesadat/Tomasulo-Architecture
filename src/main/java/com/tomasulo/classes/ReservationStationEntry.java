@@ -117,6 +117,7 @@ public class ReservationStationEntry {
             return true;
 
         }
+        //will remove?
         if (this.busy) {
             System.out.println(" Remaining time now is" + (this.currInstruction.endTime - Simulator.clockCycle));
         }

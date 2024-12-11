@@ -102,12 +102,15 @@ public class TomasuloController {
 
     public void updateAndRefreshTables() {
         // Call the method in Simulator to update entries
-        Simulator.executeNextCycle();
+        boolean enterAgain = false;
+        do{ 
+        enterAgain = Simulator.executeNextCycle();
         // Refresh the tables
         populateReservationStationAddSub();
         populateReservationStationMulDiv();
         populateReservationStationLoad();
         populateReservationStationStore();
+        }while(enterAgain);
     }
 
 }
