@@ -11,9 +11,9 @@ public class UserInputValues {
     public static int mulLatency;
     public static int subLatency;
     public static int divLatency;
-    public static int addIntegerLatency;
-    public static int subIntegerLatency;
-    public static int branchLatency;
+    public static int addIntegerLatency = 1;
+    public static int subIntegerLatency = 1;
+    public static int branchLatency = 1;
     public static int cacheBlockSize;
     public static int cacheSize;
     public static int reservationStationAddSubSize;
@@ -45,14 +45,6 @@ public class UserInputValues {
 
         System.out.print("Enter Div Latency: ");
         divLatency = sc.nextInt();
-
-        System.out.print("Enter ADDI Latency: ");
-        addIntegerLatency = sc.nextInt();
-
-        System.out.print("Enter SUBI Latency: ");
-        subIntegerLatency = sc.nextInt();
-        System.out.print("Enter Branch Latency: ");
-        branchLatency = sc.nextInt();
         System.out.print("Enter Cache Block Size (in bytes): ");
         cacheBlockSize = sc.nextInt();
 

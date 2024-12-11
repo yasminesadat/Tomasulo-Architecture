@@ -30,12 +30,6 @@ public class PrimaryController {
     @FXML
     private TextField divLatencyField;
     @FXML
-    private TextField addIntegerLatencyField;
-    @FXML
-    private TextField subIntegerLatencyField;
-    @FXML
-    private TextField branchLatencyField;
-    @FXML
     private TextField cacheBlockSizeField;
     @FXML
     private TextField cacheSizeField;
@@ -48,7 +42,7 @@ public class PrimaryController {
     @FXML
     private TextField storeBufferSizeField;
 
-     @FXML
+    @FXML
     private void saveConfiguration() throws IOException {
         // Gather user inputs and set them in UserInputValues
         UserInputValues.storeLatency = Integer.parseInt(storeLatencyField.getText());
@@ -57,17 +51,14 @@ public class PrimaryController {
         UserInputValues.mulLatency = Integer.parseInt(mulLatencyField.getText());
         UserInputValues.subLatency = Integer.parseInt(subLatencyField.getText());
         UserInputValues.divLatency = Integer.parseInt(divLatencyField.getText());
-        UserInputValues.addIntegerLatency = Integer.parseInt(addIntegerLatencyField.getText());
-        UserInputValues.subIntegerLatency = Integer.parseInt(subIntegerLatencyField.getText());
-        UserInputValues.branchLatency = Integer.parseInt(branchLatencyField.getText());
         UserInputValues.cacheBlockSize = Integer.parseInt(cacheBlockSizeField.getText());
         UserInputValues.cacheSize = Integer.parseInt(cacheSizeField.getText());
         UserInputValues.reservationStationAddSubSize = Integer.parseInt(reservationStationAddSubSizeField.getText());
         UserInputValues.reservationStationMulDivSize = Integer.parseInt(reservationStationMulDivSizeField.getText());
-        //UserInputValues.reservationStationAddSubIntegerSize = Integer.parseInt(reservationStationAddSubIntegerSizeField.getText());
+        // UserInputValues.reservationStationAddSubIntegerSize =
+        // Integer.parseInt(reservationStationAddSubIntegerSizeField.getText());
         UserInputValues.loadBufferSize = Integer.parseInt(loadBufferSizeField.getText());
         UserInputValues.storeBufferSize = Integer.parseInt(storeBufferSizeField.getText());
-
 
         Simulator.init();
         loadReservationStationScene();

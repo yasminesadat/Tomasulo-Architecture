@@ -34,15 +34,6 @@
       <Label text="Div Latency:" GridPane.rowIndex="6" GridPane.columnIndex="0" />
       <TextField fx:id="divLatencyField" promptText="Enter Div Latency" GridPane.rowIndex="6" GridPane.columnIndex="1" />
 
-      <Label text="Add Integer Latency:" GridPane.rowIndex="7" GridPane.columnIndex="0" />
-      <TextField fx:id="addIntegerLatencyField" promptText="Enter Add Integer Latency" GridPane.rowIndex="7" GridPane.columnIndex="1" />
-
-      <Label text="Sub Integer Latency:" GridPane.rowIndex="8" GridPane.columnIndex="0" />
-      <TextField fx:id="subIntegerLatencyField" promptText="Enter Sub Integer Latency" GridPane.rowIndex="8" GridPane.columnIndex="1" />
-
-      <Label text="Branch Latency:" GridPane.rowIndex="9" GridPane.columnIndex="0" />
-      <TextField fx:id="branchLatencyField" promptText="Enter Branch Latency" GridPane.rowIndex="9" GridPane.columnIndex="1" />
-
       <Label text="Cache Block Size:" GridPane.rowIndex="10" GridPane.columnIndex="0" />
       <TextField fx:id="cacheBlockSizeField" promptText="Enter Cache Block Size" GridPane.rowIndex="10" GridPane.columnIndex="1" />
 

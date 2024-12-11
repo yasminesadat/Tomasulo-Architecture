@@ -35,7 +35,8 @@ public class TomasuloController {
 
         // Create a VBox to hold the tables
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(addSubReservationStationTable, mulDivReservationStationTable, loadReservationStationTable, storeReservationStationTable);
+        vbox.getChildren().addAll(addSubReservationStationTable, mulDivReservationStationTable,
+                loadReservationStationTable, storeReservationStationTable);
 
         // Create a scene and add the VBox to it
         Scene scene = new Scene(vbox, 800, 600);
@@ -79,7 +80,7 @@ public class TomasuloController {
         ReservationStation rs = Simulator.getAddSubReservationStation();
         Vector<ReservationStationEntry> vectorEntries = rs.getEntries();
         ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        addSubReservationStationTable.setItems(observableEntries);      
+        addSubReservationStationTable.setItems(observableEntries);
     }
 
     public void populateReservationStationMulDiv() {
@@ -102,7 +103,7 @@ public class TomasuloController {
 
     public void updateAndRefreshTables() {
         // Call the method in Simulator to update entries
-        Simulator.executeNextCycle();
+        // Simulator.executeNextCycle();
         // Refresh the tables
         populateReservationStationAddSub();
         populateReservationStationMulDiv();
