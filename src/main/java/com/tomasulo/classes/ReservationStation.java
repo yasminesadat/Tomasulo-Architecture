@@ -42,9 +42,28 @@ public class ReservationStation {
 
     }
 
-    public boolean hasSpace() {
+    public ReservationStationType getType() {
+        return type;
+    }
 
+    public int getSize() {
+        return size;
+    }
+
+    public int getFreeSpaces() {
+        return freeSpaces;
+    }
+
+    public boolean hasSpace() {
         return freeSpaces > 0;
+    }
+
+    public boolean isEmpty() {
+        return (freeSpaces == this.size);
+    }
+
+    public Vector<ReservationStationEntry> getEntries() {
+        return entries;
     }
 
     public int addEntry(int address, double vj, double vk, String qj, String qk,
@@ -74,10 +93,6 @@ public class ReservationStation {
             }
             return 0;
         }
-    }
-
-    public Vector<ReservationStationEntry> getEntries() {
-        return entries;
     }
 
     public boolean canStartExecution() {
@@ -169,16 +184,8 @@ public class ReservationStation {
         return false;
     }
 
-    public int getFreeSpaces() {
-        return freeSpaces;
-    }
-
     public void setFreeSpaces(int freeSpaces) {
         this.freeSpaces = freeSpaces;
-    }
-
-    public boolean isEmpty() {
-        return (freeSpaces == this.size);
     }
 
     @Override

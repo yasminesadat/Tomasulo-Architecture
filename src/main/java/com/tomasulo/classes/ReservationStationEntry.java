@@ -99,6 +99,14 @@ public class ReservationStationEntry {
         this.functionalUnit = functionalUnit;
     }
 
+    public int getIssueTime() {
+        return issueTime;
+    }
+
+    public double getResult() {
+        return result;
+    }
+
     public boolean canWrite() {
         if (this.qj.equals("0") && this.qk.equals("0")
                 && this.currInstruction.getEndTime() < Simulator.clockCycle
@@ -115,14 +123,15 @@ public class ReservationStationEntry {
         return false;
     }
 
+    public void setIssueTime(int issueTime) {
+        this.issueTime = issueTime;
+    }
+
     @Override
     public String toString() {
         return " [tag=" + tag + ", issueTime=" + issueTime + ", busy=" + busy + ", address=" + address + ", vj=" + vj
                 + ", vk=" + vk + ", qj=" + qj + ", qk=" + qk + "]";
     }
-
-    public void setIssueTime(int issueTime) {
-        this.issueTime = issueTime;
-    }
-
 }
+    
+

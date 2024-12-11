@@ -5,8 +5,9 @@ import javafx.fxml.FXML;
 
 public class TomasuloController {
 
-    @FXML
-    private void switchToPrimary() throws IOException {
-        App.setRoot("primary");
+    
+
+    public void populateReservationStationAddSub(int rows){
+        data
     }
 }
