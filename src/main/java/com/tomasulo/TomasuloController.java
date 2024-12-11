@@ -2,6 +2,7 @@ package com.tomasulo;
 
 import java.util.Vector;
 
+import com.tomasulo.classes.ReservationStation;
 import com.tomasulo.classes.ReservationStationEntry;
 import com.tomasulo.classes.Simulator;
 
@@ -75,9 +76,10 @@ public class TomasuloController {
     }
 
     public void populateReservationStationAddSub() {
-        Vector<ReservationStationEntry> vectorEntries = Simulator.getAddSubReservationStation().getEntries();
+        ReservationStation rs = Simulator.getAddSubReservationStation();
+        Vector<ReservationStationEntry> vectorEntries = rs.getEntries();
         ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        addSubReservationStationTable.setItems(observableEntries);
+        addSubReservationStationTable.setItems(observableEntries);      
     }
 
     public void populateReservationStationMulDiv() {

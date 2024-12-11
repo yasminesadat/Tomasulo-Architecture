@@ -163,6 +163,7 @@ public class Simulator {
     }
 
     public static boolean executeNextCycle(){
+        clockCycle++;
         if (instructionQueue.size() > 0) {
              Issuer.issue();
         }
@@ -170,10 +171,6 @@ public class Simulator {
         WriteBack.writeBack();
 
         return !(endSystem()) || instructionQueue.size() > 0;
-    }
-
-    public static void nextClockCycle(){
-        clockCycle++;
     }
 
     public static void main(String[] args) throws IOException {
