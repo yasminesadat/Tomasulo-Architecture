@@ -12,8 +12,9 @@ public class Simulator {
     public static ReservationStation storeBuffer;
     public static ReservationStation mulDivReservationStation;
     public static ReservationStation integerReservationStation;
-    public static Memory memory;
+    public static double[] memory;
     public static Cache cache;
+    int pc = 0;
     // public static AddFU Adder;
     // public static SubFU Subtractor;
     // public static MulFU Multiplier;
@@ -36,7 +37,7 @@ public class Simulator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        memory = new Memory(); // 1000 memory locations
+        memory = new double[1000];
         instructionQueue.printInstructions();
 
     }
@@ -101,6 +102,7 @@ public class Simulator {
 
             clockCycle++;
         }
+        registerFile.displayRegisterFiles();
         displayReservationStations();
 
     }

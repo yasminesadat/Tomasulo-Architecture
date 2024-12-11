@@ -31,4 +31,9 @@ public class Register {
         return Q.equals("0");
     }
 
+    @Override
+    public String toString() {
+        return "Register [value=" + value + ", Q=" + Q + "] \n ";
+    }
+
 }

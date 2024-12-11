@@ -12,6 +12,7 @@ public class ReservationStationEntry {
     String qk;
     Instruction currInstruction;
     int issueTime;
+    double result;
     FunctionalUnit functionalUnit;
 
     public ReservationStationEntry(String tag) {

@@ -95,7 +95,7 @@ public class Issuer {
             int immediate = instruction.getImmediate();
             Register destination = getRegister(instruction.getRd());
             FunctionalUnit functionalUnit = new AddSubFU();
-            int index = reservationStation.addEntry(immediate, source1.getValue(), 0,
+            int index = reservationStation.addEntry(-1, source1.getValue(), immediate,
                     source1.getQ(), "0", instruction, functionalUnit);
             destination.setQ("I" + index); // Register file update
 
@@ -162,6 +162,10 @@ public class Issuer {
 
     // gets register from the F12 / R26 values etc
     private static Register getRegister(String register) {
-        return Simulator.registerFile.getFloatRegister(Integer.parseInt(register.substring(1)));
+        if (register.startsWith("R"))
+            return Simulator.registerFile.getIntRegister(Integer.parseInt(register.substring(1)));
+        else {
+            return Simulator.registerFile.getFloatRegister(Integer.parseInt(register.substring(1)));
+        }
     }
 }

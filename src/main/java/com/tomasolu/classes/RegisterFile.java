@@ -1,5 +1,7 @@
 package com.tomasolu.classes;
 
+import java.util.Arrays;
+
 public class RegisterFile {
     // 2 lists of registers (object) of size 32 each
     Register[] R;
@@ -63,4 +65,14 @@ public class RegisterFile {
             F[index].setQ(Q);
         }
     }
+
+    public void displayRegisterFiles() {
+        for (int i = 0; i < 32; i++) {
+            System.out.println("R" + i + " : " + R[i].toString());
+        }
+        for (int i = 0; i < 32; i++) {
+            System.out.println("F" + i + " : " + F[i].toString());
+        }
+    }
+
 }

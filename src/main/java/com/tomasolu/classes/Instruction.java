@@ -1,6 +1,7 @@
 package com.tomasolu.classes;
 
 public class Instruction {
+    public static int instructionCount = 0;
     String type;
     String rs;
     String rt;
@@ -10,6 +11,7 @@ public class Instruction {
     int endTime;
     int issueTime;
     int writeTime;
+    int pc;
 
     public String getType() {
         return type;
@@ -83,11 +85,15 @@ public class Instruction {
         this.writeTime = writeTime;
     }
 
+    public void setPc(int pc) {
+        this.pc = pc;
+    }
+
     @Override
     public String toString() {
         return "Instruction [type=" + type + ", rs=" + rs + ", rt=" + rt + ", rd=" + rd + ", immediate=" + immediate
                 + ", startTime=" + startTime + ", endTime=" + endTime + ", issueTime=" + issueTime + ", writeTime="
-                + writeTime + "]";
+                + writeTime + ", pc=" + pc + "]";
     }
 
 }
