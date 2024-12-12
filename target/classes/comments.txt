@@ -13,3 +13,19 @@ ADD.D F10,F8,F9
 MUL.D F11,F7,F10
 ADD.D F5,F5,F11
 13 cycles 
+latencies 2 sizes 4
+
+
+DADDI R1,R1,1
+BNE R1,R2,0
+
+counter loop 
+
+
+ADD.D F7,F1,F3 
+SUB.D F7,F1,F7 
+MUL.D F8,F7,F2 
+DIV.D F9,F8,F1 
+ADD.D F10,F9,F4 
+SUB.D F11,F10,F5
+latencies= 4  & cycles =4 // 31 cycles 

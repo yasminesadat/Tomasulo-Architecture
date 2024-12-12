@@ -206,25 +206,25 @@ public class Simulator {
 
     public static void main(String[] args) throws IOException {
 
-        getUserInputs();
-        init();
-        // executeNextCycle();
-        while (clockCycle < 20) {
+        // getUserInputs();
+        // init();
+        // // executeNextCycle();
+        // while (clockCycle < 20) {
 
-            if (instructionQueue.size() > Simulator.pc) {
-                Issuer.issue();
-            }
-            Executer.execute();
-            WriteBack.writeBack();
-            System.out.println("Clock Cycle: " + clockCycle);
-            displayReservationStations();
-            System.out.println("End of Clock Cycle: " + clockCycle);
-            clockCycle++;
+        // if (instructionQueue.size() > Simulator.pc) {
+        // Issuer.issue();
+        // }
+        // Executer.execute();
+        // WriteBack.writeBack();
+        // System.out.println("Clock Cycle: " + clockCycle);
+        // displayReservationStations();
+        // System.out.println("End of Clock Cycle: " + clockCycle);
+        // clockCycle++;
 
-        }
-        System.out.println("Done: " + clockCycle);
-        registerFile.displayRegisterFiles();
-        displayReservationStations();
+        // }
+        // System.out.println("Done: " + clockCycle);
+        // registerFile.displayRegisterFiles();
+        // displayReservationStations();
 
     }
 }

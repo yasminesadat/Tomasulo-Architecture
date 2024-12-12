@@ -14,7 +14,9 @@ public class AddSubFU extends FunctionalUnit {
             case InstructionType.BRANCH_EQUAL:
             case InstructionType.BRANCH_NOT_EQUAL:
             case InstructionType.SUB_IMMEDIATE:
+
                 this.result = src1 - src2;
+                System.out.println("result" + this.result);
                 break;
             // update pc dont forget affects issuing and life
         }

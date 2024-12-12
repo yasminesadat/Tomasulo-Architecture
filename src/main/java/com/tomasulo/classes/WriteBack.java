@@ -37,7 +37,9 @@ public class WriteBack {
 
         }
         for (ReservationStationEntry entry : Simulator.integerReservationStation.getEntries()) {
+
             if (entry.canWrite()) {
+
                 if (!entry.getCurrInstruction().getType().equals("BEQ")
                         && !entry.getCurrInstruction().getType().equals("BNE")) {
                     if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
@@ -48,6 +50,8 @@ public class WriteBack {
                     }
                 } else {
                     // branch
+                    System.out.println("hiiiiii" + entry.getCurrInstruction().getType());
+                    System.out.println("hiiiiii" + entry.getFunctionalUnit().result);
                     if (entry.getCurrInstruction().getType() == "BEQ") {
                         if (entry.getFunctionalUnit().result == 0)
                             Simulator.pc = entry.getCurrInstruction().immediate;
@@ -56,10 +60,15 @@ public class WriteBack {
 
                     if (entry.getCurrInstruction().getType() == "BNE") {
                         if (entry.getFunctionalUnit().result != 0)
-                            Simulator.pc = entry.getCurrInstruction().immediate;
+                            System.out.println("Updating pc to " + Simulator.pc);
+                        Simulator.pc = entry.getCurrInstruction().immediate;
 
                     }
                     Simulator.isBranchTaken = false;
+                    entry.setBusy(false);
+                    Simulator.integerReservationStation
+                            .setFreeSpaces(Simulator.integerReservationStation.getFreeSpaces() + 1);
+                    entry.currInstruction.setStartTime(-1);
 
                 }
 

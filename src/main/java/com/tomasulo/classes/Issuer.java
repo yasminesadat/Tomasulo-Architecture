@@ -6,7 +6,8 @@ public class Issuer {
         // from instrution memory
 
         Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
-        System.out.println("issuing now in cycle" + Simulator.clockCycle + " pc:  " + instruction.pc);
+        System.out.println("issuing now in cycle" + Simulator.clockCycle + " pc: " +
+                instruction.pc);
         String instructionType = instruction.getType();
         System.out.println("Instruction type: " + instructionType);
         System.out.println("PC value is" + Simulator.pc);
