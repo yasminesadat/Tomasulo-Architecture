@@ -104,27 +104,33 @@ public class TomasuloController {
                 createTableSection(storeLabel, storeReservationStationTable),
                 createTableSection(integerLabel, integerReservationStationTable));
         middleColumn.setPrefWidth(400);
+        VBox instructionQueueSection = createTableSection(instructionQueueLabel, instructionQueueTable);
+        instructionQueueSection.setPrefHeight(50);
         VBox rightColumn = new VBox(10);
         rightColumn.getChildren().addAll(
                 createTableSection(intRegLabel, integerRegisterTable),
-                createTableSection(floatRegLabel, floatRegisterTable));
+                createTableSection(floatRegLabel, floatRegisterTable),
+                instructionQueueSection);
         rightColumn.setPrefWidth(300);
+        VBox actualRight = new VBox(15);
+        actualRight.getChildren().addAll(
+                rightColumn,
+                instructionQueueSection);
+        actualRight.setPrefWidth(600);
         // Create layout for reservation stations (left side)
 
         // Create layout for registers (right side)
-        VBox instructionQueueSection = createTableSection(instructionQueueLabel, instructionQueueTable);
-        instructionQueueSection.setPrefHeight(200);
 
         // Create horizontal layout for the three columns
         HBox columnsLayout = new HBox(15);
-        columnsLayout.getChildren().addAll(leftColumn, middleColumn, rightColumn);
+        columnsLayout.getChildren().addAll(leftColumn, middleColumn, actualRight);
         columnsLayout.setPadding(new Insets(10));
         columnsLayout.setStyle("-fx-background-color: white;");
 
         // Create horizontal layout for main content
 
         VBox root = new VBox(10);
-        root.getChildren().addAll(clockControlBox, columnsLayout, instructionQueueSection);
+        root.getChildren().addAll(clockControlBox, columnsLayout);
         root.setStyle("-fx-background-color: white;");
 
         // Modify the createTableSection method to add styling
@@ -173,6 +179,8 @@ public class TomasuloController {
         tableSizeMap.put(integerReservationStationTable, UserInputValues.reservationStationAddSubIntegerSize);
         tableSizeMap.put(integerRegisterTable, 32);
         tableSizeMap.put(floatRegisterTable, 32);
+        tableSizeMap.put(instructionQueueTable, Simulator.instructionQueue.size()); // Reasonable default for
+                                                                                    // instruction queue
 
         // Apply settings to each table
         for (Map.Entry<TableView<?>, Integer> entry : tableSizeMap.entrySet()) {
@@ -185,7 +193,7 @@ public class TomasuloController {
             table.setStyle("-fx-border-color: #e0e0e0; -fx-border-width: 1; " +
                     "-fx-border-radius: 4; -fx-background-color: white;");
         }
-        instructionQueueTable.setPrefHeight(150);
+        // instructionQueueTable.setPrefHeight(150);
     }
 
     // Make instruction queue table slightly shorter
