@@ -32,13 +32,18 @@ public class TomasuloController {
     private TableView<ReservationStationEntry> storeReservationStationTable;
     private TableView<Register> integerRegisterTable;
     private TableView<Register> floatRegisterTable;
-    private RegisterFile registerFile;
     private TableView<Instruction> instructionQueueTable;
+    private ObservableList<ReservationStationEntry>  mulDivReservationStationObservableList= FXCollections.observableArrayList();
+    private ObservableList<ReservationStationEntry> addSubReservationStationObservableList = FXCollections.observableArrayList();
+    private ObservableList<ReservationStationEntry> loadReservationStationObservableList = FXCollections.observableArrayList();
+    private ObservableList<ReservationStationEntry> storeReservationStationObservableList = FXCollections.observableArrayList();
+    private ObservableList<Register> integerRegisters = FXCollections.observableArrayList();
+    private ObservableList<Register> floatRegisters = FXCollections.observableArrayList();
     private Label clockCycleLabel;
     private Button nextCycleButton;
 
     public TomasuloController() {
-        registerFile = new RegisterFile();
+       
     }
 
     public void initialize(Stage stage) {
@@ -190,32 +195,26 @@ public class TomasuloController {
         populateReservationStationStore();
     }
     private void populateReservationStationAddSub() {
-        ReservationStation rs = Simulator.getAddSubReservationStation();
-        Vector<ReservationStationEntry> vectorEntries = rs.getEntries();
-        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        addSubReservationStationTable.setItems(observableEntries);
+        addSubReservationStationObservableList.setAll(Simulator.getAddSubReservationStation().getEntries());
+        addSubReservationStationTable.setItems(addSubReservationStationObservableList);
     }
     private void populateReservationStationMulDiv() {
-        Vector<ReservationStationEntry> vectorEntries = Simulator.getMulDivReservationStation().getEntries();
-        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        mulDivReservationStationTable.setItems(observableEntries);
+        mulDivReservationStationObservableList.setAll(Simulator.getMulDivReservationStation().getEntries()); // Clears and adds new entries
+        mulDivReservationStationTable.setItems(mulDivReservationStationObservableList);
     }
     private void populateReservationStationLoad() {
-        Vector<ReservationStationEntry> vectorEntries = Simulator.getLoadBuffer().getEntries();
-        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        loadReservationStationTable.setItems(observableEntries);
+        loadReservationStationObservableList.setAll(Simulator.getLoadBuffer().getEntries());
+        loadReservationStationTable.setItems(loadReservationStationObservableList);
     }
     private void populateReservationStationStore() {
-        Vector<ReservationStationEntry> vectorEntries = Simulator.getStoreBuffer().getEntries();
-        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        storeReservationStationTable.setItems(observableEntries);
+        storeReservationStationObservableList.setAll(Simulator.getStoreBuffer().getEntries());
+        storeReservationStationTable.setItems(storeReservationStationObservableList);
+        
     }
-
     private void populateRegisterTables() {
-        ObservableList<Register> integerRegisters = FXCollections.observableArrayList(registerFile.getR());
+        integerRegisters.setAll(Simulator.registerFile.getR());
         integerRegisterTable.setItems(integerRegisters);
-
-        ObservableList<Register> floatRegisters = FXCollections.observableArrayList(registerFile.getF());
+        floatRegisters.setAll(Simulator.registerFile.getF());
         floatRegisterTable.setItems(floatRegisters);
     }
     private void populateInstructionQueueTable() {
@@ -228,7 +227,6 @@ public class TomasuloController {
                 instructionList.add(instruction);
             }
         }
-        
         ObservableList<Instruction> observableInstructions = 
             FXCollections.observableArrayList(instructionList);
         instructionQueueTable.setItems(observableInstructions);

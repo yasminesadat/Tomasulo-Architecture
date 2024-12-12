@@ -179,7 +179,7 @@ public class Simulator {
     }
 
     public static boolean executeNextCycle(){
-        if (instructionQueue.size() > 0) {
+        if (instructionQueue.size() > Simulator.pc) {
              Issuer.issue();
         }
         Executer.execute();

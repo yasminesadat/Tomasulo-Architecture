@@ -4,7 +4,7 @@ public class Issuer {
     public static boolean issue() {
         // issue instruction with id=pc if its at the front of the queue else go fetch
         // from instrution memory
-        Instruction instruction = Simulator.instructionQueue.peekInstruction();
+        Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
         String instructionType = instruction.getType();
         //
         switch (instructionType) {
