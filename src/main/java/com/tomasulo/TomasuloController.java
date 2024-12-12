@@ -60,11 +60,12 @@ public class TomasuloController {
 
     public void initialize(Stage stage) {
         // Initialize all tables
-        addSubReservationStationTable = createReservationStationTableView();
-        mulDivReservationStationTable = createReservationStationTableView();
-        loadReservationStationTable = createReservationStationTableView();
-        storeReservationStationTable = createReservationStationTableView();
-        integerReservationStationTable = createReservationStationTableView();
+        // In initialize()
+        addSubReservationStationTable = createReservationStationTableView("ADD_SUB", false);
+        mulDivReservationStationTable = createReservationStationTableView("MUL_DIV", false);
+        loadReservationStationTable = createReservationStationTableView("LOAD", false);
+        storeReservationStationTable = createReservationStationTableView("STORE", false);
+        integerReservationStationTable = createReservationStationTableView("INTEGER", true);
         integerRegisterTable = createRegisterTableView("Integer Registers");
         floatRegisterTable = createRegisterTableView("Float Registers");
         instructionQueueTable = createInstructionQueueTableView();
@@ -148,6 +149,34 @@ public class TomasuloController {
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
+    }
+
+    private TableView<Register> createRegisterTableView(String title) {
+        TableView<Register> tableView = new TableView<>();
+
+        // Add register label column
+        TableColumn<Register, String> labelColumn = new TableColumn<>("Register");
+        labelColumn.setCellValueFactory(cellData -> {
+            int index = tableView.getItems().indexOf(cellData.getValue());
+            String prefix = title.startsWith("Float") ? "F" : "R";
+            return new javafx.beans.property.SimpleStringProperty(prefix + index);
+        });
+
+        TableColumn<Register, Double> valueColumn = new TableColumn<>("Value");
+        TableColumn<Register, String> qColumn = new TableColumn<>("Q");
+
+        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
+        qColumn.setCellValueFactory(new PropertyValueFactory<>("Q"));
+
+        // Set column widths
+        labelColumn.setPrefWidth(80);
+        valueColumn.setPrefWidth(100);
+        qColumn.setPrefWidth(80);
+
+        tableView.getColumns().addAll(labelColumn, valueColumn, qColumn);
+        tableView.setPlaceholder(new javafx.scene.control.Label(title + " - No Data"));
+
+        return tableView;
     }
 
     private Label createTableLabel(String text) {
@@ -241,19 +270,20 @@ public class TomasuloController {
 
     }
 
-    private TableView<ReservationStationEntry> createReservationStationTableView() {
+    private TableView<ReservationStationEntry> createReservationStationTableView(String type, boolean isBranch) {
         TableView<ReservationStationEntry> tableView = new TableView<>();
 
+        // Create all columns
         TableColumn<ReservationStationEntry, String> tagColumn = new TableColumn<>("Tag");
         TableColumn<ReservationStationEntry, Boolean> busyColumn = new TableColumn<>("Busy");
-        TableColumn<ReservationStationEntry, Integer> addressColumn = new TableColumn<>("Address");
+        TableColumn<ReservationStationEntry, Integer> addressColumn = new TableColumn<>(
+                isBranch ? "Branch Address " : "Address");
         TableColumn<ReservationStationEntry, Double> vjColumn = new TableColumn<>("Vj");
         TableColumn<ReservationStationEntry, Double> vkColumn = new TableColumn<>("Vk");
         TableColumn<ReservationStationEntry, String> qjColumn = new TableColumn<>("Qj");
         TableColumn<ReservationStationEntry, String> qkColumn = new TableColumn<>("Qk");
         TableColumn<ReservationStationEntry, Integer> remainingTimeColumn = new TableColumn<>("Remaining Time");
-        remainingTimeColumn.setPrefWidth(200);
-        remainingTimeColumn.setCellValueFactory(new PropertyValueFactory<>("remainingTime"));
+
         tagColumn.setPrefWidth(80);
         busyColumn.setPrefWidth(60);
         addressColumn.setPrefWidth(80);
@@ -269,38 +299,39 @@ public class TomasuloController {
         vkColumn.setCellValueFactory(new PropertyValueFactory<>("vk"));
         qjColumn.setCellValueFactory(new PropertyValueFactory<>("qj"));
         qkColumn.setCellValueFactory(new PropertyValueFactory<>("qk"));
-        tableView.getColumns().addAll(
-                tagColumn, busyColumn, addressColumn,
-                vjColumn, vkColumn, qjColumn, qkColumn,
-                remainingTimeColumn);
-        return tableView;
-    }
 
-    private TableView<Register> createRegisterTableView(String title) {
-        TableView<Register> tableView = new TableView<>();
+        // Add columns based on type
+        List<TableColumn<ReservationStationEntry, ?>> columns = new ArrayList<>();
+        columns.add(tagColumn);
+        columns.add(busyColumn);
 
-        // Add register label column
-        TableColumn<Register, String> labelColumn = new TableColumn<>("Register");
-        labelColumn.setCellValueFactory(cellData -> {
-            int index = tableView.getItems().indexOf(cellData.getValue());
-            String prefix = title.startsWith("Float") ? "F" : "R";
-            return new javafx.beans.property.SimpleStringProperty(prefix + index);
-        });
+        switch (type) {
+            case "LOAD":
 
-        TableColumn<Register, Double> valueColumn = new TableColumn<>("Value");
-        TableColumn<Register, String> qColumn = new TableColumn<>("Q");
+                columns.add(addressColumn);
+                break;
 
-        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
-        qColumn.setCellValueFactory(new PropertyValueFactory<>("Q"));
+            case "STORE":
 
-        // Set column widths
-        labelColumn.setPrefWidth(80);
-        valueColumn.setPrefWidth(100);
-        qColumn.setPrefWidth(80);
+                columns.add(addressColumn);
 
-        tableView.getColumns().addAll(labelColumn, valueColumn, qColumn);
-        tableView.setPlaceholder(new javafx.scene.control.Label(title + " - No Data"));
+                columns.add(vjColumn); // for base address calculation
 
+                columns.add(qjColumn);
+                break;
+
+            case "ADD_SUB":
+            case "MUL_DIV":
+            case "INTEGER":
+                columns.add(addressColumn);
+                columns.add(vjColumn);
+                columns.add(vkColumn);
+                columns.add(qjColumn);
+                columns.add(qkColumn);
+                break;
+        }
+
+        tableView.getColumns().addAll(columns);
         return tableView;
     }
 
