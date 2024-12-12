@@ -1,6 +1,8 @@
 package com.tomasulo;
 
 import javafx.scene.control.Label;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +20,9 @@ import com.tomasulo.classes.UserInputValues;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -53,6 +57,7 @@ public class TomasuloController {
     private ObservableList<Register> floatRegisters = FXCollections.observableArrayList();
     private Label clockCycleLabel;
     private Button nextCycleButton;
+    private Button goBackButton;
 
     public TomasuloController() {
 
@@ -84,6 +89,15 @@ public class TomasuloController {
         clockCycleLabel = new Label("Current Clock Cycle: " + 0);
         clockCycleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         nextCycleButton = new Button("Next Cycle");
+        goBackButton = new Button("Start Over");
+        goBackButton.setOnAction(e -> {
+            try {
+                navigateToStart();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
+
         nextCycleButton.setStyle(
                 "-fx-font-size: 14px; " +
                         "-fx-padding: 10px 20px; " +
@@ -106,10 +120,9 @@ public class TomasuloController {
                         "-fx-background-radius: 5px; " +
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);"));
         nextCycleButton.setOnAction(e -> advanceClockCycle());
-        nextCycleButton.setOnAction(e -> advanceClockCycle());
 
         // Create an HBox for clock cycle controls
-        HBox clockControlBox = new HBox(20, clockCycleLabel, nextCycleButton);
+        HBox clockControlBox = new HBox(20, clockCycleLabel, nextCycleButton, goBackButton);
         clockControlBox.setAlignment(javafx.geometry.Pos.CENTER);
         clockControlBox.setPadding(new Insets(15));
         clockControlBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0;");
@@ -288,6 +301,13 @@ public class TomasuloController {
 
             nextCycleButton.setDisable(true);
         }
+
+    }
+
+    private void navigateToStart() throws IOException {
+        Stage stage = (Stage) goBackButton.getScene().getWindow();
+        App primarycontroller = new App();
+        primarycontroller.start(stage);
 
     }
 
