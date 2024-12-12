@@ -12,8 +12,15 @@ public class RegisterFile {
         F = new Register[32];
         for (int i = 0; i < 32; i++) {
             R[i] = new Register(0, "0"); // integer value reg
-            F[i] = new Register(0.0, "0"); // float value reg
+            F[i] = new Register(getRandomNumber(), "0"); // float value reg
+
         }
+    }
+
+    public double getRandomNumber() {
+
+        double random = (Math.random() * 50);
+        return Math.round(random * 10.0) / 10.0;
     }
 
     public Register getIntRegister(int index) { // name of reg is its index in arrau
