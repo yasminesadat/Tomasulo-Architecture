@@ -102,8 +102,8 @@ public class Cache {
             (byte) value
         };
     }
-
-    private int bytesToInt(byte[] bytes) {
+  
+    private int bytesToInt(byte[] bytes) {   // treat bytes as unsigned values 
         return ((bytes[0] & 0xFF) << 24) |
                ((bytes[1] & 0xFF) << 16) |
                ((bytes[2] & 0xFF) << 8) |
