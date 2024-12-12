@@ -84,7 +84,28 @@ public class TomasuloController {
         clockCycleLabel = new Label("Current Clock Cycle: " + 0);
         clockCycleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         nextCycleButton = new Button("Next Cycle");
-        nextCycleButton.setStyle("-fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-radius: 4px;");
+        nextCycleButton.setStyle(
+                "-fx-font-size: 14px; " +
+                        "-fx-padding: 10px 20px; " +
+                        "-fx-background-color: #3498db; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 5px; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);");
+        nextCycleButton.setOnMouseEntered(e -> nextCycleButton.setStyle(
+                "-fx-font-size: 14px; " +
+                        "-fx-padding: 10px 20px; " +
+                        "-fx-background-color: #2980b9; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 5px; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0, 0, 2);"));
+        nextCycleButton.setOnMouseExited(e -> nextCycleButton.setStyle(
+                "-fx-font-size: 14px; " +
+                        "-fx-padding: 10px 20px; " +
+                        "-fx-background-color: #3498db; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 5px; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);"));
+        nextCycleButton.setOnAction(e -> advanceClockCycle());
         nextCycleButton.setOnAction(e -> advanceClockCycle());
 
         // Create an HBox for clock cycle controls
