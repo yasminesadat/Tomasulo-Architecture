@@ -18,6 +18,7 @@ public class Simulator {
     public static Cache cache;
     public static Bus bus;
     public static int pc = 0;
+    public static boolean isBranchTaken = false;
 
     public static int getClockCycle() {
         return clockCycle;
@@ -185,15 +186,16 @@ public class Simulator {
 
     public static boolean executeNextCycle() {
 
-        if (instructionQueue.size() > Simulator.pc) {
+        System.out.println("size" + instructionQueue.size());
+        if (instructionQueue.size() > Simulator.pc && !isBranchTaken) {
             Issuer.issue();
         }
 
         Executer.execute();
         WriteBack.writeBack();
-        System.out.println("Clock Cycle: " + clockCycle);
-        displayReservationStations();
-        registerFile.displayRegisterFiles();
+        System.out.println("Clock Cycle: " + clockCycle + "PC is " + pc);
+        // displayReservationStations();
+        // registerFile.displayRegisterFiles();
 
         clockCycle++;
 

@@ -17,9 +17,10 @@ public class InstructionQueue {
     public InstructionQueue() {
         this.instructions = new ArrayList<Instruction>(); // Create a new list based on the input
     }
-    public Instruction getPCInstruction(int address){
+
+    public Instruction getPCInstruction(int address) {
         Instruction instruction = instructions.get(address);
-        Instruction newInstruction=new Instruction();
+        Instruction newInstruction = new Instruction();
         newInstruction.setPc(instruction.getPc());
         newInstruction.setType(instruction.getType());
         newInstruction.setEndTime(-1);
@@ -51,12 +52,13 @@ public class InstructionQueue {
         }
         return null;
     }
+
     public void enqueueInstruction(Instruction instruction) {
-             instructions.add(instruction);
+        instructions.add(instruction);
     }
 
-    public void loadInstruction(List<Instruction> instructionsList){
-        this.instructions=new ArrayList<Instruction>(instructionsList);
+    public void loadInstruction(List<Instruction> instructionsList) {
+        this.instructions = new ArrayList<Instruction>(instructionsList);
     }
 
     /**
@@ -77,5 +79,5 @@ public class InstructionQueue {
             System.out.println(instruction);
         }
     }
-    
+
 }

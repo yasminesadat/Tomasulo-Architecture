@@ -33,6 +33,7 @@ public class InstructionParser {
                 currentInstruction.setWriteTime(-1);
                 currentInstruction.setType(operation);
                 currentInstruction.setPc(Instruction.instructionCount++);
+                System.out.println("operation: " + operation);
                 switch (operation) {
                     case InstructionType.ADD_DOUBLE_PRECISION: // ADD R1 R2 R3
                     case InstructionType.ADD_SINGLE_PRECISION:

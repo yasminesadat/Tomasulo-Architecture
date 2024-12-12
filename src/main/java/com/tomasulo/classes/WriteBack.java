@@ -37,17 +37,33 @@ public class WriteBack {
 
         }
         for (ReservationStationEntry entry : Simulator.integerReservationStation.getEntries()) {
-            if (entry.canWrite() && !entry.getCurrInstruction().getType().equals("BEQ")
-                    && !entry.getCurrInstruction().getType().equals("BNE")) {
-                if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
-                    maxWaiting = Simulator.getWaitingStation(entry.getTag());
-                    writingBackEntry = entry;
-                    desiredStation = Simulator.integerReservationStation;
+            if (entry.canWrite()) {
+                if (!entry.getCurrInstruction().getType().equals("BEQ")
+                        && !entry.getCurrInstruction().getType().equals("BNE")) {
+                    if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
+                        maxWaiting = Simulator.getWaitingStation(entry.getTag());
+                        writingBackEntry = entry;
+                        desiredStation = Simulator.integerReservationStation;
+
+                    }
+                } else {
+                    // branch
+                    if (entry.getCurrInstruction().getType() == "BEQ") {
+                        if (entry.getFunctionalUnit().result == 0)
+                            Simulator.pc = entry.getCurrInstruction().immediate;
+
+                    }
+
+                    if (entry.getCurrInstruction().getType() == "BNE") {
+                        if (entry.getFunctionalUnit().result != 0)
+                            Simulator.pc = entry.getCurrInstruction().immediate;
+
+                    }
+                    Simulator.isBranchTaken = false;
 
                 }
 
             }
-
         }
         for (ReservationStationEntry entry : Simulator.loadBuffer.getEntries()) {
             if (entry.canWrite()) {

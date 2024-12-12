@@ -184,7 +184,8 @@ public class TomasuloController {
         Map<TableView<?>, Integer> registerSizeMap = new HashMap<>();
         registerSizeMap.put(integerRegisterTable, 32);
         registerSizeMap.put(floatRegisterTable, 32);
-        registerSizeMap.put(instructionQueueTable, Simulator.instructionQueue.size()); // Reasonable default for
+        Map<TableView<?>, Integer> queueMap = new HashMap<>();
+        queueMap.put(instructionQueueTable, Simulator.instructionQueue.size()); // Reasonable default for
 
         // Apply settings to each table
         for (Map.Entry<TableView<?>, Integer> entry : tableSizeMap.entrySet()) {
@@ -207,6 +208,17 @@ public class TomasuloController {
             table.setStyle("-fx-border-color: #e0e0e0; -fx-border-width: 1; " +
                     "-fx-border-radius: 4; -fx-background-color: white;");
         }
+        for (Map.Entry<TableView<?>, Integer> entry : queueMap.entrySet()) {
+            TableView<?> table = entry.getKey();
+            int rows = entry.getValue();
+
+            table.setFixedCellSize(rowHeight);
+            table.setPrefHeight(10 * rows + 30); // +30 for header
+            table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            table.setStyle("-fx-border-color: #e0e0e0; -fx-border-width: 1; " +
+                    "-fx-border-radius: 4; -fx-background-color: white;");
+        }
+
         // instructionQueueTable.setPrefHeight(150);
     }
 

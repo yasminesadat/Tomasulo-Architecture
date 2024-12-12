@@ -8,7 +8,8 @@ public class Issuer {
         Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
         System.out.println("issuing now in cycle" + Simulator.clockCycle + " pc:  " + instruction.pc);
         String instructionType = instruction.getType();
-        //
+        System.out.println("Instruction type: " + instructionType);
+        System.out.println("PC value is" + Simulator.pc);
         switch (instructionType) {
             case InstructionType.ADD_DOUBLE_PRECISION:
             case InstructionType.ADD_SINGLE_PRECISION:
@@ -22,8 +23,6 @@ public class Issuer {
                 return handleMulDiv();
 
             case InstructionType.ADD_IMMEDIATE:
-                return handleIntegerOperations();
-
             case InstructionType.SUB_IMMEDIATE:
                 return handleIntegerOperations();
             case InstructionType.BRANCH_EQUAL:
@@ -43,6 +42,7 @@ public class Issuer {
                 return handleStore();
         }
 
+        System.out.println("PC NEW " + Simulator.pc);
         return true;
     }
 
@@ -89,6 +89,7 @@ public class Issuer {
     }
 
     private static boolean handleIntegerOperations() {
+        System.out.println("Handling integer operations");
         ReservationStation reservationStation = Simulator.integerReservationStation;
         if (!reservationStation.hasSpace()) {
             System.out.println("No space in reservation station");
@@ -96,7 +97,6 @@ public class Issuer {
         } else {
             Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
             instruction.setIssueTime(Simulator.clockCycle);
-            Simulator.instructionQueue.dequeueInstruction();
             Register source1 = getRegister(instruction.getRs());
             int immediate = instruction.getImmediate();
             Register destination = getRegister(instruction.getRd());
@@ -116,7 +116,7 @@ public class Issuer {
             System.out.println("No space in reservation station");
             return false;
         } else {
-
+            Simulator.isBranchTaken = true;
             Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
             instruction.setIssueTime(Simulator.clockCycle);
 
