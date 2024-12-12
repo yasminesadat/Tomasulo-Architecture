@@ -31,6 +31,8 @@ public class TomasuloController {
     private TableView<ReservationStationEntry> mulDivReservationStationTable;
     private TableView<ReservationStationEntry> loadReservationStationTable;
     private TableView<ReservationStationEntry> storeReservationStationTable;
+    private TableView<ReservationStationEntry> integerReservationStationTable;
+
     private TableView<Register> integerRegisterTable;
     private TableView<Register> floatRegisterTable;
     private TableView<Instruction> instructionQueueTable;
@@ -41,6 +43,8 @@ public class TomasuloController {
     private ObservableList<ReservationStationEntry> loadReservationStationObservableList = FXCollections
             .observableArrayList();
     private ObservableList<ReservationStationEntry> storeReservationStationObservableList = FXCollections
+            .observableArrayList();
+    private ObservableList<ReservationStationEntry> integerReservationStationObservableList = FXCollections
             .observableArrayList();
     private ObservableList<Register> integerRegisters = FXCollections.observableArrayList();
     private ObservableList<Register> floatRegisters = FXCollections.observableArrayList();
@@ -57,6 +61,7 @@ public class TomasuloController {
         mulDivReservationStationTable = createReservationStationTableView();
         loadReservationStationTable = createReservationStationTableView();
         storeReservationStationTable = createReservationStationTableView();
+        integerReservationStationTable = createReservationStationTableView();
         integerRegisterTable = createRegisterTableView("Integer Registers");
         floatRegisterTable = createRegisterTableView("Float Registers");
         instructionQueueTable = createInstructionQueueTableView();
@@ -68,6 +73,7 @@ public class TomasuloController {
         Label storeLabel = createTableLabel("Store Buffer");
         Label intRegLabel = createTableLabel("Integer Registers");
         Label floatRegLabel = createTableLabel("Float Registers");
+        Label integerLabel = createTableLabel("Integer Reservation Station");
         Label instructionQueueLabel = createTableLabel("Instruction Queue");
 
         // Clock cycle controls
@@ -84,13 +90,16 @@ public class TomasuloController {
         VBox mulDivSection = createTableSection(mulDivLabel, mulDivReservationStationTable);
         VBox loadSection = createTableSection(loadLabel, loadReservationStationTable);
         VBox storeSection = createTableSection(storeLabel, storeReservationStationTable);
+        VBox integerSection = createTableSection(integerLabel, integerReservationStationTable);
+
         VBox intRegSection = createTableSection(intRegLabel, integerRegisterTable);
         VBox floatRegSection = createTableSection(floatRegLabel, floatRegisterTable);
         VBox instructionSection = createTableSection(instructionQueueLabel, instructionQueueTable);
 
         // Create layout for reservation stations (left side)
         VBox reservationStations = new VBox(10);
-        reservationStations.getChildren().addAll(addSubSection, mulDivSection, loadSection, storeSection);
+        reservationStations.getChildren().addAll(addSubSection, mulDivSection, loadSection, storeSection,
+                integerSection);
         reservationStations.setPrefWidth(500);
 
         // Create layout for registers (right side)
@@ -147,7 +156,7 @@ public class TomasuloController {
         integerRegisterTable.setPrefHeight(200);
         floatRegisterTable.setPrefHeight(200);
         instructionQueueTable.setPrefHeight(150);
-
+        integerRegisterTable.setPrefHeight(150);
         // Make tables fill their containers
         addSubReservationStationTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         mulDivReservationStationTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -156,6 +165,7 @@ public class TomasuloController {
         integerRegisterTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         floatRegisterTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         instructionQueueTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        integerReservationStationTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void advanceClockCycle() {
@@ -266,6 +276,13 @@ public class TomasuloController {
         populateReservationStationMulDiv();
         populateReservationStationLoad();
         populateReservationStationStore();
+        populateReservationStationInteger();
+    }
+
+    private void populateReservationStationInteger() {
+        integerReservationStationObservableList.setAll(Simulator.getIntegerReservationStation().getEntries());
+        integerReservationStationTable.setItems(integerReservationStationObservableList);
+        integerReservationStationTable.refresh();
     }
 
     private void populateReservationStationAddSub() {
