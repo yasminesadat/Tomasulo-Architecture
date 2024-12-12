@@ -160,14 +160,16 @@ public class TomasuloController {
 
     private void advanceClockCycle() {
         clockCycleLabel.setText("Current Clock Cycle: " + (Simulator.getClockCycle()));
-        boolean continueSimulation = Simulator.executeNextCycle();
+        boolean stopSimulation = Simulator.executeNextCycle();
 
         // Update clock cycle labels
         populateReservationStationTables();
         populateRegisterTables();
         // populateInstructionQueueTable();
         // updateAndRefreshTables();
-        if (!continueSimulation) {
+
+        if (stopSimulation) {
+
             nextCycleButton.setDisable(true);
         }
 

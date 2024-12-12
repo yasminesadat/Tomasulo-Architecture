@@ -175,10 +175,12 @@ public class Simulator {
     }
 
     public static boolean endSystem() {
-        return (addSubReservationStation.isEmpty() && mulDivReservationStation.isEmpty() && storeBuffer.isEmpty()
-                && loadBuffer.isEmpty()
-                && integerReservationStation.isEmpty());
+        boolean noMoreInstructions = instructionQueue.size() <= Simulator.pc;
+        boolean allStationsAndBuffersEmpty = addSubReservationStation.isEmpty() && mulDivReservationStation.isEmpty()
+                && storeBuffer.isEmpty() && loadBuffer.isEmpty()
+                && integerReservationStation.isEmpty();
 
+        return noMoreInstructions && allStationsAndBuffersEmpty;
     }
 
     public static boolean executeNextCycle() {
@@ -195,8 +197,9 @@ public class Simulator {
 
         clockCycle++;
 
-        ///////////////////////////////////////////
-        return !(endSystem()) || instructionQueue.size() > 0;
+        // stopping condition for system
+        return (endSystem());
+
     }
 
     public static void main(String[] args) throws IOException {
