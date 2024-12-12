@@ -153,28 +153,6 @@ public class Simulator {
         return waitingStations;
     }
 
-    /**
-     * Main method to run the simulator.
-     * 
-     * @param args
-     * @throws IOException
-     */
-    public static void displayReservationStations() {
-        System.out.println("------------------------------------------------------------------------------------");
-
-        System.out.println(addSubReservationStation);
-        System.out.println("------------------------------------------------------------------------------------");
-        System.out.println(mulDivReservationStation);
-        System.out.println("------------------------------------------------------------------------------------");
-
-        System.out.println(integerReservationStation);
-        System.out.println("------------------------------------------------------------------------------------");
-        System.out.println(loadBuffer);
-        System.out.println("------------------------------------------------------------------------------------");
-        System.out.println(storeBuffer);
-        System.out.println("------------------------------------------------------------------------------------");
-    }
-
     public static boolean endSystem() {
         boolean noMoreInstructions = instructionQueue.size() <= Simulator.pc;
         boolean allStationsAndBuffersEmpty = addSubReservationStation.isEmpty() && mulDivReservationStation.isEmpty()
@@ -194,8 +172,6 @@ public class Simulator {
         Executer.execute();
         WriteBack.writeBack();
         System.out.println("Clock Cycle: " + clockCycle + "PC is " + pc);
-        // displayReservationStations();
-        // registerFile.displayRegisterFiles();
 
         clockCycle++;
 
@@ -205,26 +181,6 @@ public class Simulator {
     }
 
     public static void main(String[] args) throws IOException {
-
-        // getUserInputs();
-        // init();
-        // // executeNextCycle();
-        // while (clockCycle < 20) {
-
-        // if (instructionQueue.size() > Simulator.pc) {
-        // Issuer.issue();
-        // }
-        // Executer.execute();
-        // WriteBack.writeBack();
-        // System.out.println("Clock Cycle: " + clockCycle);
-        // displayReservationStations();
-        // System.out.println("End of Clock Cycle: " + clockCycle);
-        // clockCycle++;
-
-        // }
-        // System.out.println("Done: " + clockCycle);
-        // registerFile.displayRegisterFiles();
-        // displayReservationStations();
 
     }
 }
