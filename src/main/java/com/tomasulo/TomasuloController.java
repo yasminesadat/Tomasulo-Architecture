@@ -105,7 +105,7 @@ public class TomasuloController {
                 createTableSection(integerLabel, integerReservationStationTable));
         middleColumn.setPrefWidth(400);
         VBox instructionQueueSection = createTableSection(instructionQueueLabel, instructionQueueTable);
-        instructionQueueSection.setPrefHeight(50);
+        // instructionQueueSection.setPrefHeight(50);
         VBox rightColumn = new VBox(10);
         rightColumn.getChildren().addAll(
                 createTableSection(intRegLabel, integerRegisterTable),
@@ -177,10 +177,14 @@ public class TomasuloController {
         tableSizeMap.put(loadReservationStationTable, UserInputValues.loadBufferSize);
         tableSizeMap.put(storeReservationStationTable, UserInputValues.storeBufferSize);
         tableSizeMap.put(integerReservationStationTable, UserInputValues.reservationStationAddSubIntegerSize);
-        tableSizeMap.put(integerRegisterTable, 32);
-        tableSizeMap.put(floatRegisterTable, 32);
-        tableSizeMap.put(instructionQueueTable, Simulator.instructionQueue.size()); // Reasonable default for
-                                                                                    // instruction queue
+
+        // tableSizeMap.put(instructionQueueTable, Simulator.instructionQueue.size());
+        // // Reasonable default for
+        // instruction queue
+        Map<TableView<?>, Integer> registerSizeMap = new HashMap<>();
+        registerSizeMap.put(integerRegisterTable, 32);
+        registerSizeMap.put(floatRegisterTable, 32);
+        registerSizeMap.put(instructionQueueTable, Simulator.instructionQueue.size()); // Reasonable default for
 
         // Apply settings to each table
         for (Map.Entry<TableView<?>, Integer> entry : tableSizeMap.entrySet()) {
@@ -189,6 +193,16 @@ public class TomasuloController {
 
             table.setFixedCellSize(rowHeight);
             table.setPrefHeight(rowHeight * rows + 30); // +30 for header
+            table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            table.setStyle("-fx-border-color: #e0e0e0; -fx-border-width: 1; " +
+                    "-fx-border-radius: 4; -fx-background-color: white;");
+        }
+        for (Map.Entry<TableView<?>, Integer> entry : registerSizeMap.entrySet()) {
+            TableView<?> table = entry.getKey();
+            int rows = entry.getValue();
+
+            table.setFixedCellSize(rowHeight);
+            table.setPrefHeight(5 * rows + 30); // +30 for header
             table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
             table.setStyle("-fx-border-color: #e0e0e0; -fx-border-width: 1; " +
                     "-fx-border-radius: 4; -fx-background-color: white;");
