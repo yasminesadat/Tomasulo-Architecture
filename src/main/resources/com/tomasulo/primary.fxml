@@ -51,9 +51,11 @@
 
       <Label text="Store Buffer Size:" GridPane.rowIndex="15" GridPane.columnIndex="0" />
       <TextField fx:id="storeBufferSizeField" promptText="Enter Store Buffer Size" GridPane.rowIndex="15" GridPane.columnIndex="1" />
+      <Label text="Integer Reservation Station size " GridPane.rowIndex="16" GridPane.columnIndex="0" />
+      <TextField fx:id="reservationStationIntegerSizeField" promptText="Enter Integer Reservation Station size" GridPane.rowIndex="16" GridPane.columnIndex="1" />
 
       <!-- Save Button -->
-      <Button fx:id="saveButton" text="Save Configuration" GridPane.rowIndex="16" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" onAction="#saveConfiguration"/>
+      <Button fx:id="saveButton" text="Save Configuration" GridPane.rowIndex="17" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" onAction="#saveConfiguration"/>
 
      
    </children>

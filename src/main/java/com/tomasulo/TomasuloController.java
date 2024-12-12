@@ -2,7 +2,9 @@ package com.tomasulo;
 
 import javafx.scene.control.Label;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import javafx.scene.text.Font;
 import com.tomasulo.classes.ReservationStation;
@@ -12,6 +14,7 @@ import com.tomasulo.classes.InstructionQueue;
 import com.tomasulo.classes.Register;
 import com.tomasulo.classes.RegisterFile;
 import com.tomasulo.classes.Simulator;
+import com.tomasulo.classes.UserInputValues;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -157,25 +160,35 @@ public class TomasuloController {
         return section;
     }
 
+    // Set heights for all tables
     private void setTableSizes() {
-        // Set heights for all tables
-        TableView<?>[] tables = {
-                addSubReservationStationTable, mulDivReservationStationTable,
-                loadReservationStationTable, storeReservationStationTable,
-                integerReservationStationTable, integerRegisterTable,
-                floatRegisterTable, instructionQueueTable
-        };
+        double rowHeight = 40; // height per row
 
-        for (TableView<?> table : tables) {
-            table.setPrefHeight(200);
+        // Create mapping of tables to their respective sizes
+        Map<TableView<?>, Integer> tableSizeMap = new HashMap<>();
+        tableSizeMap.put(addSubReservationStationTable, UserInputValues.reservationStationAddSubSize);
+        tableSizeMap.put(mulDivReservationStationTable, UserInputValues.reservationStationMulDivSize);
+        tableSizeMap.put(loadReservationStationTable, UserInputValues.loadBufferSize);
+        tableSizeMap.put(storeReservationStationTable, UserInputValues.storeBufferSize);
+        tableSizeMap.put(integerReservationStationTable, UserInputValues.reservationStationAddSubIntegerSize);
+        tableSizeMap.put(integerRegisterTable, 32);
+        tableSizeMap.put(floatRegisterTable, 32);
+
+        // Apply settings to each table
+        for (Map.Entry<TableView<?>, Integer> entry : tableSizeMap.entrySet()) {
+            TableView<?> table = entry.getKey();
+            int rows = entry.getValue();
+
+            table.setFixedCellSize(rowHeight);
+            table.setPrefHeight(rowHeight * rows + 30); // +30 for header
             table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
             table.setStyle("-fx-border-color: #e0e0e0; -fx-border-width: 1; " +
                     "-fx-border-radius: 4; -fx-background-color: white;");
         }
-
-        // Make instruction queue table slightly shorter
         instructionQueueTable.setPrefHeight(150);
     }
+
+    // Make instruction queue table slightly shorter
 
     private void advanceClockCycle() {
         clockCycleLabel.setText("Current Clock Cycle: " + (Simulator.getClockCycle()));

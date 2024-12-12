@@ -41,6 +41,8 @@ public class PrimaryController {
     private TextField loadBufferSizeField;
     @FXML
     private TextField storeBufferSizeField;
+    @FXML
+    private TextField reservationStationIntegerSizeField;
 
     @FXML
     private void saveConfiguration() throws IOException {
@@ -53,6 +55,8 @@ public class PrimaryController {
         UserInputValues.divLatency = Integer.parseInt(divLatencyField.getText());
         UserInputValues.cacheBlockSize = Integer.parseInt(cacheBlockSizeField.getText());
         UserInputValues.cacheSize = Integer.parseInt(cacheSizeField.getText());
+        UserInputValues.reservationStationAddSubIntegerSize = Integer
+                .parseInt(reservationStationIntegerSizeField.getText());
         UserInputValues.reservationStationAddSubSize = Integer.parseInt(reservationStationAddSubSizeField.getText());
         UserInputValues.reservationStationMulDivSize = Integer.parseInt(reservationStationMulDivSizeField.getText());
         // UserInputValues.reservationStationAddSubIntegerSize =
