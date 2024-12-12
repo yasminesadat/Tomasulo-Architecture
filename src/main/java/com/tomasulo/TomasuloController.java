@@ -1,17 +1,26 @@
 package com.tomasulo;
-
+import javafx.scene.control.Label;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import com.tomasulo.classes.ReservationStation;
 import com.tomasulo.classes.ReservationStationEntry;
+import com.tomasulo.classes.Instruction;
+import com.tomasulo.classes.InstructionQueue;
+import com.tomasulo.classes.Register;
+import com.tomasulo.classes.RegisterFile;
 import com.tomasulo.classes.Simulator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -21,30 +30,81 @@ public class TomasuloController {
     private TableView<ReservationStationEntry> mulDivReservationStationTable;
     private TableView<ReservationStationEntry> loadReservationStationTable;
     private TableView<ReservationStationEntry> storeReservationStationTable;
+    private TableView<Register> integerRegisterTable;
+    private TableView<Register> floatRegisterTable;
+    private RegisterFile registerFile;
+    private TableView<Instruction> instructionQueueTable;
+    private Label clockCycleLabel;
+    private Button nextCycleButton;
 
     public TomasuloController() {
-        // No-argument constructor
+        registerFile = new RegisterFile();
     }
 
     public void initialize(Stage stage) {
-        // Initialize the TableViews and TableColumns
-        addSubReservationStationTable = createTableView();
-        mulDivReservationStationTable = createTableView();
-        loadReservationStationTable = createTableView();
-        storeReservationStationTable = createTableView();
+        // Initialize Reservation Station Tables
+        addSubReservationStationTable = createReservationStationTableView();
+        mulDivReservationStationTable = createReservationStationTableView();
+        loadReservationStationTable = createReservationStationTableView();
+        storeReservationStationTable = createReservationStationTableView();
 
-        // Create a VBox to hold the tables
+
+        integerRegisterTable = createRegisterTableView("Integer Registers");
+        floatRegisterTable = createRegisterTableView("Float Registers");
+        instructionQueueTable = createInstructionQueueTableView();
+
+        clockCycleLabel = new Label("Current Clock Cycle: " + Simulator.getClockCycle());
+        nextCycleButton = new Button("Next Cycle");
+        nextCycleButton.setOnAction(e -> advanceClockCycle());
+
+        // Create an HBox for clock cycle controls
+        HBox clockControlBox = new HBox(10, clockCycleLabel, nextCycleButton);
+        clockControlBox.setPadding(new Insets(10));
+
+        
+        // Populate Tables
+        // populateReservationStationTables();
+        // populateRegisterTables();
+         populateInstructionQueueTable();
+        
+        // Create a VBox to hold all tables
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(addSubReservationStationTable, mulDivReservationStationTable,
-                loadReservationStationTable, storeReservationStationTable);
+        vbox.getChildren().addAll(
+            addSubReservationStationTable,
+            mulDivReservationStationTable,
+            loadReservationStationTable,
+            storeReservationStationTable,
+            integerRegisterTable,
+            floatRegisterTable,
+            instructionQueueTable,
+            clockControlBox
+        );
 
-        // Create a scene and add the VBox to it
+        // Create a scene and set it on the stage
         Scene scene = new Scene(vbox, 800, 600);
         stage.setScene(scene);
         stage.show();
     }
 
-    private TableView<ReservationStationEntry> createTableView() {
+    private void advanceClockCycle() {
+        // Execute next cycle
+        boolean continueSimulation = Simulator.executeNextCycle();
+        
+        // Update clock cycle label
+        clockCycleLabel.setText("Current Clock Cycle: " + Simulator.getClockCycle());
+        
+        populateReservationStationTables();
+        populateRegisterTables();
+        // populateInstructionQueueTable();
+        // updateAndRefreshTables();
+        if (!continueSimulation) {
+            nextCycleButton.setDisable(true);
+        }
+
+        
+    }
+
+    private TableView<ReservationStationEntry> createReservationStationTableView() {
         TableView<ReservationStationEntry> tableView = new TableView<>();
 
         TableColumn<ReservationStationEntry, String> tagColumn = new TableColumn<>("Tag");
@@ -54,8 +114,10 @@ public class TomasuloController {
         TableColumn<ReservationStationEntry, Double> vkColumn = new TableColumn<>("Vk");
         TableColumn<ReservationStationEntry, String> qjColumn = new TableColumn<>("Qj");
         TableColumn<ReservationStationEntry, String> qkColumn = new TableColumn<>("Qk");
+        
+        // New column for remaining time and current clock cycle
+        TableColumn<ReservationStationEntry, String> remainingTimeColumn = new TableColumn<>("Remaining Time/Clock Cycle");
 
-        // Set up the columns with appropriate cell value factories
         tagColumn.setCellValueFactory(new PropertyValueFactory<>("tag"));
         busyColumn.setCellValueFactory(new PropertyValueFactory<>("busy"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -63,52 +125,121 @@ public class TomasuloController {
         vkColumn.setCellValueFactory(new PropertyValueFactory<>("vk"));
         qjColumn.setCellValueFactory(new PropertyValueFactory<>("qj"));
         qkColumn.setCellValueFactory(new PropertyValueFactory<>("qk"));
+        
+        remainingTimeColumn.setCellValueFactory(cellData -> {
+            ReservationStationEntry entry = cellData.getValue();
+            if (entry.getCurrInstruction() != null) {
+                int remainingTime = entry.getCurrInstruction().getEndTime() - Simulator.clockCycle;
+                return new javafx.beans.property.SimpleStringProperty(
+                    "Remaining: " + Math.max(0, remainingTime) + 
+                    " / Clock: " + Simulator.clockCycle
+                );
+            }
+            return new javafx.beans.property.SimpleStringProperty("N/A");
+        });
 
-        // Add columns to the table
-        tableView.getColumns().add(tagColumn);
-        tableView.getColumns().add(busyColumn);
-        tableView.getColumns().add(addressColumn);
-        tableView.getColumns().add(vjColumn);
-        tableView.getColumns().add(vkColumn);
-        tableView.getColumns().add(qjColumn);
-        tableView.getColumns().add(qkColumn);
+        tableView.getColumns().addAll(
+            tagColumn, busyColumn, addressColumn, 
+            vjColumn, vkColumn, qjColumn, qkColumn, 
+            remainingTimeColumn
+        );
+        return tableView;
+    }
+
+    private TableView<Register> createRegisterTableView(String title) {
+        TableView<Register> tableView = new TableView<>();
+
+        TableColumn<Register, Double> valueColumn = new TableColumn<>("value");
+        TableColumn<Register, String> qColumn = new TableColumn<>("Q");
+
+        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
+        qColumn.setCellValueFactory(new PropertyValueFactory<>("Q"));
+
+        tableView.getColumns().addAll(valueColumn, qColumn);
+        tableView.setPlaceholder(new javafx.scene.control.Label(title + " - No Data"));
 
         return tableView;
     }
 
-    public void populateReservationStationAddSub() {
-        ReservationStation rs = Simulator.getAddSubReservationStation();
-        Vector<ReservationStationEntry> vectorEntries = rs.getEntries();
-        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        addSubReservationStationTable.setItems(observableEntries);
+    private TableView<Instruction> createInstructionQueueTableView() {
+        TableView<Instruction> tableView = new TableView<>();
+        tableView.setPlaceholder(new javafx.scene.control.Label("Instruction Queue - No Instructions"));
+    
+        TableColumn<Instruction, String> typeColumn = new TableColumn<>("Type");
+        TableColumn<Instruction, String> rsColumn = new TableColumn<>("Rs");
+        TableColumn<Instruction, String> rtColumn = new TableColumn<>("Rt");
+        TableColumn<Instruction, String> rdColumn = new TableColumn<>("Rd");
+        TableColumn<Instruction, Integer> pcColumn = new TableColumn<>("PC");
+        TableColumn<Instruction, Integer> immediateColumn = new TableColumn<>("Immediate");
+    
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        rsColumn.setCellValueFactory(new PropertyValueFactory<>("rs"));
+        rtColumn.setCellValueFactory(new PropertyValueFactory<>("rt"));
+        rdColumn.setCellValueFactory(new PropertyValueFactory<>("rd"));
+        pcColumn.setCellValueFactory(new PropertyValueFactory<>("pc"));
+        immediateColumn.setCellValueFactory(new PropertyValueFactory<>("immediate"));
+    
+        tableView.getColumns().addAll(typeColumn, rsColumn, rtColumn, rdColumn, pcColumn, immediateColumn);
+    
+        return tableView;
     }
-
-    public void populateReservationStationMulDiv() {
-        Vector<ReservationStationEntry> vectorEntries = Simulator.getMulDivReservationStation().getEntries();
-        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        mulDivReservationStationTable.setItems(observableEntries);
-    }
-
-    public void populateReservationStationLoad() {
-        Vector<ReservationStationEntry> vectorEntries = Simulator.getLoadBuffer().getEntries();
-        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        loadReservationStationTable.setItems(observableEntries);
-    }
-
-    public void populateReservationStationStore() {
-        Vector<ReservationStationEntry> vectorEntries = Simulator.getStoreBuffer().getEntries();
-        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
-        storeReservationStationTable.setItems(observableEntries);
-    }
-
-    public void updateAndRefreshTables() {
-        // Call the method in Simulator to update entries
-        // Simulator.executeNextCycle();
-        // Refresh the tables
+    public void populateReservationStationTables() {
         populateReservationStationAddSub();
         populateReservationStationMulDiv();
         populateReservationStationLoad();
         populateReservationStationStore();
     }
+    private void populateReservationStationAddSub() {
+        ReservationStation rs = Simulator.getAddSubReservationStation();
+        Vector<ReservationStationEntry> vectorEntries = rs.getEntries();
+        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
+        addSubReservationStationTable.setItems(observableEntries);
+    }
+    private void populateReservationStationMulDiv() {
+        Vector<ReservationStationEntry> vectorEntries = Simulator.getMulDivReservationStation().getEntries();
+        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
+        mulDivReservationStationTable.setItems(observableEntries);
+    }
+    private void populateReservationStationLoad() {
+        Vector<ReservationStationEntry> vectorEntries = Simulator.getLoadBuffer().getEntries();
+        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
+        loadReservationStationTable.setItems(observableEntries);
+    }
+    private void populateReservationStationStore() {
+        Vector<ReservationStationEntry> vectorEntries = Simulator.getStoreBuffer().getEntries();
+        ObservableList<ReservationStationEntry> observableEntries = FXCollections.observableArrayList(vectorEntries);
+        storeReservationStationTable.setItems(observableEntries);
+    }
 
+    private void populateRegisterTables() {
+        ObservableList<Register> integerRegisters = FXCollections.observableArrayList(registerFile.getR());
+        integerRegisterTable.setItems(integerRegisters);
+
+        ObservableList<Register> floatRegisters = FXCollections.observableArrayList(registerFile.getF());
+        floatRegisterTable.setItems(floatRegisters);
+    }
+    private void populateInstructionQueueTable() {
+        List<Instruction> instructionList = new ArrayList<>();
+        int size = Simulator.getInstructionQueue().size();
+        InstructionQueue instructionQueue= Simulator.getInstructionQueue();
+        for (int i = 0; i < size; i++) {
+            Instruction instruction = instructionQueue.dequeueInstruction();
+            if (instruction != null) {
+                instructionList.add(instruction);
+            }
+        }
+        
+        ObservableList<Instruction> observableInstructions = 
+            FXCollections.observableArrayList(instructionList);
+        instructionQueueTable.setItems(observableInstructions);
+    }
+
+    
+    public void updateAndRefreshTables() {
+
+        //Simulator.executeNextCycle();
+        populateReservationStationTables();
+        populateRegisterTables();
+       // populateInstructionQueueTable();
+    }
 }

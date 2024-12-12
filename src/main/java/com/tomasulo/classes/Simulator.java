@@ -1,6 +1,8 @@
 package com.tomasulo.classes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Simulator {
 
@@ -16,7 +18,6 @@ public class Simulator {
     public static Cache cache;
     public static Bus bus;
     public static int pc = 0;
-
     public static int getClockCycle() {
         return clockCycle;
     }
@@ -25,10 +26,31 @@ public class Simulator {
         return registerFile;
     }
 
-    public static InstructionQueue getInstructionQueue() {
-        return instructionQueue;
+   public static InstructionQueue getInstructionQueue() {
+        InstructionQueue clonedQueue = new InstructionQueue();
+        InstructionQueue originalQueue = instructionQueue;
+       
+        // Create a temporary list to hold the instructions
+        List<Instruction> instructionList = new ArrayList<>();
+        
+        // Dequeue all instructions from the original queue and add them to the list
+        while (originalQueue.size() > 0) {
+            Instruction instruction = originalQueue.dequeueInstruction();
+            instructionList.add(instruction);
+        }
+        
+        // Requeue all instructions back to the original queue
+        for (Instruction instruction : instructionList) {
+            originalQueue.enqueueInstruction(instruction);
+        }
+        
+        // Add all instructions from the list to the cloned queue
+        for (Instruction instruction : instructionList) {
+            clonedQueue.enqueueInstruction(instruction);
+        }
+        
+        return clonedQueue;
     }
-
     public static ReservationStation getAddSubReservationStation() {
         return addSubReservationStation;
     }
@@ -76,8 +98,8 @@ public class Simulator {
         integerReservationStation = new ReservationStation(
                 UserInputValues.getReservationStationAddSubIntegerSize(), ReservationStationType.INTEGER);
         try {
-            instructionQueue = new InstructionQueue(
-                    InstructionParser.parseInstructions("src/main/resources/com/tomasulo/instructions.txt"));
+            instructionQueue = new InstructionQueue();
+            instructionQueue.loadInstruction(InstructionParser.parseInstructions("src/main/resources/com/tomasulo/instructions.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -156,41 +178,43 @@ public class Simulator {
 
     }
 
-    // public static boolean executeNextCycle() {
-    // clockCycle++;
-    // if (instructionQueue.size() > 0) {
-    // Issuer.issue();
-    // }
-    // Executer.execute();
-    // WriteBack.writeBack();
-    // System.out.println("Clock Cycle: " + clockCycle);
-    // displayReservationStations();
-    // clockCycle++;
-    // return !(endSystem()) || instructionQueue.size() > 0;
-    // }
+    public static boolean executeNextCycle(){
+        if (instructionQueue.size() > 0) {
+             Issuer.issue();
+        }
+        Executer.execute();
+        WriteBack.writeBack();
+        System.out.println("Clock Cycle: " + clockCycle);
+        displayReservationStations();
+        registerFile.displayRegisterFiles();
+
+        clockCycle++;
+
+        return !(endSystem()) || instructionQueue.size() > 0;
+    }
 
     public static void main(String[] args) throws IOException {
 
         getUserInputs();
         init();
         // executeNextCycle();
-        while (!(endSystem()) || instructionQueue.size() > 0) {
+        // while (!(endSystem()) || instructionQueue.size() > 0) {
 
-            System.out.println(
-                    "------------------------ Start of clock cycle " + clockCycle + "-----------------------------");
-            if (instructionQueue.size() > 0) {
-                Issuer.issue();
-            }
-            Executer.execute();
-            WriteBack.writeBack();
+        //     System.out.println(
+        //             "------------------------ Start of clock cycle " + clockCycle + "-----------------------------");
+        //     if (instructionQueue.size() > 0) {
+        //         Issuer.issue();
+        //     }
+        //     Executer.execute();
+        //     WriteBack.writeBack();
 
-            displayReservationStations();
-            System.out.println(
-                    "------------------------ End of clock cycle " + clockCycle + "-----------------------------");
+        //     displayReservationStations();
+        //     System.out.println(
+        //             "------------------------ End of clock cycle " + clockCycle + "-----------------------------");
 
-            clockCycle++;
+        //     clockCycle++;
 
-        }
+        // }
         System.out.println("Done: " + clockCycle);
         registerFile.displayRegisterFiles();
         displayReservationStations();

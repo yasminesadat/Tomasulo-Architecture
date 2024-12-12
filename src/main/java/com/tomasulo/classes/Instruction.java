@@ -12,11 +12,19 @@ public class Instruction {
     int issueTime;
     int writeTime;
     int pc;
+    public static int getInstructionCount() {
+        return instructionCount;
+    }
 
+    public static void setInstructionCount(int instructionCount) {
+        Instruction.instructionCount = instructionCount;
+    }
     public String getType() {
         return type;
     }
-
+    public int getPc() {
+        return pc;
+    }
     public String getRs() {
         return rs;
     }

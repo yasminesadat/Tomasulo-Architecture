@@ -14,8 +14,23 @@ public class InstructionQueue {
      * @param instructionsList The list of instructions to initialize the queue
      *                         with.
      */
-    public InstructionQueue(List<Instruction> instructionsList) {
-        this.instructions = new ArrayList<Instruction>(instructionsList); // Create a new list based on the input
+    public InstructionQueue() {
+        this.instructions = new ArrayList<Instruction>(); // Create a new list based on the input
+    }
+    public Instruction getPCInstruction(int address){
+        Instruction instruction = instructions.get(address);
+        Instruction newInstruction=new Instruction();
+        newInstruction.setPc(instruction.getPc());
+        newInstruction.setType(instruction.getType());
+        newInstruction.setEndTime(-1);
+        newInstruction.setStartTime(-1);
+        newInstruction.setIssueTime(-1);
+        newInstruction.setWriteTime(-1);
+        newInstruction.setRd(instruction.getRd());
+        newInstruction.setRs(instruction.getRs());
+        newInstruction.setRt(instruction.getRt());
+        newInstruction.setImmediate(instruction.getImmediate());
+        return newInstruction;
     }
 
     /**
@@ -36,6 +51,13 @@ public class InstructionQueue {
         }
         return null;
     }
+    public void enqueueInstruction(Instruction instruction) {
+             instructions.add(instruction);
+    }
+
+    public void loadInstruction(List<Instruction> instructionsList){
+        this.instructions=new ArrayList<Instruction>(instructionsList);
+    }
 
     /**
      * Gets the current size of the queue.
@@ -55,4 +77,5 @@ public class InstructionQueue {
             System.out.println(instruction);
         }
     }
+    
 }

@@ -70,7 +70,6 @@ public class PrimaryController {
         Stage stage = (Stage) saveButton.getScene().getWindow();
         TomasuloController tomasuloController = new TomasuloController();
         tomasuloController.initialize(stage);
-
         tomasuloController.updateAndRefreshTables();
     }
 }

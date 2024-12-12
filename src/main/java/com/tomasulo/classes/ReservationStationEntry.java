@@ -109,17 +109,24 @@ public class ReservationStationEntry {
 
     public boolean canWrite() {
         if (this.qj.equals("0") && this.qk.equals("0")
+        && this.currInstruction.getStartTime() <= Simulator.clockCycle 
+        && this.currInstruction.getIssueTime() < Simulator.clockCycle
+        && this.currInstruction.getEndTime() >= Simulator.clockCycle
+        && this.busy) {
+            System.out.println(" Remaining time "+this.currInstruction.type+" now is" + (this.currInstruction.endTime - Simulator.clockCycle));
+        }
+        if (this.qj.equals("0") && this.qk.equals("0")
                 && this.currInstruction.getEndTime() < Simulator.clockCycle
-                && this.currInstruction.issueTime != Simulator.clockCycle && this.busy)
+                && this.currInstruction.getIssueTime() < Simulator.clockCycle
+               && this.busy)
 
         {
-            System.out.println("True Remaining time now is" + (this.currInstruction.endTime - Simulator.clockCycle));
+           
+            //System.out.println("True Remaining time now is" + (this.currInstruction.endTime - Simulator.clockCycle));
             return true;
 
         }
-        if (this.busy) {
-            System.out.println(" Remaining time now is" + (this.currInstruction.endTime - Simulator.clockCycle));
-        }
+       
         return false;
     }
 

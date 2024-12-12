@@ -50,7 +50,7 @@ public class Issuer {
             System.out.println("No space in reservation station");
             return false;
         } else {
-            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
             instruction.setIssueTime(Simulator.clockCycle);
             Register source1 = getRegister(instruction.getRs());
             Register source2 = getRegister(instruction.getRt());
@@ -71,7 +71,7 @@ public class Issuer {
             return false;
         } else {
 
-            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
             instruction.setIssueTime(Simulator.clockCycle);
             Register source1 = getRegister(instruction.getRs());
             Register source2 = getRegister(instruction.getRt());
@@ -92,7 +92,7 @@ public class Issuer {
             System.out.println("No space in reservation station");
             return false;
         } else {
-            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
             instruction.setIssueTime(Simulator.clockCycle);
             Simulator.instructionQueue.dequeueInstruction();
             Register source1 = getRegister(instruction.getRs());
@@ -115,7 +115,7 @@ public class Issuer {
             return false;
         } else {
 
-            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
             instruction.setIssueTime(Simulator.clockCycle);
 
             Register source1 = getRegister(instruction.getRs());
@@ -137,7 +137,7 @@ public class Issuer {
             System.out.println("No space in load buffer");
             return false;
         } else {
-            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
             instruction.setIssueTime(Simulator.clockCycle);
             Register destination = getRegister(instruction.getRd());
             int immediate = instruction.getImmediate();
@@ -155,7 +155,7 @@ public class Issuer {
             System.out.println("No space in store buffer");
             return false;
         } else {
-            Instruction instruction = Simulator.instructionQueue.dequeueInstruction();
+            Instruction instruction = Simulator.instructionQueue.getPCInstruction(Simulator.pc);
             instruction.setIssueTime(Simulator.clockCycle);
             Register source = getRegister(instruction.getRs());
             int immediate = instruction.getImmediate();
