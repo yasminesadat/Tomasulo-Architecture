@@ -1,5 +1,7 @@
 package com.tomasulo.classes;
 
+import javafx.css.SizeUnits;
+
 public class WriteBack {
 
     public static void writeBack() {
@@ -18,7 +20,7 @@ public class WriteBack {
                     writingBackEntry = entry;
                     desiredStation = Simulator.addSubReservationStation;
                 }
-                System.out.println("Writing back: " + entry.tag);
+                System.out.println("Writing back: " + entry.tag + "pc:  " + entry.getCurrInstruction().pc);
 
             }
 
@@ -60,6 +62,7 @@ public class WriteBack {
 
         }
         if (writingBackEntry != null) {
+            System.out.println("Writing back right now in cycle : " + Simulator.clockCycle + writingBackEntry.tag);
             writingBackEntry.setBusy(false);
             writingBackEntry.getCurrInstruction().setWriteTime(Simulator.clockCycle);
             desiredStation.setFreeSpaces(desiredStation.getFreeSpaces() + 1);

@@ -95,7 +95,7 @@ public class ReservationStation {
         }
     }
 
-    public boolean canStartExecution() {
+    public void canStartExecution() {
         for (int i = 0; i < entries.size(); i++) {
             if (entries.get(i).qj.equals("0") && entries.get(i).qk.equals("0")
                     && entries.get(i).currInstruction.getIssueTime() != Simulator.clockCycle && entries.get(i).busy
@@ -176,12 +176,12 @@ public class ReservationStation {
                 endExecutionTime = entries.get(i).currInstruction.getStartTime() + latency - 1;
                 entries.get(i).currInstruction.setEndTime(endExecutionTime);
                 System.out.println("Instruction " + entries.get(i).currInstruction.type
-                        + " started execution at clock cycle" + Simulator.clockCycle);
+                        + " started execution at clock cycle" + Simulator.clockCycle + " pc "
+                        + entries.get(i).currInstruction.pc);
 
-                return true;
             }
         }
-        return false;
+
     }
 
     public void setFreeSpaces(int freeSpaces) {

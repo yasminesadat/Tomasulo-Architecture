@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Simulator {
 
-    public static int clockCycle = 0;
+    public static int clockCycle = 1;
     public static RegisterFile registerFile;
     public static InstructionQueue instructionQueue;
     public static ReservationStation addSubReservationStation;
@@ -182,9 +182,11 @@ public class Simulator {
     }
 
     public static boolean executeNextCycle() {
+
         if (instructionQueue.size() > Simulator.pc) {
             Issuer.issue();
         }
+
         Executer.execute();
         WriteBack.writeBack();
         System.out.println("Clock Cycle: " + clockCycle);
@@ -193,6 +195,7 @@ public class Simulator {
 
         clockCycle++;
 
+        ///////////////////////////////////////////
         return !(endSystem()) || instructionQueue.size() > 0;
     }
 
@@ -201,25 +204,19 @@ public class Simulator {
         getUserInputs();
         init();
         // executeNextCycle();
-        // while (!(endSystem()) || instructionQueue.size() > 0) {
+        while (clockCycle < 20) {
 
-        // System.out.println(
-        // "------------------------ Start of clock cycle " + clockCycle +
-        // "-----------------------------");
-        // if (instructionQueue.size() > 0) {
-        // Issuer.issue();
-        // }
-        // Executer.execute();
-        // WriteBack.writeBack();
+            if (instructionQueue.size() > Simulator.pc) {
+                Issuer.issue();
+            }
+            Executer.execute();
+            WriteBack.writeBack();
+            System.out.println("Clock Cycle: " + clockCycle);
+            displayReservationStations();
+            System.out.println("End of Clock Cycle: " + clockCycle);
+            clockCycle++;
 
-        // displayReservationStations();
-        // System.out.println(
-        // "------------------------ End of clock cycle " + clockCycle +
-        // "-----------------------------");
-
-        // clockCycle++;
-
-        // }
+        }
         System.out.println("Done: " + clockCycle);
         registerFile.displayRegisterFiles();
         displayReservationStations();

@@ -71,7 +71,7 @@ public class TomasuloController {
         Label instructionQueueLabel = createTableLabel("Instruction Queue");
 
         // Clock cycle controls
-        clockCycleLabel = new Label("Current Clock Cycle: " + Simulator.getClockCycle());
+        clockCycleLabel = new Label("Current Clock Cycle: " + 0);
         nextCycleButton = new Button("Next Cycle");
         nextCycleButton.setOnAction(e -> advanceClockCycle());
 
@@ -159,12 +159,10 @@ public class TomasuloController {
     }
 
     private void advanceClockCycle() {
-        // Execute next cycle
+        clockCycleLabel.setText("Current Clock Cycle: " + (Simulator.getClockCycle()));
         boolean continueSimulation = Simulator.executeNextCycle();
 
-        // Update clock cycle label
-        clockCycleLabel.setText("Current Clock Cycle: " + Simulator.getClockCycle());
-
+        // Update clock cycle labels
         populateReservationStationTables();
         populateRegisterTables();
         // populateInstructionQueueTable();
@@ -185,10 +183,9 @@ public class TomasuloController {
         TableColumn<ReservationStationEntry, Double> vkColumn = new TableColumn<>("Vk");
         TableColumn<ReservationStationEntry, String> qjColumn = new TableColumn<>("Qj");
         TableColumn<ReservationStationEntry, String> qkColumn = new TableColumn<>("Qk");
-
-        // New column for remaining time and current clock cycle
-        TableColumn<ReservationStationEntry, String> remainingTimeColumn = new TableColumn<>(
-                "Remaining Time/Clock Cycle");
+        TableColumn<ReservationStationEntry, Integer> remainingTimeColumn = new TableColumn<>("Remaining Time");
+        remainingTimeColumn.setPrefWidth(200);
+        remainingTimeColumn.setCellValueFactory(new PropertyValueFactory<>("remainingTime"));
         tagColumn.setPrefWidth(80);
         busyColumn.setPrefWidth(60);
         addressColumn.setPrefWidth(80);
@@ -204,18 +201,6 @@ public class TomasuloController {
         vkColumn.setCellValueFactory(new PropertyValueFactory<>("vk"));
         qjColumn.setCellValueFactory(new PropertyValueFactory<>("qj"));
         qkColumn.setCellValueFactory(new PropertyValueFactory<>("qk"));
-
-        remainingTimeColumn.setCellValueFactory(cellData -> {
-            ReservationStationEntry entry = cellData.getValue();
-            if (entry.getCurrInstruction() != null
-                    && entry.getCurrInstruction().getIssueTime() == Simulator.clockCycle) {
-                int remainingTime = entry.getCurrInstruction().getEndTime() - Simulator.clockCycle;
-                return new javafx.beans.property.SimpleStringProperty(
-                        String.valueOf(Math.max(0, remainingTime)));
-            }
-            remainingTimeColumn.setMinWidth(200);
-            return new javafx.beans.property.SimpleStringProperty("N/A");
-        });
         tableView.getColumns().addAll(
                 tagColumn, busyColumn, addressColumn,
                 vjColumn, vkColumn, qjColumn, qkColumn,
@@ -284,6 +269,7 @@ public class TomasuloController {
     private void populateReservationStationAddSub() {
         addSubReservationStationObservableList.setAll(Simulator.getAddSubReservationStation().getEntries());
         addSubReservationStationTable.setItems(addSubReservationStationObservableList);
+        addSubReservationStationTable.refresh();
     }
 
     private void populateReservationStationMulDiv() {
@@ -292,6 +278,7 @@ public class TomasuloController {
                                                                                                              // new
                                                                                                              // entries
         mulDivReservationStationTable.setItems(mulDivReservationStationObservableList);
+        mulDivReservationStationTable.refresh();
     }
 
     private void populateReservationStationLoad() {

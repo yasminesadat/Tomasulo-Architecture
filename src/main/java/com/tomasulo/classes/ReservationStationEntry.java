@@ -14,6 +14,7 @@ public class ReservationStationEntry {
     int issueTime;
     double result;
     FunctionalUnit functionalUnit;
+    int remainingTime;
 
     public ReservationStationEntry(String tag) {
         this.tag = tag;
@@ -37,6 +38,27 @@ public class ReservationStationEntry {
 
     public boolean isBusy() {
         return busy;
+    }
+
+    public String getRemainingTime() {
+        if (this.currInstruction != null) {
+            // System.out.println("Start time " + this.currInstruction.getStartTime());
+            // System.out.println("End time " + this.currInstruction.getEndTime());
+            // System.out.println("Issue time " + this.currInstruction.getIssueTime());
+            // System.out.println("Clock Cycle" + Simulator.clockCycle);
+            // If instruction is executing (has started but not finished)
+            if (this.currInstruction.getStartTime() != -1 &&
+                    this.currInstruction.getEndTime() >= Simulator.clockCycle) {
+                int remainingTime = this.currInstruction.getEndTime() - Simulator.clockCycle;
+                System.out.println(currInstruction.type + " Remaining time " + remainingTime);
+                return String.valueOf(remainingTime);
+            }
+            // If instruction has just been issued or waiting to execute
+            else if (this.currInstruction.getIssueTime() != -1) {
+                return String.valueOf(5);
+            }
+        }
+        return "N/A";
     }
 
     public void setBusy(boolean busy) {
@@ -109,24 +131,26 @@ public class ReservationStationEntry {
 
     public boolean canWrite() {
         if (this.qj.equals("0") && this.qk.equals("0")
-        && this.currInstruction.getStartTime() <= Simulator.clockCycle 
-        && this.currInstruction.getIssueTime() < Simulator.clockCycle
-        && this.currInstruction.getEndTime() >= Simulator.clockCycle
-        && this.busy) {
-            System.out.println(" Remaining time "+this.currInstruction.type+" now is" + (this.currInstruction.endTime - Simulator.clockCycle));
+                && this.currInstruction.getStartTime() <= Simulator.clockCycle
+                && this.currInstruction.getIssueTime() < Simulator.clockCycle
+                && this.currInstruction.getEndTime() >= Simulator.clockCycle
+                && this.busy) {
+            System.out.println(" Remaining time " + this.currInstruction.type + " now is"
+                    + (this.currInstruction.endTime - Simulator.clockCycle) + " pc:  " + this.getCurrInstruction().pc);
         }
         if (this.qj.equals("0") && this.qk.equals("0")
                 && this.currInstruction.getEndTime() < Simulator.clockCycle
                 && this.currInstruction.getIssueTime() < Simulator.clockCycle
-               && this.busy)
+                && this.busy)
 
         {
-           
-            //System.out.println("True Remaining time now is" + (this.currInstruction.endTime - Simulator.clockCycle));
+
+            // System.out.println("True Remaining time now is" +
+            // (this.currInstruction.endTime - Simulator.clockCycle));
             return true;
 
         }
-       
+
         return false;
     }
 
@@ -140,5 +164,3 @@ public class ReservationStationEntry {
                 + ", vk=" + vk + ", qj=" + qj + ", qk=" + qk + "]";
     }
 }
-    
-
