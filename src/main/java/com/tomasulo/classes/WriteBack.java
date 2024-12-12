@@ -52,16 +52,21 @@ public class WriteBack {
                     // branch
                     System.out.println("hiiiiii" + entry.getCurrInstruction().getType());
                     System.out.println("hiiiiii" + entry.getFunctionalUnit().result);
-                    if (entry.getCurrInstruction().getType() == "BEQ") {
-                        if (entry.getFunctionalUnit().result == 0)
+                    if (entry.getCurrInstruction().getType().equals("BEQ")) {
+                        if (entry.getFunctionalUnit().result == 0) {
                             Simulator.pc = entry.getCurrInstruction().immediate;
+                        } else {
+                            Simulator.pc++;
+                        }
 
                     }
-
-                    if (entry.getCurrInstruction().getType() == "BNE") {
-                        if (entry.getFunctionalUnit().result != 0)
+                    if (entry.getCurrInstruction().getType().equals("BNE")) {
+                        if (entry.getFunctionalUnit().result != 0) {
                             System.out.println("Updating pc to " + Simulator.pc);
-                        Simulator.pc = entry.getCurrInstruction().immediate;
+                            Simulator.pc = entry.getCurrInstruction().immediate;
+                        } else {
+                            Simulator.pc++;
+                        }
 
                     }
                     Simulator.isBranchTaken = false;

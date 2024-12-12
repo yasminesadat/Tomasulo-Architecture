@@ -127,7 +127,6 @@ public class Issuer {
             FunctionalUnit functionalUnit = new AddSubFU();
             int index = reservationStation.addEntry(address, source1.getValue(), source2.getValue(),
                     source1.getQ(), source2.getQ(), instruction, functionalUnit);
-            Simulator.pc++;
 
         }
         return true;
