@@ -78,46 +78,53 @@ public class TomasuloController {
 
         // Clock cycle controls
         clockCycleLabel = new Label("Current Clock Cycle: " + 0);
+        clockCycleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         nextCycleButton = new Button("Next Cycle");
+        nextCycleButton.setStyle("-fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-radius: 4px;");
         nextCycleButton.setOnAction(e -> advanceClockCycle());
 
         // Create an HBox for clock cycle controls
-        HBox clockControlBox = new HBox(10, clockCycleLabel, nextCycleButton);
-        clockControlBox.setPadding(new Insets(10));
+        HBox clockControlBox = new HBox(20, clockCycleLabel, nextCycleButton);
+        clockControlBox.setAlignment(javafx.geometry.Pos.CENTER);
+        clockControlBox.setPadding(new Insets(15));
+        clockControlBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0;");
 
+        VBox leftColumn = new VBox(10);
+        leftColumn.getChildren().addAll(
+                createTableSection(addSubLabel, addSubReservationStationTable),
+                createTableSection(mulDivLabel, mulDivReservationStationTable));
+        leftColumn.setPrefWidth(400);
         // Create containers for each section with label and table
-        VBox addSubSection = createTableSection(addSubLabel, addSubReservationStationTable);
-        VBox mulDivSection = createTableSection(mulDivLabel, mulDivReservationStationTable);
-        VBox loadSection = createTableSection(loadLabel, loadReservationStationTable);
-        VBox storeSection = createTableSection(storeLabel, storeReservationStationTable);
-        VBox integerSection = createTableSection(integerLabel, integerReservationStationTable);
-
-        VBox intRegSection = createTableSection(intRegLabel, integerRegisterTable);
-        VBox floatRegSection = createTableSection(floatRegLabel, floatRegisterTable);
-        VBox instructionSection = createTableSection(instructionQueueLabel, instructionQueueTable);
-
+        VBox middleColumn = new VBox(10);
+        middleColumn.getChildren().addAll(
+                createTableSection(loadLabel, loadReservationStationTable),
+                createTableSection(storeLabel, storeReservationStationTable),
+                createTableSection(integerLabel, integerReservationStationTable));
+        middleColumn.setPrefWidth(400);
+        VBox rightColumn = new VBox(10);
+        rightColumn.getChildren().addAll(
+                createTableSection(intRegLabel, integerRegisterTable),
+                createTableSection(floatRegLabel, floatRegisterTable));
+        rightColumn.setPrefWidth(300);
         // Create layout for reservation stations (left side)
-        VBox reservationStations = new VBox(10);
-        reservationStations.getChildren().addAll(addSubSection, mulDivSection, loadSection, storeSection,
-                integerSection);
-        reservationStations.setPrefWidth(500);
 
         // Create layout for registers (right side)
-        VBox registers = new VBox(10);
-        registers.getChildren().addAll(intRegSection, floatRegSection);
-        registers.setPrefWidth(300);
+        VBox instructionQueueSection = createTableSection(instructionQueueLabel, instructionQueueTable);
+        instructionQueueSection.setPrefHeight(200);
+
+        // Create horizontal layout for the three columns
+        HBox columnsLayout = new HBox(15);
+        columnsLayout.getChildren().addAll(leftColumn, middleColumn, rightColumn);
+        columnsLayout.setPadding(new Insets(10));
+        columnsLayout.setStyle("-fx-background-color: white;");
 
         // Create horizontal layout for main content
-        HBox mainContent = new HBox(10);
-        mainContent.getChildren().addAll(reservationStations, registers);
-        mainContent.setPadding(new Insets(10));
 
-        // Create final vertical layout
         VBox root = new VBox(10);
-        root.getChildren().addAll(clockControlBox, mainContent, instructionSection);
-        root.setPadding(new Insets(10));
+        root.getChildren().addAll(clockControlBox, columnsLayout, instructionQueueSection);
+        root.setStyle("-fx-background-color: white;");
 
-        // Set table sizes
+        // Modify the createTableSection method to add styling
         setTableSizes();
 
         // Populate initial data
@@ -125,7 +132,7 @@ public class TomasuloController {
 
         // Create and configure the scene
         Scene scene = new Scene(root);
-        scene.getRoot().setStyle("-fx-font-family: 'Arial';");
+        scene.getRoot().setStyle("-fx-font-family: 'Arial'; -fx-background-color: white;");
 
         // Configure and show the stage
         stage.setTitle("Tomasulo Algorithm Simulator");
@@ -136,7 +143,7 @@ public class TomasuloController {
 
     private Label createTableLabel(String text) {
         Label label = new Label(text);
-        label.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        label.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 5px 0; -fx-text-fill: #2c3e50;");
         return label;
     }
 
@@ -144,28 +151,30 @@ public class TomasuloController {
         VBox section = new VBox(5);
         section.getChildren().addAll(label, table);
         VBox.setVgrow(table, javafx.scene.layout.Priority.ALWAYS);
+        section.setStyle("-fx-background-color: white; -fx-padding: 10; " +
+                "-fx-border-color: #e0e0e0; -fx-border-radius: 4; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);");
         return section;
     }
 
     private void setTableSizes() {
-        // Set preferred heights for all tables
-        addSubReservationStationTable.setPrefHeight(150);
-        mulDivReservationStationTable.setPrefHeight(150);
-        loadReservationStationTable.setPrefHeight(150);
-        storeReservationStationTable.setPrefHeight(150);
-        integerRegisterTable.setPrefHeight(200);
-        floatRegisterTable.setPrefHeight(200);
+        // Set heights for all tables
+        TableView<?>[] tables = {
+                addSubReservationStationTable, mulDivReservationStationTable,
+                loadReservationStationTable, storeReservationStationTable,
+                integerReservationStationTable, integerRegisterTable,
+                floatRegisterTable, instructionQueueTable
+        };
+
+        for (TableView<?> table : tables) {
+            table.setPrefHeight(200);
+            table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            table.setStyle("-fx-border-color: #e0e0e0; -fx-border-width: 1; " +
+                    "-fx-border-radius: 4; -fx-background-color: white;");
+        }
+
+        // Make instruction queue table slightly shorter
         instructionQueueTable.setPrefHeight(150);
-        integerRegisterTable.setPrefHeight(150);
-        // Make tables fill their containers
-        addSubReservationStationTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        mulDivReservationStationTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        loadReservationStationTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        storeReservationStationTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        integerRegisterTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        floatRegisterTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        instructionQueueTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        integerReservationStationTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void advanceClockCycle() {
