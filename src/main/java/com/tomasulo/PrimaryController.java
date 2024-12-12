@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.tomasulo.classes.Simulator;
 import com.tomasulo.classes.UserInputValues;
-
+import javafx.scene.text.Font;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

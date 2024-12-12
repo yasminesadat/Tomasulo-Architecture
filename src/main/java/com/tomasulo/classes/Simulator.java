@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Simulator {
 
-    public static int clockCycle = 1;
+    public static int clockCycle = 0;
     public static RegisterFile registerFile;
     public static InstructionQueue instructionQueue;
     public static ReservationStation addSubReservationStation;
@@ -18,6 +18,7 @@ public class Simulator {
     public static Cache cache;
     public static Bus bus;
     public static int pc = 0;
+
     public static int getClockCycle() {
         return clockCycle;
     }
@@ -26,31 +27,32 @@ public class Simulator {
         return registerFile;
     }
 
-   public static InstructionQueue getInstructionQueue() {
+    public static InstructionQueue getInstructionQueue() {
         InstructionQueue clonedQueue = new InstructionQueue();
         InstructionQueue originalQueue = instructionQueue;
-       
+
         // Create a temporary list to hold the instructions
         List<Instruction> instructionList = new ArrayList<>();
-        
+
         // Dequeue all instructions from the original queue and add them to the list
         while (originalQueue.size() > 0) {
             Instruction instruction = originalQueue.dequeueInstruction();
             instructionList.add(instruction);
         }
-        
+
         // Requeue all instructions back to the original queue
         for (Instruction instruction : instructionList) {
             originalQueue.enqueueInstruction(instruction);
         }
-        
+
         // Add all instructions from the list to the cloned queue
         for (Instruction instruction : instructionList) {
             clonedQueue.enqueueInstruction(instruction);
         }
-        
+
         return clonedQueue;
     }
+
     public static ReservationStation getAddSubReservationStation() {
         return addSubReservationStation;
     }
@@ -99,7 +101,8 @@ public class Simulator {
                 UserInputValues.getReservationStationAddSubIntegerSize(), ReservationStationType.INTEGER);
         try {
             instructionQueue = new InstructionQueue();
-            instructionQueue.loadInstruction(InstructionParser.parseInstructions("src/main/resources/com/tomasulo/instructions.txt"));
+            instructionQueue.loadInstruction(
+                    InstructionParser.parseInstructions("src/main/resources/com/tomasulo/instructions.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -178,9 +181,9 @@ public class Simulator {
 
     }
 
-    public static boolean executeNextCycle(){
+    public static boolean executeNextCycle() {
         if (instructionQueue.size() > Simulator.pc) {
-             Issuer.issue();
+            Issuer.issue();
         }
         Executer.execute();
         WriteBack.writeBack();
@@ -200,19 +203,21 @@ public class Simulator {
         // executeNextCycle();
         // while (!(endSystem()) || instructionQueue.size() > 0) {
 
-        //     System.out.println(
-        //             "------------------------ Start of clock cycle " + clockCycle + "-----------------------------");
-        //     if (instructionQueue.size() > 0) {
-        //         Issuer.issue();
-        //     }
-        //     Executer.execute();
-        //     WriteBack.writeBack();
+        // System.out.println(
+        // "------------------------ Start of clock cycle " + clockCycle +
+        // "-----------------------------");
+        // if (instructionQueue.size() > 0) {
+        // Issuer.issue();
+        // }
+        // Executer.execute();
+        // WriteBack.writeBack();
 
-        //     displayReservationStations();
-        //     System.out.println(
-        //             "------------------------ End of clock cycle " + clockCycle + "-----------------------------");
+        // displayReservationStations();
+        // System.out.println(
+        // "------------------------ End of clock cycle " + clockCycle +
+        // "-----------------------------");
 
-        //     clockCycle++;
+        // clockCycle++;
 
         // }
         System.out.println("Done: " + clockCycle);

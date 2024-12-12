@@ -1,3 +1,5 @@
+package com.tomasulo.classes;
+
 public class Memory {
 
     private final byte[] memory;
