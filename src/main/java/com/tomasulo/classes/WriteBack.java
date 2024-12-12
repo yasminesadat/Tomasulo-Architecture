@@ -46,12 +46,8 @@ public class WriteBack {
                         maxWaiting = Simulator.getWaitingStation(entry.getTag());
                         writingBackEntry = entry;
                         desiredStation = Simulator.integerReservationStation;
-
                     }
                 } else {
-                    // branch
-                    System.out.println("hiiiiii" + entry.getCurrInstruction().getType());
-                    System.out.println("hiiiiii" + entry.getFunctionalUnit().result);
                     if (entry.getCurrInstruction().getType().equals("BEQ")) {
                         if (entry.getFunctionalUnit().result == 0) {
                             Simulator.pc = entry.getCurrInstruction().immediate;
@@ -62,7 +58,7 @@ public class WriteBack {
                     }
                     if (entry.getCurrInstruction().getType().equals("BNE")) {
                         if (entry.getFunctionalUnit().result != 0) {
-                            System.out.println("Updating pc to " + Simulator.pc);
+                            // System.out.println("Updating pc to " + Simulator.pc);
                             Simulator.pc = entry.getCurrInstruction().immediate;
                         } else {
                             Simulator.pc++;
