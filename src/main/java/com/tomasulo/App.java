@@ -28,6 +28,7 @@ public class App extends Application {
         scene.getRoot().setStyle("-fx-font-family: 'Arial';");
 
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 
