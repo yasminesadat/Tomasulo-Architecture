@@ -65,15 +65,15 @@ public class PrimaryController {
         UserInputValues.storeBufferSize = Integer.parseInt(storeBufferSizeField.getText());
 
         Simulator.init();
-        loadReservationStationScene();
+        loadMemoryScene();
 
         System.out.println("Configuration saved and simulator initialized.");
     }
 
-    private void loadReservationStationScene() throws IOException {
+    private void loadMemoryScene() throws IOException {
         Stage stage = (Stage) saveButton.getScene().getWindow();
-        TomasuloController tomasuloController = new TomasuloController();
-        tomasuloController.initialize(stage);
-        tomasuloController.updateAndRefreshTables();
+        MemoryController controller = new MemoryController();
+        controller.initialize(stage);
+        stage.show();
     }
 }

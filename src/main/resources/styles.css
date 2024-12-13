@@ -1,0 +1,35 @@
+/* styles.css */
+.root {
+  -fx-font-family: "Arial", sans-serif;
+}
+
+.input-field {
+  -fx-background-color: white;
+  -fx-border-color: #bdc3c7;
+  -fx-border-radius: 4px;
+  -fx-padding: 8px;
+  -fx-background-radius: 4px;
+}
+
+.input-field:focused {
+  -fx-border-color: #3498db;
+  -fx-background-color: #f9f9f9;
+}
+
+.combo-box {
+  -fx-background-color: white;
+  -fx-border-color: #bdc3c7;
+  -fx-border-radius: 4px;
+  -fx-background-radius: 4px;
+}
+
+.action-button {
+  -fx-background-color: #3498db;
+  -fx-text-fill: white;
+  -fx-background-radius: 4px;
+  -fx-padding: 10px;
+}
+
+.action-button:hover {
+  -fx-background-color: #2980b9;
+}

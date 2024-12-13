@@ -9,28 +9,41 @@ public class Cache {
         boolean valid;
         byte[] data;
 
-        CacheLine(int tag, byte[] data) {
-            this.tag = tag;
-            this.data = data;
-            this.valid = false;
+        CacheLine(int blockSize) {
+            this.data = new byte[blockSize];
+            this.valid = false; // Initially invalid
+            this.tag = -1;
         }
+
     }
 
     private final int cacheSize;
     private final int blockSize;
+    private final int numberOfLines;
     private final CacheLine[] cacheLines;
 
     public Cache(int cacheSize, int blockSize) {
+        if (blockSize <= 0 || cacheSize <= 0 || cacheSize % blockSize != 0) {
+            throw new IllegalArgumentException("Invalid cache size or block size.");
+        }
         this.cacheSize = cacheSize;
         this.blockSize = blockSize;
-        this.cacheLines = new CacheLine[cacheSize];
+        this.numberOfLines = cacheSize / blockSize;
+        this.cacheLines = new CacheLine[numberOfLines];
+        for (int i = 0; i < numberOfLines; i++) {
+            cacheLines[i] = new CacheLine(blockSize);
+        }
+    }
+
+    
+    public int getBlockSize() {
+        return blockSize;
     }
 
     // Handle load/store operations
     public Object access(int address, Object data, int size, String operation) {
-        int blockIndex = address / blockSize;
-        int tag = blockIndex / cacheSize;
-        int index = blockIndex % cacheSize;
+        int tag = address / cacheSize;
+        int index = (address / blockSize) % numberOfLines;
 
         CacheLine cacheLine = cacheLines[index];
 
@@ -38,7 +51,7 @@ public class Cache {
         int blockOffset = address % blockSize;
 
         if (data == null) { // Load operation
-            if (cacheLine != null && cacheLine.valid && cacheLine.tag == tag) {
+            if (cacheLine.valid && cacheLine.tag == tag) {
                 // Cache hit: Read data from cache
                 return extractData(cacheLine.data, blockOffset, size, operation);
             } else {
@@ -47,7 +60,8 @@ public class Cache {
             }
         } else { // Store operation
             byte[] dataBytes = toByteArray(data, size);
-            cacheLines[index] = new CacheLine(tag, storeData(cacheLine != null ? cacheLine.data : new byte[blockSize], dataBytes, blockOffset, operation));
+            cacheLines[index].tag = tag;
+            cacheLines[index].data = storeData(cacheLine.data , dataBytes, blockOffset);
             cacheLines[index].valid = true;
             return null;
         }
@@ -67,9 +81,25 @@ public class Cache {
         }
     }
 
-    private byte[] storeData(byte[] block, byte[] data, int offset, String operation) {
+    private byte[] storeData(byte[] block, byte[] data, int offset) {
         System.arraycopy(data, 0, block, offset, data.length);
         return block;
+    }
+
+
+    public void storeCacheLine(int address, byte[] memoryBlock) {
+        if (memoryBlock.length != blockSize) {
+            throw new IllegalArgumentException("Block size mismatch.");
+        }
+        int lineIndex = (address / blockSize) % numberOfLines; // Calculate the line index
+        int tag = address / (blockSize * numberOfLines); // Calculate the tag
+
+        // Store the block in the cache line
+        cacheLines[lineIndex].data = memoryBlock.clone();
+        cacheLines[lineIndex].tag = tag;
+        cacheLines[lineIndex].valid = true;
+
+        System.out.println("Stored cache line at index " + lineIndex + " with tag " + tag);
     }
 
     // Convert data to byte array based on size
@@ -149,25 +179,21 @@ public class Cache {
         System.out.println("Cache State:");
         for (int i = 0; i < cacheLines.length; i++) {
             CacheLine line = cacheLines[i];
-            if (line != null && line.valid) {
-                System.out.println("Index: " + i + ", Tag: " + line.tag + ", Data: " + Arrays.toString(line.data));
-            } else {
-                System.out.println("Index: " + i + ", Empty");
-            }
+            System.out.println("Index: " + i + ", Valid: "+line.valid+", Tag: " + line.tag + ", Data: " + Arrays.toString(line.data));
         }
     }
 
     public static void main(String[] args) {
-        Cache cache = new Cache(4, 16); // Cache with 4 lines, block size = 16 bytes
+        Cache cache = new Cache(64, 16); 
 
         // Store single-precision float (S.S)
-        cache.access(0, 3.14f, 4, InstructionType.STORE_SINGLE_PRECISION); // S.S
-        System.out.println("Read S.S: " + cache.access(0, null, 4, InstructionType.LOAD_SINGLE_PRECISION)); // L.S
-        
+        //cache.access(0, 3.14f, 4, InstructionType.STORE_SINGLE_PRECISION); // S.S
+        //System.out.println("Read S.S: " + cache.access(0, null, 4, InstructionType.LOAD_SINGLE_PRECISION)); // L.S
+
         // Store double-precision float (S.D)
         cache.access(8, 3.141592653589793, 8, InstructionType.STORE_DOUBLE_PRECISION); // S.D
         System.out.println("Read S.D: " + cache.access(8, null, 8, InstructionType.LOAD_DOUBLE_PRECISION)); // L.D
-
+        cache.displayCache();
         // Store integer (SW)
         cache.access(4, 42, 4, InstructionType.STORE_WORD); // SW
         System.out.println("Read SW: " + cache.access(4, null, 4, InstructionType.LOAD_WORD)); // LW

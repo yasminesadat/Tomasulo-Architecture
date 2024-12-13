@@ -1,5 +1,4 @@
 package com.tomasulo.classes;
-
 public class Memory {
 
     private final byte[] memory;
@@ -37,9 +36,11 @@ public class Memory {
         }
     }
 
-    public void writeLong(int address, long value) {
-        for (int i = 0; i < 8; i++) {
-            memory[address + i] = (byte) (value >>> (56 - i * 8));
+    public void displayMemory() {
+        System.out.println("Memory Contents:");
+        for (int i = 0; i < memory.length; i++) {
+            // Print address and value in hexadecimal format
+            System.out.printf("Address 0x%04X: 0x%02X%n", i, memory[i]);
         }
     }
 }
