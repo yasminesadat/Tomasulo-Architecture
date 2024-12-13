@@ -1,1 +1,2 @@
-S.D F2,0
+DADDI R2,R2,8
+S.D F2,R2

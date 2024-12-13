@@ -217,6 +217,10 @@ public class WriteBack {
                 entry.setQj("0");
                 entry.setVj(dataBus.value);
             }
+            if (entry.getQk().equals(dataBus.tag)) {
+                entry.setQk("0");
+                entry.setVk(dataBus.value);
+            }
 
         }
 
