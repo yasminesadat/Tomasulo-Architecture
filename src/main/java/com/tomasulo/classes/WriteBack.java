@@ -69,7 +69,7 @@ public class WriteBack {
                     entry.setBusy(false);
                     Simulator.integerReservationStation
                             .setFreeSpaces(Simulator.integerReservationStation.getFreeSpaces() + 1);
-                    entry.currInstruction.setStartTime(-1);
+                    //entry.currInstruction.setStartTime(-1);
 
                 }
 
