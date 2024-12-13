@@ -555,10 +555,9 @@ public class TomasuloController {
         TableColumn<Cache.CacheLine, Boolean> validColumn = new TableColumn<>("Valid");
         validColumn.setCellValueFactory(cellData -> {
             if (cellData.getValue() != null) {
-                System.out.println("Valid Value: " + cellData.getValue().getValid());
+                //System.out.println("Valid Value: " + cellData.getValue().getValid());
                 return new SimpleBooleanProperty(cellData.getValue().getValid()).asObject();
             }
-            System.out.println("Null Value in Valid Column");
             return null;
         });
 
