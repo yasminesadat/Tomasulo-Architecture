@@ -117,13 +117,22 @@ public class WriteBack {
             if (entry.busy && Simulator.stallLoad && Simulator.clockCycle==entry.currInstruction.getEndTime()){
                 int size=0;
                 System.out.println("GETTTT FROM MEMORYYY THE MISS " +Simulator.clockCycle);
+                String accessType = "";
                 switch(entry.currInstruction.getType()) {
-                    case "SW":
+                    case "SW": 
+                    accessType = "LW"; 
+                    size = 4;
+                    break;
                     case "S.S":
+                    accessType = "L.S";
                     size = 4;
                     break;
                     case "SD":
+                    accessType = "LD"; 
+                    size = 8;
+                    break;
                     case "S.D":
+                    accessType = "L.D"; 
                     size = 8;
                     break;
                 }
@@ -131,7 +140,8 @@ public class WriteBack {
                 if (entry.currInstruction.rd.contains("R")){
                     address = (int)entry.getVk();
                 }
-                CacheMemoryHandler.loadDataFromMemoryIfCacheMiss(address, Simulator.cache, Simulator.memory, size, entry.currInstruction.getType());
+                
+                CacheMemoryHandler.loadDataFromMemoryIfCacheMiss(address, Simulator.cache, Simulator.memory, size, accessType);
                 Simulator.stallLoad = false;
                 double value = entry.getVj();
                 entry.functionalUnit.execute(address, value, entry.currInstruction.getType());
@@ -141,7 +151,7 @@ public class WriteBack {
                 if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
                     maxWaiting = Simulator.getWaitingStation(entry.getTag());
                     writingBackEntry = entry;
-                    desiredStation = Simulator.loadBuffer;
+                    desiredStation = Simulator.storeBuffer;
 
                 }
 
