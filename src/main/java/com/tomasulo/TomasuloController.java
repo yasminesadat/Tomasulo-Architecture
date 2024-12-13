@@ -699,6 +699,8 @@ public class TomasuloController {
 
         }
 
+
+
         
 
         allInstructions.sort(Comparator.comparingInt(Instruction::getIssueTime));
@@ -746,6 +748,10 @@ public class TomasuloController {
                     instruction.setStartTime(instruction.getStartTime());
                     completedInstructions.add(instruction);
                 }
+
+        
+
+
 
             // }
         }

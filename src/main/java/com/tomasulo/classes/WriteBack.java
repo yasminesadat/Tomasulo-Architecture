@@ -67,6 +67,7 @@ public class WriteBack {
                     }
                     Simulator.isBranchTaken = false;
                     entry.setBusy(false);
+                    entry.getCurrInstruction().setWriteTime(Simulator.clockCycle);
                     Simulator.integerReservationStation
                             .setFreeSpaces(Simulator.integerReservationStation.getFreeSpaces() + 1);
                     //entry.currInstruction.setStartTime(-1);
