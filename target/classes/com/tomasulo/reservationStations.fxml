@@ -18,7 +18,6 @@
         <Label text="Instruction status" style="-fx-font-size: 14px; -fx-font-weight: bold;" GridPane.rowIndex="18" GridPane.columnIndex="1" />
     <TableView fx:id="instructionStatusTable" GridPane.rowIndex="19" GridPane.columnIndex="1">
         <columns>
-            <TableColumn fx:id="instructionStatusIterationColumn" text="Iteration" />
             <TableColumn fx:id="instructionStatusTypeColumn" text="Type" />
             <TableColumn fx:id="instructionStatusRdColumn" text="Rd" />
             <TableColumn fx:id="instructionStatusIssueTimeColumn" text="Issue Time" />

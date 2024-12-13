@@ -190,8 +190,23 @@ public class ReservationStation {
                         else{
                             address= entries.get(i).address;
                         }
+                        String accessType = "";
+                        switch(insType) {
+                            case "SW": 
+                            accessType = "LW"; 
+                            break;
+                            case "S.S":
+                            accessType = "L.S";
+                            break;
+                            case "SD":
+                            accessType = "LD"; 
+                            break;
+                            case "S.D":
+                            accessType = "L.D"; 
+                            break;
+                        }
                         StoreFU functionalUnit = (StoreFU)entries.get(i).functionalUnit;
-                        boolean hit = functionalUnit.tryAccess(address, insType);
+                        boolean hit = functionalUnit.tryAccess(address, accessType);
                         if (!hit){
                             Simulator.stallLoad = true ;
                             System.out.println("first store so miss and no load before ");
