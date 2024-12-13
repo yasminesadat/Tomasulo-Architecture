@@ -363,16 +363,13 @@ public class TomasuloController {
             case "STORE":
 
                 columns.add(addressColumn);
-
                 columns.add(vjColumn); // for base address calculation
-
                 columns.add(qjColumn);
                 break;
 
             case "ADD_SUB":
             case "MUL_DIV":
             case "INTEGER":
-                columns.add(addressColumn);
                 columns.add(operationColumn);
                 columns.add(vjColumn);
                 columns.add(vkColumn);
