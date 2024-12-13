@@ -489,7 +489,6 @@ public class TomasuloController {
         TableView<InstructionStatus> tableView = new TableView<>();
         tableView.setPlaceholder(new javafx.scene.control.Label("Instruction Status"));
 
-        TableColumn<InstructionStatus, Integer> iterationColumn = new TableColumn<>("Iteration");
         TableColumn<InstructionStatus, String> typeColumn = new TableColumn<>("Type");
         TableColumn<InstructionStatus, String> rdColumn = new TableColumn<>("Rd");
         TableColumn<InstructionStatus, String> issueTimeColumn = new TableColumn<>("Issue Time");
@@ -498,7 +497,6 @@ public class TomasuloController {
         TableColumn<InstructionStatus, String> writeTimeColumn = new TableColumn<>("Write Time");
         TableColumn<InstructionStatus, Integer> remainingTimeColumn = new TableColumn<>("Remaining Time");
 
-        iterationColumn.setCellValueFactory(new PropertyValueFactory<>("iteration"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         rdColumn.setCellValueFactory(new PropertyValueFactory<>("rd"));
         issueTimeColumn.setCellValueFactory(new PropertyValueFactory<>("issueTime"));
@@ -507,7 +505,7 @@ public class TomasuloController {
         writeTimeColumn.setCellValueFactory(new PropertyValueFactory<>("writeTime"));
         remainingTimeColumn.setCellValueFactory(new PropertyValueFactory<>("remainingTime"));
 
-        tableView.getColumns().addAll(iterationColumn, typeColumn, rdColumn, issueTimeColumn, startTimeColumn,
+        tableView.getColumns().addAll(typeColumn, rdColumn, issueTimeColumn, startTimeColumn,
                 endTimeColumn, writeTimeColumn, remainingTimeColumn);
         return tableView;
     }
