@@ -15,7 +15,6 @@ public class RegisterFile {
             F[i] = new Register(getRandomNumber(), "0"); // float value reg
 
         }
-        R[2].setValue(5);
         // R[5].setValue(47);
     }
 

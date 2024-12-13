@@ -465,8 +465,8 @@ public class TomasuloController {
 
                 columns.add(addressColumn);
                 columns.add(vjColumn); // for base address calculation
-                columns.add(qjColumn);
                 columns.add(vkColumn); // for base address calculation
+                columns.add(qjColumn);    
                 columns.add(qkColumn);
                 break;
 
