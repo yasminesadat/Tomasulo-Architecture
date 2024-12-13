@@ -13,6 +13,7 @@ import java.util.Vector;
 import javafx.scene.text.Font;
 import com.tomasulo.classes.ReservationStation;
 import com.tomasulo.classes.ReservationStationEntry;
+import com.tomasulo.classes.Cache;
 import com.tomasulo.classes.Instruction;
 import com.tomasulo.classes.InstructionQueue;
 import com.tomasulo.classes.InstructionStatus;
@@ -21,6 +22,9 @@ import com.tomasulo.classes.Register;
 import com.tomasulo.classes.RegisterFile;
 import com.tomasulo.classes.Simulator;
 import com.tomasulo.classes.UserInputValues;
+
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -33,7 +37,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -49,7 +58,9 @@ public class TomasuloController {
     private TableView<ReservationStationEntry> integerReservationStationTable;
     private TableView<Register> integerRegisterTable;
     private TableView<Register> floatRegisterTable;
+    private TableView<Cache.CacheLine> cacheTable;
     private TableView<Instruction> instructionQueueTable;
+    private ObservableList<Cache.CacheLine> cacheObservableList = FXCollections.observableArrayList(); 
     private ObservableList<ReservationStationEntry> mulDivReservationStationObservableList = FXCollections
             .observableArrayList();
     private ObservableList<ReservationStationEntry> addSubReservationStationObservableList = FXCollections
@@ -131,10 +142,12 @@ public class TomasuloController {
         nextCycleButton.setOnAction(e -> advanceClockCycle());
 
         Button memoryViewButton = new Button("View Memory");
+        Button cacheViewButton = new Button("View Cache");
         memoryViewButton.setOnAction(e -> showMemoryView());
+        cacheViewButton.setOnAction(e -> showCacheView(Simulator.getCache().cacheLines));
 
         // Create an HBox for clock cycle controls
-        HBox clockControlBox = new HBox(20, clockCycleLabel, nextCycleButton, memoryViewButton);
+        HBox clockControlBox = new HBox(20, clockCycleLabel, nextCycleButton, memoryViewButton,cacheViewButton);
         clockControlBox.setAlignment(javafx.geometry.Pos.CENTER);
         clockControlBox.setPadding(new Insets(15));
         clockControlBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0;");
@@ -373,6 +386,35 @@ public class TomasuloController {
         memoryStage.show();
     }
 
+    private void showCacheView(Cache.CacheLine[] cacheLines) {
+    // Create a new Stage for the pop-up
+    Stage popupStage = new Stage();
+    
+    // Create the TableView
+    TableView<Cache.CacheLine> tableView = createCacheTableView(cacheLines);
+
+    // Set the stage properties
+    popupStage.setTitle("Cache View"); // Set the title of the pop-up
+    popupStage.initModality(Modality.APPLICATION_MODAL); // Make the window modal (blocks interaction with parent)
+    popupStage.setWidth(500); // Set width for the pop-up
+    popupStage.setHeight(400); // Set height for the pop-up
+    
+    // Create a layout and add the TableView to it
+    StackPane layout = new StackPane();
+    layout.getChildren().add(tableView);
+    
+    // Set up the scene
+    Scene scene = new Scene(layout, 500, 400); // Define size for the scene
+    popupStage.setScene(scene); // Attach the scene to the stage
+
+    tableView.setFixedCellSize(30);
+    tableView.setPrefHeight(cacheLines.length * 30 + 30); // +30 for header
+    tableView.setMaxHeight(cacheLines.length * 30 + 30);
+    
+    // Show the pop-up window
+    popupStage.show();
+}
+
     private TableView<ReservationStationEntry> createReservationStationTableView(String type, boolean isBranch) {
         TableView<ReservationStationEntry> tableView = new TableView<>();
         TableColumn<ReservationStationEntry, String> tagColumn = new TableColumn<>("Tag");
@@ -493,6 +535,71 @@ public class TomasuloController {
         tableView.getColumns().addAll(typeColumn, rsColumn, rtColumn, rdColumn, pcColumn, immediateColumn);
 
         return tableView;
+    }
+
+    private TableView<Cache.CacheLine> createCacheTableView(Cache.CacheLine[] cacheLines) {
+        TableView<Cache.CacheLine> tableView = new TableView<>();
+        
+        // Set the table's preferred size based on cache lines
+        tableView.setPrefHeight(cacheLines.length * 30); 
+        
+        // Index Column - using list position since there's no stored index
+        TableColumn<Cache.CacheLine, Integer> indexColumn = new TableColumn<>("Index");
+        indexColumn.setCellValueFactory(cellData -> {
+            int index = tableView.getItems().indexOf(cellData.getValue());
+            return new SimpleIntegerProperty(index).asObject();
+        });
+        indexColumn.setPrefWidth(60);
+        
+        // Valid Column with checkbox
+        TableColumn<Cache.CacheLine, Boolean> validColumn = new TableColumn<>("Valid");
+        validColumn.setCellValueFactory(cellData -> {
+            if (cellData.getValue() != null) {
+                System.out.println("Valid Value: " + cellData.getValue().getValid());
+                return new SimpleBooleanProperty(cellData.getValue().getValid()).asObject();
+            }
+            System.out.println("Null Value in Valid Column");
+            return null;
+        });
+
+        validColumn.setPrefWidth(60);
+        
+        // Tag Column - now showing as regular integer
+        TableColumn<Cache.CacheLine, Integer> tagColumn = new TableColumn<>("Tag");
+        tagColumn.setCellValueFactory(cellData -> 
+            new SimpleIntegerProperty(cellData.getValue().getTag()).asObject());
+        tagColumn.setPrefWidth(80);
+        
+        // Data Column with hex formatting
+        TableColumn<Cache.CacheLine, String> dataColumn = new TableColumn<>("Data");
+        dataColumn.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(bytesToHexString(cellData.getValue().getData())));
+        dataColumn.setPrefWidth(200);
+        
+        // Add all columns to the table
+        tableView.getColumns().addAll(indexColumn, validColumn, tagColumn, dataColumn);
+        
+        // Initialize table with the actual cache lines array
+        ObservableList<Cache.CacheLine> cacheLinesList = FXCollections.observableArrayList(Arrays.asList(cacheLines));
+        tableView.setItems(cacheLinesList);
+        
+        return tableView;
+    }
+    
+    private String bytesToHexString(byte[] bytes) {
+        if (bytes == null) return "";
+        StringBuilder hex = new StringBuilder();
+        for (byte b : bytes) {
+            hex.append(String.format("%02X ", b));
+        }
+        return hex.toString().trim();
+    }
+    
+    // Method to update the table view when cache state changes
+    public void updateCacheView(TableView<Cache.CacheLine> tableView, Cache.CacheLine[] cacheLines) {
+        ObservableList<Cache.CacheLine> items = tableView.getItems();
+        items.clear();
+        items.addAll(Arrays.asList(cacheLines));
     }
 
     public void populateReservationStationTables() {
@@ -665,6 +772,12 @@ public class TomasuloController {
         }
         ObservableList<Instruction> observableInstructions = FXCollections.observableArrayList(instructionList);
         instructionQueueTable.setItems(observableInstructions);
+    }
+
+    private void populateCacheTable() {
+        cacheObservableList.setAll(Simulator.getCache().cacheLines); 
+        System.out.println("populate cache table"+Simulator.getCache());
+        cacheTable.setItems(cacheObservableList); 
     }
 
     public void updateAndRefreshTables() {
