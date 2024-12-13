@@ -60,7 +60,7 @@ public class TomasuloController {
     private TableView<Register> floatRegisterTable;
     private TableView<Cache.CacheLine> cacheTable;
     private TableView<Instruction> instructionQueueTable;
-    private ObservableList<Cache.CacheLine> cacheObservableList = FXCollections.observableArrayList(); 
+    private ObservableList<Cache.CacheLine> cacheObservableList = FXCollections.observableArrayList();
     private ObservableList<ReservationStationEntry> mulDivReservationStationObservableList = FXCollections
             .observableArrayList();
     private ObservableList<ReservationStationEntry> addSubReservationStationObservableList = FXCollections
@@ -84,7 +84,7 @@ public class TomasuloController {
     public void initialize(Stage stage) {
         // Initialize all tables
         // In initialize()
-        instructionStatusTable= createInstructionStatusTableView();
+        instructionStatusTable = createInstructionStatusTableView();
         addSubReservationStationTable = createReservationStationTableView("ADD_SUB", false);
         mulDivReservationStationTable = createReservationStationTableView("MUL_DIV", false);
         loadReservationStationTable = createReservationStationTableView("LOAD", false);
@@ -147,7 +147,7 @@ public class TomasuloController {
         cacheViewButton.setOnAction(e -> showCacheView(Simulator.getCache().cacheLines));
 
         // Create an HBox for clock cycle controls
-        HBox clockControlBox = new HBox(20, clockCycleLabel, nextCycleButton, memoryViewButton,cacheViewButton);
+        HBox clockControlBox = new HBox(20, clockCycleLabel, nextCycleButton, memoryViewButton, cacheViewButton);
         clockControlBox.setAlignment(javafx.geometry.Pos.CENTER);
         clockControlBox.setPadding(new Insets(15));
         clockControlBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0;");
@@ -342,39 +342,35 @@ public class TomasuloController {
         memoryStage.setTitle("Tomasulo Simulator - Memory Contents");
 
         TableView<List<String>> memoryTableView = new TableView<>();
-        
+
         TableColumn<List<String>, String> addressColumn = new TableColumn<>("Address");
         TableColumn<List<String>, String> hexColumn = new TableColumn<>("Hex Value");
 
-        addressColumn.setCellValueFactory(data -> 
-            new SimpleStringProperty(data.getValue().get(0)));
-        hexColumn.setCellValueFactory(data -> 
-            new SimpleStringProperty(data.getValue().get(1)));
+        addressColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(0)));
+        hexColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get(1)));
 
         memoryTableView.getColumns().addAll(addressColumn, hexColumn);
 
         ObservableList<List<String>> memoryData = FXCollections.observableArrayList();
         Memory memory = Simulator.getMemory();
-        
+
         for (int i = 0; i < memory.getSize(); i++) {
             byte value = memory.readByte(i);
-            //System.out.printf("Address 0x%04X: 0x%02X%n", i, value);
+            // System.out.printf("Address 0x%04X: 0x%02X%n", i, value);
             memoryData.add(Arrays.asList(
-                String.format("0x%04X", i),
-                String.format("0x%02X", value)
-            ));
+                    String.format("0x%04X", i),
+                    String.format("0x%02X", value)));
         }
-        
+
         memoryTableView.setItems(memoryData);
 
         TextField searchField = new TextField();
         searchField.setPromptText("Search Address or Value");
-        
+
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            memoryTableView.setItems(memoryData.filtered(entry -> 
-                entry.get(0).toLowerCase().contains(newValue.toLowerCase()) ||
-                entry.get(1).toLowerCase().contains(newValue.toLowerCase())
-            ));
+            memoryTableView.setItems(
+                    memoryData.filtered(entry -> entry.get(0).toLowerCase().contains(newValue.toLowerCase()) ||
+                            entry.get(1).toLowerCase().contains(newValue.toLowerCase())));
         });
 
         VBox layout = new VBox(10);
@@ -387,33 +383,33 @@ public class TomasuloController {
     }
 
     private void showCacheView(Cache.CacheLine[] cacheLines) {
-    // Create a new Stage for the pop-up
-    Stage popupStage = new Stage();
-    
-    // Create the TableView
-    TableView<Cache.CacheLine> tableView = createCacheTableView(cacheLines);
+        // Create a new Stage for the pop-up
+        Stage popupStage = new Stage();
 
-    // Set the stage properties
-    popupStage.setTitle("Cache View"); // Set the title of the pop-up
-    popupStage.initModality(Modality.APPLICATION_MODAL); // Make the window modal (blocks interaction with parent)
-    popupStage.setWidth(500); // Set width for the pop-up
-    popupStage.setHeight(400); // Set height for the pop-up
-    
-    // Create a layout and add the TableView to it
-    StackPane layout = new StackPane();
-    layout.getChildren().add(tableView);
-    
-    // Set up the scene
-    Scene scene = new Scene(layout, 500, 400); // Define size for the scene
-    popupStage.setScene(scene); // Attach the scene to the stage
+        // Create the TableView
+        TableView<Cache.CacheLine> tableView = createCacheTableView(cacheLines);
 
-    tableView.setFixedCellSize(30);
-    tableView.setPrefHeight(cacheLines.length * 30 + 30); // +30 for header
-    tableView.setMaxHeight(cacheLines.length * 30 + 30);
-    
-    // Show the pop-up window
-    popupStage.show();
-}
+        // Set the stage properties
+        popupStage.setTitle("Cache View"); // Set the title of the pop-up
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Make the window modal (blocks interaction with parent)
+        popupStage.setWidth(500); // Set width for the pop-up
+        popupStage.setHeight(400); // Set height for the pop-up
+
+        // Create a layout and add the TableView to it
+        StackPane layout = new StackPane();
+        layout.getChildren().add(tableView);
+
+        // Set up the scene
+        Scene scene = new Scene(layout, 500, 400); // Define size for the scene
+        popupStage.setScene(scene); // Attach the scene to the stage
+
+        tableView.setFixedCellSize(30);
+        tableView.setPrefHeight(cacheLines.length * 30 + 30); // +30 for header
+        tableView.setMaxHeight(cacheLines.length * 30 + 30);
+
+        // Show the pop-up window
+        popupStage.show();
+    }
 
     private TableView<ReservationStationEntry> createReservationStationTableView(String type, boolean isBranch) {
         TableView<ReservationStationEntry> tableView = new TableView<>();
@@ -468,6 +464,8 @@ public class TomasuloController {
                 columns.add(addressColumn);
                 columns.add(vjColumn); // for base address calculation
                 columns.add(qjColumn);
+                columns.add(vkColumn); // for base address calculation
+                columns.add(qkColumn);
                 break;
 
             case "ADD_SUB":
@@ -485,12 +483,10 @@ public class TomasuloController {
         return tableView;
     }
 
-
-
     private TableView<InstructionStatus> createInstructionStatusTableView() {
         TableView<InstructionStatus> tableView = new TableView<>();
         tableView.setPlaceholder(new javafx.scene.control.Label("Instruction Status"));
-    
+
         TableColumn<InstructionStatus, Integer> iterationColumn = new TableColumn<>("Iteration");
         TableColumn<InstructionStatus, String> typeColumn = new TableColumn<>("Type");
         TableColumn<InstructionStatus, String> rdColumn = new TableColumn<>("Rd");
@@ -499,7 +495,7 @@ public class TomasuloController {
         TableColumn<InstructionStatus, String> endTimeColumn = new TableColumn<>("End Time");
         TableColumn<InstructionStatus, String> writeTimeColumn = new TableColumn<>("Write Time");
         TableColumn<InstructionStatus, Integer> remainingTimeColumn = new TableColumn<>("Remaining Time");
-    
+
         iterationColumn.setCellValueFactory(new PropertyValueFactory<>("iteration"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         rdColumn.setCellValueFactory(new PropertyValueFactory<>("rd"));
@@ -508,11 +504,11 @@ public class TomasuloController {
         endTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
         writeTimeColumn.setCellValueFactory(new PropertyValueFactory<>("writeTime"));
         remainingTimeColumn.setCellValueFactory(new PropertyValueFactory<>("remainingTime"));
-    
-        tableView.getColumns().addAll(iterationColumn, typeColumn, rdColumn, issueTimeColumn, startTimeColumn, endTimeColumn, writeTimeColumn,remainingTimeColumn);
+
+        tableView.getColumns().addAll(iterationColumn, typeColumn, rdColumn, issueTimeColumn, startTimeColumn,
+                endTimeColumn, writeTimeColumn, remainingTimeColumn);
         return tableView;
     }
-
 
     private TableView<Instruction> createInstructionQueueTableView() {
         TableView<Instruction> tableView = new TableView<>();
@@ -539,10 +535,10 @@ public class TomasuloController {
 
     private TableView<Cache.CacheLine> createCacheTableView(Cache.CacheLine[] cacheLines) {
         TableView<Cache.CacheLine> tableView = new TableView<>();
-        
+
         // Set the table's preferred size based on cache lines
-        tableView.setPrefHeight(cacheLines.length * 30); 
-        
+        tableView.setPrefHeight(cacheLines.length * 30);
+
         // Index Column - using list position since there's no stored index
         TableColumn<Cache.CacheLine, Integer> indexColumn = new TableColumn<>("Index");
         indexColumn.setCellValueFactory(cellData -> {
@@ -550,50 +546,50 @@ public class TomasuloController {
             return new SimpleIntegerProperty(index).asObject();
         });
         indexColumn.setPrefWidth(60);
-        
+
         // Valid Column with checkbox
         TableColumn<Cache.CacheLine, Boolean> validColumn = new TableColumn<>("Valid");
         validColumn.setCellValueFactory(cellData -> {
             if (cellData.getValue() != null) {
-                //System.out.println("Valid Value: " + cellData.getValue().getValid());
+                // System.out.println("Valid Value: " + cellData.getValue().getValid());
                 return new SimpleBooleanProperty(cellData.getValue().getValid()).asObject();
             }
             return null;
         });
 
         validColumn.setPrefWidth(60);
-        
+
         // Tag Column - now showing as regular integer
         TableColumn<Cache.CacheLine, Integer> tagColumn = new TableColumn<>("Tag");
-        tagColumn.setCellValueFactory(cellData -> 
-            new SimpleIntegerProperty(cellData.getValue().getTag()).asObject());
+        tagColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getTag()).asObject());
         tagColumn.setPrefWidth(80);
-        
+
         // Data Column with hex formatting
         TableColumn<Cache.CacheLine, String> dataColumn = new TableColumn<>("Data");
-        dataColumn.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(bytesToHexString(cellData.getValue().getData())));
+        dataColumn.setCellValueFactory(
+                cellData -> new SimpleStringProperty(bytesToHexString(cellData.getValue().getData())));
         dataColumn.setPrefWidth(200);
-        
+
         // Add all columns to the table
         tableView.getColumns().addAll(indexColumn, validColumn, tagColumn, dataColumn);
-        
+
         // Initialize table with the actual cache lines array
         ObservableList<Cache.CacheLine> cacheLinesList = FXCollections.observableArrayList(Arrays.asList(cacheLines));
         tableView.setItems(cacheLinesList);
-        
+
         return tableView;
     }
-    
+
     private String bytesToHexString(byte[] bytes) {
-        if (bytes == null) return "";
+        if (bytes == null)
+            return "";
         StringBuilder hex = new StringBuilder();
         for (byte b : bytes) {
             hex.append(String.format("%02X ", b));
         }
         return hex.toString().trim();
     }
-    
+
     // Method to update the table view when cache state changes
     public void updateCacheView(TableView<Cache.CacheLine> tableView, Cache.CacheLine[] cacheLines) {
         ObservableList<Cache.CacheLine> items = tableView.getItems();
@@ -649,9 +645,6 @@ public class TomasuloController {
         floatRegisterTable.setItems(floatRegisters);
     }
 
-
-
-
     private void populateInstructionStatusTable() {
         List<InstructionStatus> instructionStatusList = new ArrayList<>();
         List<Instruction> allInstructions = new ArrayList<>();
@@ -659,19 +652,19 @@ public class TomasuloController {
 
         for (ReservationStationEntry entry : Simulator.addSubReservationStation.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if(!allInstructions.contains(entry.getCurrInstruction())) {
-                    
+                if (!allInstructions.contains(entry.getCurrInstruction())) {
+
                     allInstructions.add(entry.getCurrInstruction());
                 }
-               
+
             }
 
         }
 
         for (ReservationStationEntry entry : Simulator.mulDivReservationStation.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if(!allInstructions.contains(entry.getCurrInstruction())) {
-                allInstructions.add(entry.getCurrInstruction());
+                if (!allInstructions.contains(entry.getCurrInstruction())) {
+                    allInstructions.add(entry.getCurrInstruction());
                 }
             }
 
@@ -679,8 +672,8 @@ public class TomasuloController {
 
         for (ReservationStationEntry entry : Simulator.integerReservationStation.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if(!allInstructions.contains(entry.getCurrInstruction())) {
-                allInstructions.add(entry.getCurrInstruction());
+                if (!allInstructions.contains(entry.getCurrInstruction())) {
+                    allInstructions.add(entry.getCurrInstruction());
                 }
             }
 
@@ -688,8 +681,8 @@ public class TomasuloController {
 
         for (ReservationStationEntry entry : Simulator.loadBuffer.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if(!allInstructions.contains(entry.getCurrInstruction())) {
-                allInstructions.add(entry.getCurrInstruction());
+                if (!allInstructions.contains(entry.getCurrInstruction())) {
+                    allInstructions.add(entry.getCurrInstruction());
                 }
             }
 
@@ -697,25 +690,24 @@ public class TomasuloController {
 
         for (ReservationStationEntry entry : Simulator.storeBuffer.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if(!allInstructions.contains(entry.getCurrInstruction())) {
-                allInstructions.add(entry.getCurrInstruction());
+                if (!allInstructions.contains(entry.getCurrInstruction())) {
+                    allInstructions.add(entry.getCurrInstruction());
                 }
             }
 
         }
 
-        
-
         allInstructions.sort(Comparator.comparingInt(Instruction::getIssueTime));
 
-        
-        //System.out.println("All Instructionsssssssssssssssssssss: " + allInstructions.size());
+        // System.out.println("All Instructionsssssssssssssssssssss: " +
+        // allInstructions.size());
 
         for (Instruction instruction : allInstructions) {
-            //System.out.println("Instructionnnnnnnnnnnnnnnnnnnnn: " + instruction.getIssueTime());
+            // System.out.println("Instructionnnnnnnnnnnnnnnnnnnnn: " +
+            // instruction.getIssueTime());
             // if (instruction.getIssueTime() != -1) {
-                InstructionStatus instructionStatus = new InstructionStatus(
-                    1,  //change this later(branch)
+            InstructionStatus instructionStatus = new InstructionStatus(
+                    1, // change this later(branch)
                     instruction.getType(),
                     instruction.getRd(),
                     instruction.getIssueTime() == -1 ? "Null" : String.valueOf(instruction.getIssueTime()),
@@ -723,41 +715,42 @@ public class TomasuloController {
                     instruction.getEndTime() == -1 ? "Null" : String.valueOf(instruction.getEndTime()),
                     instruction.getWriteTime() == -1 ? "Null" : String.valueOf(instruction.getWriteTime()),
                     instruction.getType()
-                   
-                );
 
-                if (!"Null".equals(instructionStatus.getRemainingTime()) && !"0".equals(instructionStatus.getRemainingTime()) && Simulator.getClockCycle() > Integer.parseInt(instructionStatus.getStartTime())) {
-                    int remaining = Integer.parseInt(instructionStatus.getRemainingTime());
-                    if (remaining > 0) {
-                       // remaining = Integer.parseInt(instructionStatus.getEndTime()) + Integer.parseInt(instructionStatus.getStartTime()) - Simulator.getClockCycle();
-                       remaining = Integer.parseInt(instructionStatus.getEndTime()) - Simulator.getClockCycle() + 1;
-                       if (remaining >= 0) {
-                            instructionStatus.setRemainingTime(String.valueOf(remaining));
-                        } else {
-                            instructionStatus.setRemainingTime("0");
-                        }
+            );
+
+            if (!"Null".equals(instructionStatus.getRemainingTime())
+                    && !"0".equals(instructionStatus.getRemainingTime())
+                    && Simulator.getClockCycle() > Integer.parseInt(instructionStatus.getStartTime())) {
+                int remaining = Integer.parseInt(instructionStatus.getRemainingTime());
+                if (remaining > 0) {
+                    // remaining = Integer.parseInt(instructionStatus.getEndTime()) +
+                    // Integer.parseInt(instructionStatus.getStartTime()) -
+                    // Simulator.getClockCycle();
+                    remaining = Integer.parseInt(instructionStatus.getEndTime()) - Simulator.getClockCycle() + 1;
+                    if (remaining >= 0) {
+                        instructionStatus.setRemainingTime(String.valueOf(remaining));
+                    } else {
+                        instructionStatus.setRemainingTime("0");
                     }
                 }
-              
-        
+            }
 
-                instructionStatusList.add(instructionStatus);
-                if (instruction.getWriteTime() != -1 && !completedInstructions.contains(instruction) ) {
-                    completedInstructions.add(instruction);
-                }
+            instructionStatusList.add(instructionStatus);
+            if (instruction.getWriteTime() != -1 && !completedInstructions.contains(instruction)) {
+                completedInstructions.add(instruction);
+            }
 
             // }
         }
 
-        //System.out.println("Instruction Status Listtttttttttttttttt: " + instructionStatusList.size());
-    
-        ObservableList<InstructionStatus> observableInstructions = FXCollections.observableArrayList(instructionStatusList);
+        // System.out.println("Instruction Status Listtttttttttttttttt: " +
+        // instructionStatusList.size());
+
+        ObservableList<InstructionStatus> observableInstructions = FXCollections
+                .observableArrayList(instructionStatusList);
         instructionStatusTable.setItems(observableInstructions);
-       
+
     }
-
-
-
 
     private void populateInstructionQueueTable() {
         List<Instruction> instructionList = new ArrayList<>();
@@ -774,9 +767,9 @@ public class TomasuloController {
     }
 
     private void populateCacheTable() {
-        cacheObservableList.setAll(Simulator.getCache().cacheLines); 
-        System.out.println("populate cache table"+Simulator.getCache());
-        cacheTable.setItems(cacheObservableList); 
+        cacheObservableList.setAll(Simulator.getCache().cacheLines);
+        System.out.println("populate cache table" + Simulator.getCache());
+        cacheTable.setItems(cacheObservableList);
     }
 
     public void updateAndRefreshTables() {

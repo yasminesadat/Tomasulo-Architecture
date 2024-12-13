@@ -16,54 +16,54 @@ import javafx.stage.Stage;
 public class MemoryController {
     // move this to the simulator
     public Memory memory = Simulator.memory;
-
     private TextField addressField;
     private TextField valueField;
     private ComboBox<String> dataTypeCombo;
-    
+
     public void initialize(Stage stage) {
-    // Create the main container
-    VBox mainContainer = new VBox(20);
-    mainContainer.setPadding(new Insets(40)); // Add some padding
-    mainContainer.setStyle("-fx-background-color: #f4f4f4;");
+        // Create the main container
+        VBox mainContainer = new VBox(20);
+        mainContainer.setPadding(new Insets(40)); // Add some padding
+        mainContainer.setStyle("-fx-background-color: #f4f4f4;");
 
-    // Ensure the entire VBox is centered
-    mainContainer.setAlignment(Pos.CENTER);
+        // Ensure the entire VBox is centered
+        mainContainer.setAlignment(Pos.CENTER);
 
-    // Create title
-    Label titleLabel = new Label("Memory Editor Page");
-    titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-    titleLabel.setAlignment(Pos.CENTER);
-    
-    // Create input form
-    GridPane inputForm = createInputForm();
-    inputForm.setAlignment(Pos.CENTER);
+        // Create title
+        Label titleLabel = new Label("Memory Editor Page");
+        titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        titleLabel.setAlignment(Pos.CENTER);
 
-    // Create proceed to simulator button
-    Button proceedButton = createProceedToSimulatorButton();
-    proceedButton.setAlignment(Pos.CENTER);
-    
-    // Ensure button is horizontally centered
-    HBox buttonBox = new HBox(proceedButton);
-    buttonBox.setAlignment(Pos.CENTER);
+        // Create input form
+        GridPane inputForm = createInputForm();
+        inputForm.setAlignment(Pos.CENTER);
 
-    // Add components to main container
-    mainContainer.getChildren().addAll(
-        titleLabel, 
-        inputForm, 
-        buttonBox  // Use HBox instead of direct button
-    );
+        // Create proceed to simulator button
+        Button proceedButton = createProceedToSimulatorButton();
+        proceedButton.setAlignment(Pos.CENTER);
 
-    // Create the scene with the main container
-    Scene scene = new Scene(mainContainer, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()); 
+        // Ensure button is horizontally centered
+        HBox buttonBox = new HBox(proceedButton);
+        buttonBox.setAlignment(Pos.CENTER);
 
-    // Add external CSS styling
-    scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-    
-    stage.setScene(scene);
-    stage.setTitle("Memory Editor");
-    stage.setMaximized(true);
-    stage.show();
+        // Add components to main container
+        mainContainer.getChildren().addAll(
+                titleLabel,
+                inputForm,
+                buttonBox // Use HBox instead of direct button
+        );
+
+        // Create the scene with the main container
+        Scene scene = new Scene(mainContainer, Screen.getPrimary().getBounds().getWidth(),
+                Screen.getPrimary().getBounds().getHeight());
+
+        // Add external CSS styling
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+
+        stage.setScene(scene);
+        stage.setTitle("Memory Editor");
+        stage.setMaximized(true);
+        stage.show();
     }
 
     private Button createProceedToSimulatorButton() {
@@ -75,16 +75,16 @@ public class MemoryController {
 
     private void openSimulator(Button proceedButton) {
         try {
-            
-            // Create an instance of TomasuloSimulator 
+
+            // Create an instance of TomasuloSimulator
             TomasuloController simulator = new TomasuloController();
-            
+
             // Pass the configured memory to the simulator
-            //simulator.setMemory(this.memory);
-            
+            // simulator.setMemory(this.memory);
+
             // Initialize the simulator
             simulator.initialize((Stage) proceedButton.getScene().getWindow());
-            
+
         } catch (Exception ex) {
             showError("Failed to open simulator: " + ex.getMessage());
         }
@@ -117,10 +117,9 @@ public class MemoryController {
         Label dataTypeLabel = new Label("Data Type:");
         dataTypeCombo = new ComboBox<>();
         dataTypeCombo.getItems().addAll(
-            "Word (4 bytes)", 
-            "Float (4 bytes)", 
-            "Double (8 bytes)"
-        );
+                "Word (4 bytes)",
+                "Float (4 bytes)",
+                "Double (8 bytes)");
         dataTypeCombo.getSelectionModel().selectFirst();
         dataTypeCombo.getStyleClass().add("combo-box");
         grid.add(dataTypeLabel, 0, 2);
