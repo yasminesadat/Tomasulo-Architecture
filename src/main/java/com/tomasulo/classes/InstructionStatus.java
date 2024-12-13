@@ -72,6 +72,11 @@ public class InstructionStatus {
             return "Null";
         }
         try {
+            // if(instructionType.equals("LW") || instructionType.equals("LD") || instructionType.equals("L.D") || instructionType.equals("L.S")
+            // || instructionType.equals("S.S") || instructionType.equals("S.D") || instructionType.equals("SW") || instructionType.equals("SD")) {
+                
+            // }
+
             int start = Integer.parseInt(startTime);
             int end = Integer.parseInt(endTime);
             return String.valueOf(end- start );

@@ -654,19 +654,19 @@ public class TomasuloController {
 
         for (ReservationStationEntry entry : Simulator.addSubReservationStation.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if (!allInstructions.contains(entry.getCurrInstruction())) {
-
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                    
                     allInstructions.add(entry.getCurrInstruction());
                 }
-
+               
             }
 
         }
 
         for (ReservationStationEntry entry : Simulator.mulDivReservationStation.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if (!allInstructions.contains(entry.getCurrInstruction())) {
-                    allInstructions.add(entry.getCurrInstruction());
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                allInstructions.add(entry.getCurrInstruction());
                 }
             }
 
@@ -674,8 +674,8 @@ public class TomasuloController {
 
         for (ReservationStationEntry entry : Simulator.integerReservationStation.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if (!allInstructions.contains(entry.getCurrInstruction())) {
-                    allInstructions.add(entry.getCurrInstruction());
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                allInstructions.add(entry.getCurrInstruction());
                 }
             }
 
@@ -683,8 +683,8 @@ public class TomasuloController {
 
         for (ReservationStationEntry entry : Simulator.loadBuffer.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if (!allInstructions.contains(entry.getCurrInstruction())) {
-                    allInstructions.add(entry.getCurrInstruction());
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                allInstructions.add(entry.getCurrInstruction());
                 }
             }
 
@@ -692,24 +692,24 @@ public class TomasuloController {
 
         for (ReservationStationEntry entry : Simulator.storeBuffer.getEntries()) {
             if (entry.getCurrInstruction() != null) {
-                if (!allInstructions.contains(entry.getCurrInstruction())) {
-                    allInstructions.add(entry.getCurrInstruction());
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                allInstructions.add(entry.getCurrInstruction());
                 }
             }
 
         }
 
+        
+
         allInstructions.sort(Comparator.comparingInt(Instruction::getIssueTime));
 
-        // System.out.println("All Instructionsssssssssssssssssssss: " +
-        // allInstructions.size());
+        
+        //System.out.println("All Instructionsssssssssssssssssssss: " + allInstructions.size());
 
         for (Instruction instruction : allInstructions) {
-            // System.out.println("Instructionnnnnnnnnnnnnnnnnnnnn: " +
-            // instruction.getIssueTime());
+            //System.out.println("Instructionnnnnnnnnnnnnnnnnnnnn: " + instruction.getIssueTime());
             // if (instruction.getIssueTime() != -1) {
-            InstructionStatus instructionStatus = new InstructionStatus(
-                    1, // change this later(branch)
+                InstructionStatus instructionStatus = new InstructionStatus(
                     instruction.getType(),
                     instruction.getRd(),
                     instruction.getIssueTime() == -1 ? "Null" : String.valueOf(instruction.getIssueTime()),
@@ -717,41 +717,45 @@ public class TomasuloController {
                     instruction.getEndTime() == -1 ? "Null" : String.valueOf(instruction.getEndTime()),
                     instruction.getWriteTime() == -1 ? "Null" : String.valueOf(instruction.getWriteTime()),
                     instruction.getType()
+                   
+                );
 
-            );
+                
+                if(instruction.getIssueTime()!=-1 && instruction.getStartTime()==-1) {
+                    instructionStatus.setRemainingTime(InstructionStatus.getInitialRemainingTime(instruction.getType()));
+                }
 
-            if (!"Null".equals(instructionStatus.getRemainingTime())
-                    && !"0".equals(instructionStatus.getRemainingTime())
-                    && Simulator.getClockCycle() > Integer.parseInt(instructionStatus.getStartTime())) {
-                int remaining = Integer.parseInt(instructionStatus.getRemainingTime());
-                if (remaining > 0) {
-                    // remaining = Integer.parseInt(instructionStatus.getEndTime()) +
-                    // Integer.parseInt(instructionStatus.getStartTime()) -
-                    // Simulator.getClockCycle();
-                    remaining = Integer.parseInt(instructionStatus.getEndTime()) - Simulator.getClockCycle() + 1;
-                    if (remaining >= 0) {
-                        instructionStatus.setRemainingTime(String.valueOf(remaining));
-                    } else {
-                        instructionStatus.setRemainingTime("0");
+                if (!"Null".equals(instructionStatus.getStartTime()) && !"0".equals(instructionStatus.getRemainingTime())) {
+                    int remaining = Integer.parseInt(instructionStatus.getRemainingTime());
+                    if (remaining > 0) {
+                       // remaining = Integer.parseInt(instructionStatus.getEndTime()) + Integer.parseInt(instructionStatus.getStartTime()) - Simulator.getClockCycle();
+                       remaining = Integer.parseInt(instructionStatus.getEndTime()) - Simulator.getClockCycle() + 1;
+                       if (remaining >= 0) {
+                            instructionStatus.setRemainingTime(String.valueOf(remaining));
+                        } else {
+                            instructionStatus.setRemainingTime("0");
+                        }
                     }
                 }
-            }
+              
+        
 
-            instructionStatusList.add(instructionStatus);
-            if (instruction.getWriteTime() != -1 && !completedInstructions.contains(instruction)) {
-                completedInstructions.add(instruction);
-            }
+                instructionStatusList.add(instructionStatus);
+                System.out.println("Instruction Status Listttttttttttttt: " + instructionStatusList.size());
+                
+                if (instruction.getWriteTime() != -1 && !completedInstructions.contains(instruction) ) {
+                    instruction.setStartTime(instruction.getStartTime());
+                    completedInstructions.add(instruction);
+                }
 
             // }
         }
 
-        // System.out.println("Instruction Status Listtttttttttttttttt: " +
-        // instructionStatusList.size());
-
-        ObservableList<InstructionStatus> observableInstructions = FXCollections
-                .observableArrayList(instructionStatusList);
+        //System.out.println("Instruction Status Listtttttttttttttttt: " + instructionStatusList.size());
+    
+        ObservableList<InstructionStatus> observableInstructions = FXCollections.observableArrayList(instructionStatusList);
         instructionStatusTable.setItems(observableInstructions);
-
+       
     }
 
     private void populateInstructionQueueTable() {
