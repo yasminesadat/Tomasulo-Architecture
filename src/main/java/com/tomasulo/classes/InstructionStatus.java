@@ -1,7 +1,6 @@
 package com.tomasulo.classes;
 
 public class InstructionStatus {
-    private int iteration;
     private String type;
     private String rd;
     private String issueTime;
@@ -11,8 +10,7 @@ public class InstructionStatus {
     private String remainingTime;
     private String instructionType;
 
-    public InstructionStatus(int iteration, String type, String rd, String issueTime, String startTime, String endTime, String writeTime, String instructionType) {
-        this.iteration = iteration;
+    public InstructionStatus(String type, String rd, String issueTime, String startTime, String endTime, String writeTime, String instructionType) {
         this.type = type;
         this.rd = rd;
         this.issueTime = issueTime;
@@ -23,8 +21,54 @@ public class InstructionStatus {
         this.instructionType = instructionType;
     }
 
+
+    public static String getInitialRemainingTime(String instructionType) {
+        String remainingTime = "Null";
+        switch (instructionType) {
+            case "LW":
+            case "LD":
+            case "L.D":
+            case "L.S":
+            remainingTime= String.valueOf(UserInputValues.loadLatency);
+            break;
+            
+            case "S.S":
+            case "S.D":
+            case "SW":
+            case "SD":
+            remainingTime= String.valueOf(UserInputValues.storeLatency);
+            break;
+            case "DADDI":
+            case "DSUBI":
+            remainingTime= "1";
+            break;
+            case "MUL.S":
+            case "MUL.D":
+            remainingTime= String.valueOf(UserInputValues.mulLatency);
+            break;
+            case "DIV.S":
+            case "DIV.D":
+            remainingTime= String.valueOf(UserInputValues.divLatency);
+            break;
+            case "BEQ":
+            case "BNE":
+            remainingTime= "1";
+            break;
+            case "ADD.S":
+            case "ADD.D":
+            remainingTime= String.valueOf(UserInputValues.addLatency);
+            break;
+            case "SUB.S":
+            case "SUB.D":
+            remainingTime= String.valueOf(UserInputValues.subLatency);
+            break;
+        }
+
+        return remainingTime; 
+    }
+
     private String calculateRemainingTime(String startTime, String endTime) {
-        if ("Null".equals(startTime) || "Null".equals(endTime)) {
+        if (this.issueTime.equals(String.valueOf(Simulator.clockCycle))) {
             return "Null";
         }
         try {
@@ -37,9 +81,7 @@ public class InstructionStatus {
     }
 
     // Getter methods
-    public int getIteration() {
-        return iteration;
-    }
+
 
     public String getType() {
         return type;
@@ -55,6 +97,10 @@ public class InstructionStatus {
 
     public String getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
     public String getEndTime() {
