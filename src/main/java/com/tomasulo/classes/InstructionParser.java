@@ -58,7 +58,13 @@ public class InstructionParser {
                     case InstructionType.LOAD_DOUBLE_PRECISION:
                     case InstructionType.LOAD_SINGLE_PRECISION:
                         currentInstruction.setRd(operands[0]);
-                        currentInstruction.setImmediate(Integer.parseInt(operands[1]));
+                        // handle loads with immediate or register value
+                        if (operands[1].contains("R")){
+                            currentInstruction.setRs(operands[1]);
+                        }
+                        else{
+                            currentInstruction.setImmediate(Integer.parseInt(operands[1]));
+                        }
                         break;
                     case InstructionType.STORE_WORD: // SW R1 100
                     case InstructionType.STORE_DOUBLE_WORD:
