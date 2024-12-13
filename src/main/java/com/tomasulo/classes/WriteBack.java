@@ -100,6 +100,7 @@ public class WriteBack {
                 System.out.println("stall load is now false");
                 Simulator.stallLoad = false;
             }
+
             if (entry.canWrite()) {
                 if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
                     maxWaiting = Simulator.getWaitingStation(entry.getTag());
@@ -148,13 +149,15 @@ public class WriteBack {
             }
 
             if (entry.canWrite()) {
-                if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
-                    maxWaiting = Simulator.getWaitingStation(entry.getTag());
-                    writingBackEntry = entry;
-                    desiredStation = Simulator.storeBuffer;
-
+                int address = entry.address;
+                if (entry.currInstruction.rd.contains("R")){
+                    address = (int)entry.getVk();
                 }
-
+                entry.functionalUnit.execute(address, entry.getVj(), entry.currInstruction.getType());
+                System.out.println("STOREEE NOW");
+                entry.setBusy(false);
+                entry.getCurrInstruction().setWriteTime(Simulator.clockCycle);
+                Simulator.storeBuffer.setFreeSpaces(Simulator.storeBuffer.getFreeSpaces() + 1);
             }
 
         }

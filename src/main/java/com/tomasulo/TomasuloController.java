@@ -739,7 +739,6 @@ public class TomasuloController {
         
 
                 instructionStatusList.add(instructionStatus);
-                System.out.println("Instruction Status Listttttttttttttt: " + instructionStatusList.size());
                 
                 if (instruction.getWriteTime() != -1 && !completedInstructions.contains(instruction) ) {
                     instruction.setStartTime(instruction.getStartTime());
