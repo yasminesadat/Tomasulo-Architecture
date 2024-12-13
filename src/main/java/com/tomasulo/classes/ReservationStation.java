@@ -71,7 +71,6 @@ public class ReservationStation {
         {
             for (int i = 0; i < entries.size(); i++) {
                 if (entries.get(i).busy == false) {
-
                     entries.get(i).setAddress(address);
                     if (qj.equals("0")) {
                         entries.get(i).setVj(vj);
@@ -182,6 +181,22 @@ public class ReservationStation {
                     case InstructionType.STORE_DOUBLE_WORD:
                     case InstructionType.STORE_DOUBLE_PRECISION:
                     case InstructionType.STORE_SINGLE_PRECISION:
+                    if (!Simulator.stallLoad){
+                        int address = 0;
+                        if (entries.get(i).currInstruction.rd.contains("R")){
+                            address = (int)entries.get(i).vk;
+                        }
+                        else{
+                            address= entries.get(i).address;
+                        }
+                        StoreFU functionalUnit = (StoreFU)entries.get(i).functionalUnit;
+                        boolean hit = functionalUnit.tryAccess(address, insType);
+                        if (!hit){
+                            Simulator.stallLoad = true ;
+                            System.out.println("first store so miss and no load before ");
+                        }
+                        latency = hit? UserInputValues.getLoadLatency(): UserInputValues.getLoadLatency()+4;
+                    }
                         double value = entries.get(i).vj;
                         int addressStore = entries.get(i).address;
                         entries.get(i).functionalUnit.execute(addressStore, value, insType);

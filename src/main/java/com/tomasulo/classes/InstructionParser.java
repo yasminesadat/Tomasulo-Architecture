@@ -72,8 +72,13 @@ public class InstructionParser {
                     case InstructionType.STORE_DOUBLE_PRECISION:
                     case InstructionType.STORE_SINGLE_PRECISION:
                         currentInstruction.setRs(operands[0]);
-                        currentInstruction.setImmediate(Integer.parseInt(operands[1]));
-
+                        if (operands[1].contains("R")){
+                            currentInstruction.setRd(operands[1]);
+                        }
+                        else{
+                            currentInstruction.setImmediate(Integer.parseInt(operands[1]));
+                            currentInstruction.setRd("");
+                        }
                         break;
                     case InstructionType.BRANCH_EQUAL: // BEQ R1 R2 100
                     case InstructionType.BRANCH_NOT_EQUAL:
