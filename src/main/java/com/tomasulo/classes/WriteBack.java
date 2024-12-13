@@ -77,8 +77,7 @@ public class WriteBack {
         }
         for (ReservationStationEntry entry : Simulator.loadBuffer.getEntries()) {
             // in case of a miss
-            System.out.println(entry);
-            if(Simulator.stallLoad && Simulator.clockCycle==entry.currInstruction.getEndTime()){
+            if (entry.busy && Simulator.stallLoad && Simulator.clockCycle==entry.currInstruction.getEndTime()){
                 int size=0;
                 System.out.println("GETTTT FROM MEMORYYY THE MISS " +Simulator.clockCycle);
                 switch(entry.currInstruction.getType()) {
