@@ -96,8 +96,6 @@ public class WriteBack {
             Simulator.bus.setValue(writingBackEntry.functionalUnit.result);
             writingBackEntry.currInstruction.setStartTime(-1);
             sniffBus();
-            // sniff bus
-
         }
 
     }

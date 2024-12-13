@@ -158,6 +158,11 @@ public class ReservationStationEntry {
         this.issueTime = issueTime;
     }
 
+    public String getOperation() {
+        String operation = this.currInstruction.type;
+        return operation;
+    }
+
     @Override
     public String toString() {
         return " [tag=" + tag + ", issueTime=" + issueTime + ", busy=" + busy + ", address=" + address + ", vj=" + vj

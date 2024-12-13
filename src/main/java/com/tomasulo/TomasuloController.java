@@ -305,9 +305,10 @@ public class TomasuloController {
     }
 
     private void navigateToStart() throws IOException {
-        Stage stage = (Stage) goBackButton.getScene().getWindow();
-        App primarycontroller = new App();
-        primarycontroller.start(stage);
+        // Stage stage = (Stage) goBackButton.getScene().getWindow();
+        // App primarycontroller = new App();
+        // primarycontroller.start(stage);
+        // 3yza arga3
 
     }
 
@@ -316,6 +317,7 @@ public class TomasuloController {
 
         // Create all columns
         TableColumn<ReservationStationEntry, String> tagColumn = new TableColumn<>("Tag");
+        TableColumn<ReservationStationEntry, String> operationColumn = new TableColumn<>("Operation");
         TableColumn<ReservationStationEntry, Boolean> busyColumn = new TableColumn<>("Busy");
         TableColumn<ReservationStationEntry, Integer> addressColumn = new TableColumn<>(
                 isBranch ? "Branch Address " : "Address");
@@ -327,12 +329,14 @@ public class TomasuloController {
 
         tagColumn.setPrefWidth(80);
         busyColumn.setPrefWidth(60);
+        operationColumn.setPrefWidth(80);
         addressColumn.setPrefWidth(80);
         vjColumn.setPrefWidth(80);
         vkColumn.setPrefWidth(80);
         qjColumn.setPrefWidth(80);
         qkColumn.setPrefWidth(80);
         remainingTimeColumn.setPrefWidth(200);
+        operationColumn.setCellValueFactory(new PropertyValueFactory<>("operation"));
         tagColumn.setCellValueFactory(new PropertyValueFactory<>("tag"));
         busyColumn.setCellValueFactory(new PropertyValueFactory<>("busy"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -365,6 +369,7 @@ public class TomasuloController {
             case "MUL_DIV":
             case "INTEGER":
                 columns.add(addressColumn);
+                columns.add(operationColumn);
                 columns.add(vjColumn);
                 columns.add(vkColumn);
                 columns.add(qjColumn);
