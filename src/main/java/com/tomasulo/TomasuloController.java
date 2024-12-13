@@ -4,6 +4,7 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.tomasulo.classes.ReservationStation;
 import com.tomasulo.classes.ReservationStationEntry;
 import com.tomasulo.classes.Instruction;
 import com.tomasulo.classes.InstructionQueue;
+import com.tomasulo.classes.Memory;
 import com.tomasulo.classes.Register;
 import com.tomasulo.classes.RegisterFile;
 import com.tomasulo.classes.Simulator;
@@ -28,6 +30,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -121,8 +124,11 @@ public class TomasuloController {
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);"));
         nextCycleButton.setOnAction(e -> advanceClockCycle());
 
+        Button memoryViewButton = new Button("View Memory");
+        memoryViewButton.setOnAction(e -> showMemoryView());
+
         // Create an HBox for clock cycle controls
-        HBox clockControlBox = new HBox(20, clockCycleLabel, nextCycleButton, goBackButton);
+        HBox clockControlBox = new HBox(20, clockCycleLabel, nextCycleButton, memoryViewButton);
         clockControlBox.setAlignment(javafx.geometry.Pos.CENTER);
         clockControlBox.setPadding(new Insets(15));
         clockControlBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0;");
@@ -155,7 +161,6 @@ public class TomasuloController {
         // Create layout for reservation stations (left side)
 
         // Create layout for registers (right side)
-
         // Create horizontal layout for the three columns
         HBox columnsLayout = new HBox(15);
         columnsLayout.getChildren().addAll(leftColumn, middleColumn, actualRight);
@@ -310,6 +315,55 @@ public class TomasuloController {
         // primarycontroller.start(stage);
         // 3yza arga3
 
+    }
+
+    private void showMemoryView() {
+        Stage memoryStage = new Stage();
+        memoryStage.setTitle("Tomasulo Simulator - Memory Contents");
+
+        TableView<List<String>> memoryTableView = new TableView<>();
+        
+        TableColumn<List<String>, String> addressColumn = new TableColumn<>("Address");
+        TableColumn<List<String>, String> hexColumn = new TableColumn<>("Hex Value");
+
+        addressColumn.setCellValueFactory(data -> 
+            new SimpleStringProperty(data.getValue().get(0)));
+        hexColumn.setCellValueFactory(data -> 
+            new SimpleStringProperty(data.getValue().get(1)));
+
+        memoryTableView.getColumns().addAll(addressColumn, hexColumn);
+
+        ObservableList<List<String>> memoryData = FXCollections.observableArrayList();
+        Memory memory = Simulator.getMemory();
+        
+        for (int i = 0; i < memory.getSize(); i++) {
+            byte value = memory.readByte(i);
+            //System.out.printf("Address 0x%04X: 0x%02X%n", i, value);
+            memoryData.add(Arrays.asList(
+                String.format("0x%04X", i),
+                String.format("0x%02X", value)
+            ));
+        }
+        
+        memoryTableView.setItems(memoryData);
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search Address or Value");
+        
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            memoryTableView.setItems(memoryData.filtered(entry -> 
+                entry.get(0).toLowerCase().contains(newValue.toLowerCase()) ||
+                entry.get(1).toLowerCase().contains(newValue.toLowerCase())
+            ));
+        });
+
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(searchField, memoryTableView);
+        layout.setPadding(new Insets(10));
+
+        Scene memoryScene = new Scene(layout, 500, 600);
+        memoryStage.setScene(memoryScene);
+        memoryStage.show();
     }
 
     private TableView<ReservationStationEntry> createReservationStationTableView(String type, boolean isBranch) {

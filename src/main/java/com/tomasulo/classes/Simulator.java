@@ -14,7 +14,7 @@ public class Simulator {
     public static ReservationStation storeBuffer;
     public static ReservationStation mulDivReservationStation;
     public static ReservationStation integerReservationStation;
-    public static double[] memory;
+    public static Memory memory = new Memory(256);
     public static Cache cache;
     public static Bus bus;
     public static int pc = 0;
@@ -74,7 +74,7 @@ public class Simulator {
         return integerReservationStation;
     }
 
-    public static double[] getMemory() {
+    public static Memory getMemory() {
         return memory;
     }
 
@@ -108,9 +108,8 @@ public class Simulator {
             e.printStackTrace();
         }
         bus = new Bus();
-        memory = new double[1000];
+        cache = new Cache(UserInputValues.getCacheSize(), UserInputValues.getCacheBlockSize());
         instructionQueue.printInstructions();
-
     }
 
     public static void getUserInputs() {

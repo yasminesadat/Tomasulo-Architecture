@@ -1,68 +1,69 @@
 package com.tomasulo;
 
 import com.tomasulo.classes.Memory;
+import com.tomasulo.classes.Simulator;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class MemoryController {
     // move this to the simulator
-    private Memory memory;
+    public Memory memory = Simulator.memory;
 
     private TextField addressField;
     private TextField valueField;
     private ComboBox<String> dataTypeCombo;
     
     public void initialize(Stage stage) {
-        memory = new Memory(8);
+    // Create the main container
+    VBox mainContainer = new VBox(20);
+    mainContainer.setPadding(new Insets(40)); // Add some padding
+    mainContainer.setStyle("-fx-background-color: #f4f4f4;");
+
+    // Ensure the entire VBox is centered
+    mainContainer.setAlignment(Pos.CENTER);
+
+    // Create title
+    Label titleLabel = new Label("Memory Editor Page");
+    titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+    titleLabel.setAlignment(Pos.CENTER);
     
-        // Create the main container
-        VBox mainContainer = new VBox(20);
-        mainContainer.setPadding(new Insets(40)); // Add some padding
-        mainContainer.setStyle("-fx-background-color: #f4f4f4;");
+    // Create input form
+    GridPane inputForm = createInputForm();
+    inputForm.setAlignment(Pos.CENTER);
+
+    // Create proceed to simulator button
+    Button proceedButton = createProceedToSimulatorButton();
+    proceedButton.setAlignment(Pos.CENTER);
     
-        // Ensure the entire VBox is centered
-        mainContainer.setAlignment(Pos.CENTER);
+    // Ensure button is horizontally centered
+    HBox buttonBox = new HBox(proceedButton);
+    buttonBox.setAlignment(Pos.CENTER);
+
+    // Add components to main container
+    mainContainer.getChildren().addAll(
+        titleLabel, 
+        inputForm, 
+        buttonBox  // Use HBox instead of direct button
+    );
+
+    // Create the scene with the main container
+    Scene scene = new Scene(mainContainer, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()); 
+
+    // Add external CSS styling
+    scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
     
-        // Create title
-        Label titleLabel = new Label("Memory Editor Page");
-        titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-        titleLabel.setAlignment(Pos.CENTER);
-        VBox.setVgrow(titleLabel, Priority.ALWAYS);
-    
-        // Create input form
-        GridPane inputForm = createInputForm();
-        inputForm.setAlignment(Pos.CENTER);
-        VBox.setVgrow(inputForm, Priority.ALWAYS);
-    
-        // Create proceed to simulator button
-        Button proceedButton = createProceedToSimulatorButton();
-        proceedButton.setAlignment(Pos.CENTER);
-        //VBox.setVgrow(proceedButton, Priority.ALWAYS);
-    
-        // Add components to main container
-        mainContainer.getChildren().addAll(
-            titleLabel, 
-            inputForm, 
-            proceedButton
-        );
-    
-        // Create the scene with the main container
-        Scene scene = new Scene(mainContainer, Screen.getPrimary().getBounds().getWidth(),Screen.getPrimary().getBounds().getHeight()); 
-    
-        // Add external CSS styling
-        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-        
-        stage.setScene(scene);
-        stage.setTitle("Memory Editor"); // Add a title
-        stage.setMaximized(true);
-        stage.show();
+    stage.setScene(scene);
+    stage.setTitle("Memory Editor");
+    stage.setMaximized(true);
+    stage.show();
     }
 
     private Button createProceedToSimulatorButton() {
