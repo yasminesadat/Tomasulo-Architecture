@@ -157,7 +157,7 @@ public class WriteBack {
             Simulator.bus.setTag(writingBackEntry.tag);
             Simulator.bus.setValue(writingBackEntry.functionalUnit.result);
             System.out.println("value on bus "+Simulator.bus.value);
-            writingBackEntry.currInstruction.setStartTime(-1);
+            //writingBackEntry.currInstruction.setStartTime(-1);
             sniffBus();
         }
 

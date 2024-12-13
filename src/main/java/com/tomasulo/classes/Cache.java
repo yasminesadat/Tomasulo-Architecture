@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Cache {
 
-    private static class CacheLine {
+    public static class CacheLine {
         int tag;
         boolean valid;
         byte[] data;
@@ -15,12 +15,22 @@ public class Cache {
             this.tag = -1;
         }
 
+        public int getTag() {
+            return tag;
+        }
+        public boolean getValid() {
+            return valid;
+        }
+        public byte[] getData() {
+            return data;
+        }
+
     }
 
     private final int cacheSize;
     private final int blockSize;
     private final int numberOfLines;
-    private final CacheLine[] cacheLines;
+    public final CacheLine[] cacheLines;
 
     public Cache(int cacheSize, int blockSize) {
         if (blockSize <= 0 || cacheSize <= 0 || cacheSize % blockSize != 0) {
@@ -36,6 +46,21 @@ public class Cache {
     }
 
     
+    public int getCacheSize() {
+        return cacheSize;
+    }
+
+
+    public int getNumberOfLines() {
+        return numberOfLines;
+    }
+
+
+    public CacheLine[] getCacheLines() {
+        return cacheLines;
+    }
+
+
     public int getBlockSize() {
         return blockSize;
     }
