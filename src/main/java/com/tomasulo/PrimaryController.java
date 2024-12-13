@@ -74,6 +74,5 @@ public class PrimaryController {
         Stage stage = (Stage) saveButton.getScene().getWindow();
         MemoryController controller = new MemoryController();
         controller.initialize(stage);
-        stage.show();
     }
 }

@@ -6,7 +6,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class MemoryController {
@@ -16,42 +18,49 @@ public class MemoryController {
     private TextField addressField;
     private TextField valueField;
     private ComboBox<String> dataTypeCombo;
-    private Stage primaryStage;
-
+    
     public void initialize(Stage stage) {
-        this.primaryStage = stage;
         memory = new Memory(8);
-
+    
         // Create the main container
         VBox mainContainer = new VBox(20);
-        mainContainer.setPadding(new Insets(20));
+        mainContainer.setPadding(new Insets(40)); // Add some padding
         mainContainer.setStyle("-fx-background-color: #f4f4f4;");
-
+    
+        // Ensure the entire VBox is centered
+        mainContainer.setAlignment(Pos.CENTER);
+    
         // Create title
         Label titleLabel = new Label("Memory Editor Page");
         titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-
+        titleLabel.setAlignment(Pos.CENTER);
+        VBox.setVgrow(titleLabel, Priority.ALWAYS);
+    
         // Create input form
         GridPane inputForm = createInputForm();
-
+        inputForm.setAlignment(Pos.CENTER);
+        VBox.setVgrow(inputForm, Priority.ALWAYS);
+    
         // Create proceed to simulator button
         Button proceedButton = createProceedToSimulatorButton();
-
+        proceedButton.setAlignment(Pos.CENTER);
+        //VBox.setVgrow(proceedButton, Priority.ALWAYS);
+    
         // Add components to main container
         mainContainer.getChildren().addAll(
             titleLabel, 
             inputForm, 
             proceedButton
         );
-        mainContainer.setAlignment(Pos.CENTER);
-
-        // Set up the scene
-        Scene scene = new Scene(mainContainer);
-        
+    
+        // Create the scene with the main container
+        Scene scene = new Scene(mainContainer, Screen.getPrimary().getBounds().getWidth(),Screen.getPrimary().getBounds().getHeight()); 
+    
         // Add external CSS styling
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        
         stage.setScene(scene);
-        stage.setFullScreen(true);
+        stage.setTitle("Memory Editor"); // Add a title
         stage.setMaximized(true);
         stage.show();
     }
@@ -59,14 +68,12 @@ public class MemoryController {
     private Button createProceedToSimulatorButton() {
         Button proceedButton = new Button("Proceed to Simulator");
         proceedButton.getStyleClass().add("proceed-button");
-        proceedButton.setOnAction(e -> openSimulator());
+        proceedButton.setOnAction(e -> openSimulator(proceedButton));
         return proceedButton;
     }
 
-    private void openSimulator() {
+    private void openSimulator(Button proceedButton) {
         try {
-            // Create new stage for simulator
-            Stage simulatorStage = new Stage();
             
             // Create an instance of TomasuloSimulator 
             TomasuloController simulator = new TomasuloController();
@@ -75,10 +82,8 @@ public class MemoryController {
             //simulator.setMemory(this.memory);
             
             // Initialize the simulator
-            simulator.initialize(simulatorStage);
+            simulator.initialize((Stage) proceedButton.getScene().getWindow());
             
-            // Close the current memory controller stage
-            this.primaryStage.close();
         } catch (Exception ex) {
             showError("Failed to open simulator: " + ex.getMessage());
         }
