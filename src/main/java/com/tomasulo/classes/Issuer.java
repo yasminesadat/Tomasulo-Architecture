@@ -143,8 +143,16 @@ public class Issuer {
             instruction.setIssueTime(Simulator.clockCycle);
             Register destination = getRegister(instruction.getRd());
             int immediate = instruction.getImmediate();
+            String rs = instruction.getRs();
             FunctionalUnit functionalUnit = new LoadFU();
-            int index = reservationStation.addEntry(immediate, 0, 0, "0", "0", instruction, functionalUnit);
+            int index = 0 ;
+            if (rs.contains("R")){
+                Register reg = getRegister(rs);
+                index = reservationStation.addEntry(0, reg.getValue(), 0, reg.getQ(), "0", instruction, functionalUnit);
+            }
+            else{
+                index = reservationStation.addEntry(immediate, 0, 0, "0", "0", instruction, functionalUnit);
+            }
             destination.setQ("L" + index);
             Simulator.pc++;
         }

@@ -100,12 +100,14 @@ public class ReservationStation {
             if (entries.get(i).qj.equals("0") && entries.get(i).qk.equals("0")
                     && entries.get(i).currInstruction.getIssueTime() != Simulator.clockCycle && entries.get(i).busy
                     && entries.get(i).currInstruction.getStartTime() == -1) {
+                String insType = entries.get(i).currInstruction.getType();
+                if(Simulator.stallLoad && (insType.equals( InstructionType.LOAD_WORD) || insType.equals(InstructionType.LOAD_DOUBLE_PRECISION) || insType.equals(InstructionType.LOAD_DOUBLE_WORD)
+                || insType.equals(InstructionType.LOAD_SINGLE_PRECISION))) {continue;}
                 entries.get(i).currInstruction.setStartTime(Simulator.clockCycle);
                 int endExecutionTime = 0;
                 int latency = 0;
                 double src1 = 0;
                 double src2 = 0;
-                String insType = entries.get(i).currInstruction.getType();
                 switch (insType) {
                     case InstructionType.ADD_DOUBLE_PRECISION:
                     case InstructionType.ADD_SINGLE_PRECISION:
@@ -158,10 +160,22 @@ public class ReservationStation {
                     case InstructionType.LOAD_DOUBLE_WORD:
                     case InstructionType.LOAD_DOUBLE_PRECISION:
                     case InstructionType.LOAD_SINGLE_PRECISION:
-                        int address = entries.get(i).address;
+                        if (!Simulator.stallLoad){
+                        int address = 0;
+                        if (entries.get(i).currInstruction.rs.contains("R")){
+                            address = (int)entries.get(i).vj;
+                        }
+                        else{
+                            address= entries.get(i).address;
+                        }
                         LoadFU functionalUnit = (LoadFU)entries.get(i).functionalUnit;
                         boolean hit = functionalUnit.execute(address, insType);
+                        if (!hit){
+                            Simulator.stallLoad = true ;
+                            System.out.println("first load so miss");
+                        }
                         latency = hit? UserInputValues.getLoadLatency(): UserInputValues.getLoadLatency()+4;
+                    }
                         break;
                     // S.D F10, 0
                     case InstructionType.STORE_WORD:

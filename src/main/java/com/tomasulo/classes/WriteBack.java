@@ -76,30 +76,31 @@ public class WriteBack {
             }
         }
         for (ReservationStationEntry entry : Simulator.loadBuffer.getEntries()) {
-            if (entry.canWrite()) {
-                // in case of a miss
-                if(entry.getCurrInstruction().getEndTime()-entry.getCurrInstruction().getStartTime()-1>UserInputValues.getLoadLatency()){
-                    int size=0;
-                    System.out.println("GETTTT FROM MEMORYYY THE MISS " +Simulator.clockCycle);
-                    switch(entry.currInstruction.getType()) {
-                        case "LW":
-                        case "L.S":
-                        size = 4;
-                        break;
-                        case "LD":
-                        case "L.D":
-                        size = 8;
-                        break;
-                    }
-                    Object result = CacheMemoryHandler.loadDataFromMemoryIfCacheMiss(entry.address, Simulator.cache, Simulator.memory, size, entry.currInstruction.getType());
-
-                    if (result instanceof Integer) {
-                        entry.functionalUnit.result = ((Integer) result).doubleValue();
-                    } else {
-                        entry.functionalUnit.result = (Double) result;
-                    }
+            // in case of a miss
+            if(Simulator.stallLoad && Simulator.clockCycle==entry.currInstruction.getEndTime()){
+                int size=0;
+                System.out.println("GETTTT FROM MEMORYYY THE MISS " +Simulator.clockCycle);
+                switch(entry.currInstruction.getType()) {
+                    case "LW":
+                    case "L.S":
+                    size = 4;
+                    break;
+                    case "LD":
+                    case "L.D":
+                    size = 8;
+                    break;
                 }
- 
+                Object result = CacheMemoryHandler.loadDataFromMemoryIfCacheMiss(entry.address, Simulator.cache, Simulator.memory, size, entry.currInstruction.getType());
+
+                if (result instanceof Integer) {
+                    entry.functionalUnit.result = ((Integer) result).doubleValue();
+                } else {
+                    entry.functionalUnit.result = (Double) result;
+                }
+                System.out.println("stall load is now false");
+                Simulator.stallLoad = false;
+            }
+            if (entry.canWrite()) {
                 if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
                     maxWaiting = Simulator.getWaitingStation(entry.getTag());
                     writingBackEntry = entry;
@@ -170,6 +171,14 @@ public class WriteBack {
             }
 
         }
+
+        for (ReservationStationEntry entry : Simulator.loadBuffer.getEntries()) {
+            if (entry.getQj().equals(dataBus.tag)) {
+                entry.setQj("0");
+                entry.setVj(dataBus.value);
+            }
+        }
+
         for (Register register : Simulator.registerFile.F) {
             if (register.getQ().equals(dataBus.tag)) {
                 register.setValue(dataBus.value);

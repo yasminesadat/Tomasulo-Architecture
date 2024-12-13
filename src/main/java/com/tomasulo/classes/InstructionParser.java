@@ -64,6 +64,7 @@ public class InstructionParser {
                         }
                         else{
                             currentInstruction.setImmediate(Integer.parseInt(operands[1]));
+                            currentInstruction.setRs("");
                         }
                         break;
                     case InstructionType.STORE_WORD: // SW R1 100

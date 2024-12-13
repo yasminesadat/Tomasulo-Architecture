@@ -19,6 +19,7 @@ public class Simulator {
     public static Bus bus;
     public static int pc = 0;
     public static boolean isBranchTaken = false;
+    public static boolean stallLoad = false;
 
     public static int getClockCycle() {
         return clockCycle;

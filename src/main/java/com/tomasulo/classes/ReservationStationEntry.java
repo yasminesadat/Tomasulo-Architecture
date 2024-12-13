@@ -139,6 +139,7 @@ public class ReservationStationEntry {
                     + (this.currInstruction.endTime - Simulator.clockCycle) + " pc:  " + this.getCurrInstruction().pc);
         }
         if (this.qj.equals("0") && this.qk.equals("0")
+                && this.getCurrInstruction().getStartTime()!=-1 
                 && this.currInstruction.getEndTime() < Simulator.clockCycle
                 && this.currInstruction.getIssueTime() < Simulator.clockCycle
                 && this.busy)

@@ -1,2 +1,2 @@
-LW R6,0
-LW R7,4
+LW R7,0
+LW R6,R7

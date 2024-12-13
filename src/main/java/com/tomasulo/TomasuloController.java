@@ -153,7 +153,7 @@ public class TomasuloController {
                 createTableSection(integerLabel, integerReservationStationTable));
         middleColumn.setPrefWidth(400);
         VBox instructionQueueSection = createTableSection(instructionQueueLabel, instructionQueueTable);
-        // instructionQueueSection.setPrefHeight(50);
+        instructionQueueSection.setPrefHeight(150);
         VBox rightColumn = new VBox(10);
         rightColumn.getChildren().addAll(
                 createTableSection(intRegLabel, integerRegisterTable),
@@ -603,10 +603,10 @@ public class TomasuloController {
         allInstructions.sort(Comparator.comparingInt(Instruction::getIssueTime));
 
         
-        System.out.println("All Instructionsssssssssssssssssssss: " + allInstructions.size());
+        //System.out.println("All Instructionsssssssssssssssssssss: " + allInstructions.size());
 
         for (Instruction instruction : allInstructions) {
-            System.out.println("Instructionnnnnnnnnnnnnnnnnnnnn: " + instruction.getIssueTime());
+            //System.out.println("Instructionnnnnnnnnnnnnnnnnnnnn: " + instruction.getIssueTime());
             // if (instruction.getIssueTime() != -1) {
                 InstructionStatus instructionStatus = new InstructionStatus(
                     1,  //change this later(branch)
@@ -643,7 +643,7 @@ public class TomasuloController {
             // }
         }
 
-        System.out.println("Instruction Status Listtttttttttttttttt: " + instructionStatusList.size());
+        //System.out.println("Instruction Status Listtttttttttttttttt: " + instructionStatusList.size());
     
         ObservableList<InstructionStatus> observableInstructions = FXCollections.observableArrayList(instructionStatusList);
         instructionStatusTable.setItems(observableInstructions);
