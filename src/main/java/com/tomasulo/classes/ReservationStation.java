@@ -101,7 +101,8 @@ public class ReservationStation {
                     && entries.get(i).currInstruction.getStartTime() == -1) {
                 String insType = entries.get(i).currInstruction.getType();
                 if(Simulator.stallLoad && (insType.equals( InstructionType.LOAD_WORD) || insType.equals(InstructionType.LOAD_DOUBLE_PRECISION) || insType.equals(InstructionType.LOAD_DOUBLE_WORD)
-                || insType.equals(InstructionType.LOAD_SINGLE_PRECISION))) {continue;}
+                || insType.equals(InstructionType.LOAD_SINGLE_PRECISION ) || insType.equals(InstructionType.STORE_DOUBLE_PRECISION) || insType.equals(InstructionType.STORE_DOUBLE_WORD) 
+                || insType.equals(InstructionType.STORE_SINGLE_PRECISION)|| insType.equals(InstructionType.STORE_WORD))) {continue;}
                 entries.get(i).currInstruction.setStartTime(Simulator.clockCycle);
                 int endExecutionTime = 0;
                 int latency = 0;
@@ -195,12 +196,9 @@ public class ReservationStation {
                             Simulator.stallLoad = true ;
                             System.out.println("first store so miss and no load before ");
                         }
-                        latency = hit? UserInputValues.getLoadLatency(): UserInputValues.getLoadLatency()+4;
+                        latency = hit? UserInputValues.getStoreLatency(): UserInputValues.getStoreLatency()+4;
                     }
-                        double value = entries.get(i).vj;
-                        int addressStore = entries.get(i).address;
-                        entries.get(i).functionalUnit.execute(addressStore, value, insType);
-                        latency = UserInputValues.getStoreLatency();
+                        
                         break;
                 }
                 endExecutionTime = entries.get(i).currInstruction.getStartTime() + latency - 1;

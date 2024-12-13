@@ -111,6 +111,44 @@ public class WriteBack {
             }
 
         }
+
+        for (ReservationStationEntry entry : Simulator.storeBuffer.getEntries()) {
+            // in case of a miss
+            if (entry.busy && Simulator.stallLoad && Simulator.clockCycle==entry.currInstruction.getEndTime()){
+                int size=0;
+                System.out.println("GETTTT FROM MEMORYYY THE MISS " +Simulator.clockCycle);
+                switch(entry.currInstruction.getType()) {
+                    case "SW":
+                    case "S.S":
+                    size = 4;
+                    break;
+                    case "SD":
+                    case "S.D":
+                    size = 8;
+                    break;
+                }
+                int address = entry.address;
+                if (entry.currInstruction.rd.contains("R")){
+                    address = (int)entry.getVk();
+                }
+                CacheMemoryHandler.loadDataFromMemoryIfCacheMiss(address, Simulator.cache, Simulator.memory, size, entry.currInstruction.getType());
+                Simulator.stallLoad = false;
+                double value = entry.getVj();
+                entry.functionalUnit.execute(address, value, entry.currInstruction.getType());
+            }
+
+            if (entry.canWrite()) {
+                if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
+                    maxWaiting = Simulator.getWaitingStation(entry.getTag());
+                    writingBackEntry = entry;
+                    desiredStation = Simulator.loadBuffer;
+
+                }
+
+            }
+
+        }
+
         if (writingBackEntry != null) {
             System.out.println("Writing back right now in cycle : " + Simulator.clockCycle + writingBackEntry.tag);
             writingBackEntry.setBusy(false);
