@@ -340,7 +340,6 @@ public class TomasuloController {
     private void showMemoryView() {
         Stage memoryStage = new Stage();
         memoryStage.setTitle("Tomasulo Simulator - Memory Contents");
-
         TableView<List<String>> memoryTableView = new TableView<>();
 
         TableColumn<List<String>, String> addressColumn = new TableColumn<>("Address");
@@ -378,6 +377,8 @@ public class TomasuloController {
         layout.setPadding(new Insets(10));
 
         Scene memoryScene = new Scene(layout, 500, 600);
+        memoryScene.getRoot().setStyle("-fx-font-family: 'Arial'; -fx-background-color: white;");
+
         memoryStage.setScene(memoryScene);
         memoryStage.show();
     }
@@ -402,6 +403,7 @@ public class TomasuloController {
         // Set up the scene
         Scene scene = new Scene(layout, 500, 400); // Define size for the scene
         popupStage.setScene(scene); // Attach the scene to the stage
+        scene.getRoot().setStyle("-fx-font-family: 'Arial'; -fx-background-color: white;");
 
         tableView.setFixedCellSize(30);
         tableView.setPrefHeight(cacheLines.length * 30 + 30); // +30 for header
