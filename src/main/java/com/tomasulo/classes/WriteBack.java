@@ -90,7 +90,11 @@ public class WriteBack {
                     size = 8;
                     break;
                 }
-                Object result = CacheMemoryHandler.loadDataFromMemoryIfCacheMiss(entry.address, Simulator.cache, Simulator.memory, size, entry.currInstruction.getType());
+                int address = entry.address;
+                if (entry.currInstruction.rs.contains("R")){
+                    address = (int)entry.getVj();
+                }
+                Object result = CacheMemoryHandler.loadDataFromMemoryIfCacheMiss(address, Simulator.cache, Simulator.memory, size, entry.currInstruction.getType());
 
                 if (result instanceof Integer) {
                     entry.functionalUnit.result = ((Integer) result).doubleValue();

@@ -459,6 +459,8 @@ public class TomasuloController {
             case "LOAD":
 
                 columns.add(addressColumn);
+                columns.add(vjColumn);
+                columns.add(qjColumn);
                 break;
 
             case "STORE":
