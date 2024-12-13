@@ -14,6 +14,29 @@
       <!-- Reservation Station Table -->
       <Label text="Reservation Stations" style="-fx-font-size: 16px; -fx-font-weight: bold;" GridPane.rowIndex="17" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
 
+      
+      
+    <Label text="Instruction status" style="-fx-font-size: 14px; -fx-font-weight: bold;" GridPane.rowIndex="18" GridPane.columnIndex="1" />
+    <TableView fx:id="instructionStatusTable" GridPane.rowIndex="19" GridPane.columnIndex="1">
+        <columns>
+            <TableColumn fx:id="instructionStatusIterationColumn" text="Iteration" />
+            <TableColumn fx:id="instructionStatusTypeColumn" text="Type" />
+            <TableColumn fx:id="instructionStatusRdColumn" text="Rd" />
+            <TableColumn fx:id="instructionStatusIssueTimeColumn" text="Issue Time" />
+            <TableColumn fx:id="instructionStatusStartTimeColumn" text="Start Time" />
+            <TableColumn fx:id="instructionStatusEndTimeColumn" text="End Time" />
+            <TableColumn fx:id="instructionStatusWriteTimeColumn" text="Write Time" />
+            <TableCiolumn fx:id="instructionStatusremainingTimeColumn" text="Remaining Time" />
+        </columns>
+    </TableView>
+      
+      
+      
+      
+      
+      
+      
+      
       <Label text="Add/Sub Reservation Stations" style="-fx-font-size: 14px; -fx-font-weight: bold;" GridPane.rowIndex="18" GridPane.columnIndex="1" />
       <TableView fx:id="addSubReservationStationTable" GridPane.rowIndex="19" GridPane.columnIndex="1">
           <columns>

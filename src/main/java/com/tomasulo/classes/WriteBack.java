@@ -77,6 +77,29 @@ public class WriteBack {
         }
         for (ReservationStationEntry entry : Simulator.loadBuffer.getEntries()) {
             if (entry.canWrite()) {
+                // in case of a miss
+                if(entry.getCurrInstruction().getEndTime()-entry.getCurrInstruction().getStartTime()-1>UserInputValues.getLoadLatency()){
+                    int size=0;
+                    System.out.println("GETTTT FROM MEMORYYY THE MISS " +Simulator.clockCycle);
+                    switch(entry.currInstruction.getType()) {
+                        case "LW":
+                        case "L.S":
+                        size = 4;
+                        break;
+                        case "LD":
+                        case "L.D":
+                        size = 8;
+                        break;
+                    }
+                    Object result = CacheMemoryHandler.loadDataFromMemoryIfCacheMiss(entry.address, Simulator.cache, Simulator.memory, size, entry.currInstruction.getType());
+
+                    if (result instanceof Integer) {
+                        entry.functionalUnit.result = ((Integer) result).doubleValue();
+                    } else {
+                        entry.functionalUnit.result = (Double) result;
+                    }
+                }
+ 
                 if (Simulator.getWaitingStation(entry.getTag()) >= maxWaiting) {
                     maxWaiting = Simulator.getWaitingStation(entry.getTag());
                     writingBackEntry = entry;
@@ -94,6 +117,7 @@ public class WriteBack {
             desiredStation.setFreeSpaces(desiredStation.getFreeSpaces() + 1);
             Simulator.bus.setTag(writingBackEntry.tag);
             Simulator.bus.setValue(writingBackEntry.functionalUnit.result);
+            System.out.println("value on bus "+Simulator.bus.value);
             writingBackEntry.currInstruction.setStartTime(-1);
             sniffBus();
         }

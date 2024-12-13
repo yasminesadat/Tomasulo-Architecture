@@ -109,7 +109,6 @@ public class Simulator {
         }
         bus = new Bus();
         cache = new Cache(UserInputValues.getCacheSize(), UserInputValues.getCacheBlockSize());
-        instructionQueue.printInstructions();
     }
 
     public static void getUserInputs() {

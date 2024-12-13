@@ -159,8 +159,9 @@ public class ReservationStation {
                     case InstructionType.LOAD_DOUBLE_PRECISION:
                     case InstructionType.LOAD_SINGLE_PRECISION:
                         int address = entries.get(i).address;
-                        entries.get(i).functionalUnit.execute(address, 0.0, insType);
-                        latency = UserInputValues.getLoadLatency();
+                        LoadFU functionalUnit = (LoadFU)entries.get(i).functionalUnit;
+                        boolean hit = functionalUnit.execute(address, insType);
+                        latency = hit? UserInputValues.getLoadLatency(): UserInputValues.getLoadLatency()+4;
                         break;
                     // S.D F10, 0
                     case InstructionType.STORE_WORD:
