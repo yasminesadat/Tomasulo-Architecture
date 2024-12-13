@@ -9,8 +9,9 @@ public class InstructionStatus {
     private String endTime;
     private String writeTime;
     private String remainingTime;
+    private String instructionType;
 
-    public InstructionStatus(int iteration, String type, String rd, String issueTime, String startTime, String endTime, String writeTime) {
+    public InstructionStatus(int iteration, String type, String rd, String issueTime, String startTime, String endTime, String writeTime, String instructionType) {
         this.iteration = iteration;
         this.type = type;
         this.rd = rd;
@@ -19,6 +20,7 @@ public class InstructionStatus {
         this.endTime = endTime;
         this.writeTime = writeTime;
         this.remainingTime = calculateRemainingTime(startTime, endTime);
+        this.instructionType = instructionType;
     }
 
     private String calculateRemainingTime(String startTime, String endTime) {

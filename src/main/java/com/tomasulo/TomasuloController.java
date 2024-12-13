@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import com.tomasulo.classes.ReservationStation;
 import com.tomasulo.classes.ReservationStationEntry;
 import com.tomasulo.classes.Instruction;
 import com.tomasulo.classes.InstructionQueue;
+import com.tomasulo.classes.InstructionStatus;
 import com.tomasulo.classes.Memory;
 import com.tomasulo.classes.Register;
 import com.tomasulo.classes.RegisterFile;
@@ -38,6 +40,8 @@ import javafx.stage.Stage;
 
 public class TomasuloController {
 
+    private List<Instruction> completedInstructions = new ArrayList<>();
+    private TableView<InstructionStatus> instructionStatusTable;
     private TableView<ReservationStationEntry> addSubReservationStationTable;
     private TableView<ReservationStationEntry> mulDivReservationStationTable;
     private TableView<ReservationStationEntry> loadReservationStationTable;
@@ -69,6 +73,7 @@ public class TomasuloController {
     public void initialize(Stage stage) {
         // Initialize all tables
         // In initialize()
+        instructionStatusTable= createInstructionStatusTableView();
         addSubReservationStationTable = createReservationStationTableView("ADD_SUB", false);
         mulDivReservationStationTable = createReservationStationTableView("MUL_DIV", false);
         loadReservationStationTable = createReservationStationTableView("LOAD", false);
@@ -79,6 +84,7 @@ public class TomasuloController {
         instructionQueueTable = createInstructionQueueTableView();
 
         // Create labels for each table
+        Label instructionStatus = createTableLabel("Instructions Status");
         Label addSubLabel = createTableLabel("Add/Sub Reservation Station");
         Label mulDivLabel = createTableLabel("Mul/Div Reservation Station");
         Label loadLabel = createTableLabel("Load Buffer");
@@ -135,6 +141,7 @@ public class TomasuloController {
 
         VBox leftColumn = new VBox(10);
         leftColumn.getChildren().addAll(
+                createTableSection(instructionStatus, instructionStatusTable),
                 createTableSection(addSubLabel, addSubReservationStationTable),
                 createTableSection(mulDivLabel, mulDivReservationStationTable));
         leftColumn.setPrefWidth(400);
@@ -436,6 +443,35 @@ public class TomasuloController {
         return tableView;
     }
 
+
+
+    private TableView<InstructionStatus> createInstructionStatusTableView() {
+        TableView<InstructionStatus> tableView = new TableView<>();
+        tableView.setPlaceholder(new javafx.scene.control.Label("Instruction Status"));
+    
+        TableColumn<InstructionStatus, Integer> iterationColumn = new TableColumn<>("Iteration");
+        TableColumn<InstructionStatus, String> typeColumn = new TableColumn<>("Type");
+        TableColumn<InstructionStatus, String> rdColumn = new TableColumn<>("Rd");
+        TableColumn<InstructionStatus, String> issueTimeColumn = new TableColumn<>("Issue Time");
+        TableColumn<InstructionStatus, String> startTimeColumn = new TableColumn<>("Start Time");
+        TableColumn<InstructionStatus, String> endTimeColumn = new TableColumn<>("End Time");
+        TableColumn<InstructionStatus, String> writeTimeColumn = new TableColumn<>("Write Time");
+        TableColumn<InstructionStatus, Integer> remainingTimeColumn = new TableColumn<>("Remaining Time");
+    
+        iterationColumn.setCellValueFactory(new PropertyValueFactory<>("iteration"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        rdColumn.setCellValueFactory(new PropertyValueFactory<>("rd"));
+        issueTimeColumn.setCellValueFactory(new PropertyValueFactory<>("issueTime"));
+        startTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        endTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        writeTimeColumn.setCellValueFactory(new PropertyValueFactory<>("writeTime"));
+        remainingTimeColumn.setCellValueFactory(new PropertyValueFactory<>("remainingTime"));
+    
+        tableView.getColumns().addAll(iterationColumn, typeColumn, rdColumn, issueTimeColumn, startTimeColumn, endTimeColumn, writeTimeColumn,remainingTimeColumn);
+        return tableView;
+    }
+
+
     private TableView<Instruction> createInstructionQueueTableView() {
         TableView<Instruction> tableView = new TableView<>();
         tableView.setPlaceholder(new javafx.scene.control.Label("Instruction Queue - No Instructions"));
@@ -465,6 +501,7 @@ public class TomasuloController {
         populateReservationStationLoad();
         populateReservationStationStore();
         populateReservationStationInteger();
+        populateInstructionStatusTable();
     }
 
     private void populateReservationStationInteger() {
@@ -505,6 +542,116 @@ public class TomasuloController {
         floatRegisters.setAll(Simulator.registerFile.getF());
         floatRegisterTable.setItems(floatRegisters);
     }
+
+
+
+
+    private void populateInstructionStatusTable() {
+        List<InstructionStatus> instructionStatusList = new ArrayList<>();
+        List<Instruction> allInstructions = new ArrayList<>();
+        allInstructions.addAll(completedInstructions);
+
+        for (ReservationStationEntry entry : Simulator.addSubReservationStation.getEntries()) {
+            if (entry.getCurrInstruction() != null) {
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                    
+                    allInstructions.add(entry.getCurrInstruction());
+                }
+               
+            }
+
+        }
+
+        for (ReservationStationEntry entry : Simulator.mulDivReservationStation.getEntries()) {
+            if (entry.getCurrInstruction() != null) {
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                allInstructions.add(entry.getCurrInstruction());
+                }
+            }
+
+        }
+
+        for (ReservationStationEntry entry : Simulator.integerReservationStation.getEntries()) {
+            if (entry.getCurrInstruction() != null) {
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                allInstructions.add(entry.getCurrInstruction());
+                }
+            }
+
+        }
+
+        for (ReservationStationEntry entry : Simulator.loadBuffer.getEntries()) {
+            if (entry.getCurrInstruction() != null) {
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                allInstructions.add(entry.getCurrInstruction());
+                }
+            }
+
+        }
+
+        for (ReservationStationEntry entry : Simulator.storeBuffer.getEntries()) {
+            if (entry.getCurrInstruction() != null) {
+                if(!allInstructions.contains(entry.getCurrInstruction())) {
+                allInstructions.add(entry.getCurrInstruction());
+                }
+            }
+
+        }
+
+        
+
+        allInstructions.sort(Comparator.comparingInt(Instruction::getIssueTime));
+
+        
+        System.out.println("All Instructionsssssssssssssssssssss: " + allInstructions.size());
+
+        for (Instruction instruction : allInstructions) {
+            System.out.println("Instructionnnnnnnnnnnnnnnnnnnnn: " + instruction.getIssueTime());
+            // if (instruction.getIssueTime() != -1) {
+                InstructionStatus instructionStatus = new InstructionStatus(
+                    1,  //change this later(branch)
+                    instruction.getType(),
+                    instruction.getRd(),
+                    instruction.getIssueTime() == -1 ? "Null" : String.valueOf(instruction.getIssueTime()),
+                    instruction.getStartTime() == -1 ? "Null" : String.valueOf(instruction.getStartTime()),
+                    instruction.getEndTime() == -1 ? "Null" : String.valueOf(instruction.getEndTime()),
+                    instruction.getWriteTime() == -1 ? "Null" : String.valueOf(instruction.getWriteTime()),
+                    instruction.getType()
+                   
+                );
+
+                if (!"Null".equals(instructionStatus.getRemainingTime()) && !"0".equals(instructionStatus.getRemainingTime()) && Simulator.getClockCycle() > Integer.parseInt(instructionStatus.getStartTime())) {
+                    int remaining = Integer.parseInt(instructionStatus.getRemainingTime());
+                    if (remaining > 0) {
+                       // remaining = Integer.parseInt(instructionStatus.getEndTime()) + Integer.parseInt(instructionStatus.getStartTime()) - Simulator.getClockCycle();
+                       remaining = Integer.parseInt(instructionStatus.getEndTime()) - Simulator.getClockCycle() + 1;
+                       if (remaining >= 0) {
+                            instructionStatus.setRemainingTime(String.valueOf(remaining));
+                        } else {
+                            instructionStatus.setRemainingTime("0");
+                        }
+                    }
+                }
+              
+        
+
+                instructionStatusList.add(instructionStatus);
+                if (instruction.getWriteTime() != -1 && !completedInstructions.contains(instruction) ) {
+                    completedInstructions.add(instruction);
+                }
+
+            // }
+        }
+
+        System.out.println("Instruction Status Listtttttttttttttttt: " + instructionStatusList.size());
+    
+        ObservableList<InstructionStatus> observableInstructions = FXCollections.observableArrayList(instructionStatusList);
+        instructionStatusTable.setItems(observableInstructions);
+       
+    }
+
+
+
 
     private void populateInstructionQueueTable() {
         List<Instruction> instructionList = new ArrayList<>();
