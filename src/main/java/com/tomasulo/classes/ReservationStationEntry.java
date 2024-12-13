@@ -159,8 +159,7 @@ public class ReservationStationEntry {
     }
 
     public String getOperation() {
-        String operation = this.currInstruction.type;
-        return operation;
+        return currInstruction.getType();
     }
 
     @Override

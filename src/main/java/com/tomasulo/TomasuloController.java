@@ -18,6 +18,7 @@ import com.tomasulo.classes.RegisterFile;
 import com.tomasulo.classes.Simulator;
 import com.tomasulo.classes.UserInputValues;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -39,7 +40,6 @@ public class TomasuloController {
     private TableView<ReservationStationEntry> loadReservationStationTable;
     private TableView<ReservationStationEntry> storeReservationStationTable;
     private TableView<ReservationStationEntry> integerReservationStationTable;
-
     private TableView<Register> integerRegisterTable;
     private TableView<Register> floatRegisterTable;
     private TableView<Instruction> instructionQueueTable;
@@ -314,10 +314,15 @@ public class TomasuloController {
 
     private TableView<ReservationStationEntry> createReservationStationTableView(String type, boolean isBranch) {
         TableView<ReservationStationEntry> tableView = new TableView<>();
-
-        // Create all columns
         TableColumn<ReservationStationEntry, String> tagColumn = new TableColumn<>("Tag");
-        TableColumn<ReservationStationEntry, String> operationColumn = new TableColumn<>("Operation");
+        TableColumn<ReservationStationEntry, String> operationColumn = new TableColumn<>("Op");
+        operationColumn.setCellValueFactory(cellData -> {
+            ReservationStationEntry entry = cellData.getValue();
+            if (entry != null && entry.getCurrInstruction() != null) {
+                return new SimpleStringProperty(entry.getCurrInstruction().getType());
+            }
+            return new SimpleStringProperty("");
+        });
         TableColumn<ReservationStationEntry, Boolean> busyColumn = new TableColumn<>("Busy");
         TableColumn<ReservationStationEntry, Integer> addressColumn = new TableColumn<>(
                 isBranch ? "Branch Address " : "Address");
@@ -336,7 +341,6 @@ public class TomasuloController {
         qjColumn.setPrefWidth(80);
         qkColumn.setPrefWidth(80);
         remainingTimeColumn.setPrefWidth(200);
-        operationColumn.setCellValueFactory(new PropertyValueFactory<>("operation"));
         tagColumn.setCellValueFactory(new PropertyValueFactory<>("tag"));
         busyColumn.setCellValueFactory(new PropertyValueFactory<>("busy"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
