@@ -166,6 +166,6 @@ public class ReservationStationEntry {
     @Override
     public String toString() {
         return " [tag=" + tag + ", issueTime=" + issueTime + ", busy=" + busy + ", address=" + address + ", vj=" + vj
-                + ", vk=" + vk + ", qj=" + qj + ", qk=" + qk + "]";
+                + ", vk=" + vk + ", qj=" + qj + ", qk=" + qk + "]" + "CURR INSTRUCTION " +currInstruction;
     }
 }
